@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAdminContext } from '@/layouts/AdminLayout';
+import { useAdminContext } from '@/layouts/useAdminContext';
 
 interface ActivityRecord {
   id: string;
