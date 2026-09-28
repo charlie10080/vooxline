@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@theme {
+  /* Fuentes corporativas */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display-hero: 'Sora', sans-serif;
+  --font-headline-lg: 'Sora', sans-serif;
+  --font-headline-md: 'Sora', sans-serif;
+  --font-headline-sm: 'Sora', sans-serif;
+  --font-body-lg: 'Plus Jakarta Sans', sans-serif;
+  --font-body-md: 'Plus Jakarta Sans', sans-serif;
+  --font-body-sm: 'Plus Jakarta Sans', sans-serif;
+  --font-label-tag: 'Plus Jakarta Sans', sans-serif;
+  --font-label-code: 'JetBrains Mono', monospace;
+  --font-label-numeric: 'JetBrains Mono', monospace;
+
+  /* Colores corporativos principales Vooxline */
+  --color-brand-dark: #0B0C10;
+  --color-brand-neon: #66FCF1;
+  --color-brand-teal: #45A29E;
+  --color-brand-surface: #13171F;
+  --color-brand-card: #1F2833;
+  --color-brand-border: #242E3B;
+  --color-brand-text: #C5C6C7;
+  --color-brand-heading: #FFFFFF;
+
+  --color-dark: #0B0C10;
+  --color-neon: #66FCF1;
+  --color-card: #1F2833;
+
+  /* Tokens de Maquetación Vooxline UI / Material Theme */
+  --color-surface: #121317;
+  --color-background: #121317;
+  --color-surface-dim: #121317;
+  --color-surface-bright: #38393e;
+  --color-surface-container-lowest: #0d0e12;
+  --color-surface-container-low: #1a1b20;
+  --color-surface-container: #1f1f24;
+  --color-surface-container-high: #292a2e;
+  --color-surface-container-highest: #343439;
+  --color-surface-variant: #343439;
+  --color-on-surface: #e3e2e8;
+  --color-on-surface-variant: #bacbb9;
+  --color-inverse-surface: #e3e2e8;
+  --color-inverse-on-surface: #2f3035;
+
+  --color-primary: #75ff9e;
+  --color-primary-container: #00e676;
+  --color-primary-fixed: #62ff96;
+  --color-primary-fixed-dim: #00e475;
+  --color-on-primary: #003918;
+  --color-on-primary-container: #00612e;
+  --color-on-primary-fixed: #00210b;
+  --color-on-primary-fixed-variant: #005226;
+  --color-inverse-primary: #006d35;
+
+  --color-secondary: #44e2d7;
+  --color-secondary-container: #00c5bb;
+  --color-secondary-fixed: #62f9ee;
+  --color-secondary-fixed-dim: #3cdcd1;
+  --color-on-secondary: #003734;
+  --color-on-secondary-container: #004c48;
+  --color-on-secondary-fixed: #00201e;
+  --color-on-secondary-fixed-variant: #00504b;
+
+  --color-tertiary: #dce5f4;
+  --color-tertiary-container: #c0c9d8;
+  --color-tertiary-fixed: #dae3f2;
+  --color-tertiary-fixed-dim: #bec7d6;
+  --color-on-tertiary: #28313c;
+  --color-on-tertiary-container: #4b5461;
+  --color-on-tertiary-fixed: #131c27;
+  --color-on-tertiary-fixed-variant: #3e4753;
+
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  --color-outline: #859585;
+  --color-outline-variant: #3b4a3d;
+  --color-surface-tint: #00e475;
+
+  /* Spacing tokens */
+  --spacing-margin: 2rem;
+  --spacing-gutter: 1.5rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
+
+  /* Tipografía y escalas */
+  --text-display-hero: 56px;
+  --text-display-hero--line-height: 64px;
+  --text-display-hero-mobile: 36px;
+  --text-display-hero-mobile--line-height: 44px;
+  --text-headline-lg: 36px;
+  --text-headline-lg--line-height: 44px;
+  --text-headline-lg-mobile: 26px;
+  --text-headline-lg-mobile--line-height: 34px;
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 28px;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-md: 15px;
+  --text-body-md--line-height: 24px;
+  --text-body-sm: 13px;
+  --text-body-sm--line-height: 20px;
+  --text-label-tag: 12px;
+  --text-label-tag--line-height: 16px;
+  --text-label-code: 12px;
+  --text-label-code--line-height: 16px;
+  --text-label-numeric: 14px;
+  --text-label-numeric--line-height: 20px;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0B0C10;
+  color: #C5C6C7;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Material Symbols alignment and sizing helper */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar corporativo oscuro y sutil */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0C10;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1F2833;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #45A29E;
+}
