@@ -1,46 +1,137 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LandingPage } from '@/pages/LandingPage';
-import { LoginPage } from '@/pages/LoginPage';
-import { AgentPortalPage } from '@/pages/AgentPortalPage';
-import { ClientDashboardPage } from '@/pages/ClientDashboardPage';
-import { AdminLayout } from '@/layouts/AdminLayout';
-import { AdminCommandCenterPage } from '@/pages/AdminCommandCenterPage';
-import { AdminActivityPage } from '@/pages/admin/AdminActivityPage';
-import { AdminMonitorPage } from '@/pages/admin/AdminMonitorPage';
-import { AdminUsersPage } from '@/pages/admin/AdminUsersPage';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { PlaceholderPage } from '@/pages/PlaceholderPage';
+import { TimeClockPage } from '@/pages/TimeClockPage';
+import { TimeOffPage } from '@/pages/TimeOffPage';
+import { PayrollPage } from '@/pages/PayrollPage';
+import { OverviewPage } from '@/pages/OverviewPage';
+import { UsersPage } from '@/pages/UsersPage';
+import { GroupsPage } from '@/pages/GroupsPage';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* 1. Pantalla principal pública / Index de Vooxline */}
-      <Route path="/" element={<LandingPage />} />
+      <Route element={<AppLayout />}>
+        {/* GENERAL */}
+        <Route path="/" element={<OverviewPage />} />
+        <Route
+          path="/activity"
+          element={
+            <PlaceholderPage
+              title="Activity"
+              section="GENERAL"
+              description="Registro y auditoría de eventos de agentes, sesiones, llamadas e incidencias del centro de mando."
+            />
+          }
+        />
+        <Route
+          path="/monitor"
+          element={
+            <PlaceholderPage
+              title="Monitor en Vivo"
+              section="GENERAL"
+              description="Consola de monitoreo en tiempo real con latencias SIP, estados de llamadas y agentes en simultáneo."
+            />
+          }
+        />
 
-      {/* 2. Portal de Autenticación / Login */}
-      <Route path="/login" element={<LoginPage />} />
+        {/* USERS & GROUPS */}
+        <Route path="/users" element={<UsersPage />} />
+        <Route path="/groups" element={<GroupsPage />} />
+        <Route
+          path="/automations"
+          element={
+            <PlaceholderPage
+              title="Automations"
+              section="USERS & GROUPS"
+              description="Flujos automatizados de alertas de ausentismo, reportes de turnos y sincronización de eventos."
+            />
+          }
+        />
 
-      {/* 3. Centro de Mando Maestro de Super Admin con Layout Dedicado (Sidebar + Header + Rutas Hijas) */}
-      <Route path="/admin" element={<AdminLayout />}>
-        {/* /admin -> Visión General (Overview) */}
-        <Route index element={<AdminCommandCenterPage />} />
-        {/* /admin/activity -> Historial y Auditoría */}
-        <Route path="activity" element={<AdminActivityPage />} />
-        {/* /admin/monitor -> Monitor en Vivo (Tiempo Real) */}
-        <Route path="monitor" element={<AdminMonitorPage />} />
-        {/* /admin/users -> Directorio de Usuarios y Talento */}
-        <Route path="users" element={<AdminUsersPage />} />
-        {/* Fallback de subrutas no asignadas al Overview */}
-        <Route path="*" element={<AdminCommandCenterPage />} />
+        {/* COMMUNICATION */}
+        <Route
+          path="/chat"
+          element={
+            <PlaceholderPage
+              title="Chat"
+              section="COMMUNICATION"
+              description="Canales de mensajería interna entre supervisores y agentes por campaña."
+            />
+          }
+        />
+        <Route
+          path="/updates"
+          element={
+            <PlaceholderPage
+              title="Updates"
+              section="COMMUNICATION"
+              description="Boletines operativos, avisos urgentes y actualizaciones de procesos para el equipo."
+            />
+          }
+        />
+        <Route
+          path="/director"
+          element={
+            <PlaceholderPage
+              title="Director"
+              section="COMMUNICATION"
+              description="Canal de comunicación de dirección y avisos ejecutivos para operaciones de call center."
+            />
+          }
+        />
+        <Route
+          path="/forms"
+          element={
+            <PlaceholderPage
+              title="Forms"
+              section="COMMUNICATION"
+              description="Formularios de control de calidad, encuestas de clima y cuestionarios de soporte."
+            />
+          }
+        />
+        <Route
+          path="/helpdesk"
+          element={
+            <PlaceholderPage
+              title="Help Desk"
+              section="COMMUNICATION"
+              description="Gestión de tickets técnicos para soporte de estaciones de trabajo, diademas y telefonía SIP."
+            />
+          }
+        />
+
+        {/* OPERATIONS */}
+        <Route path="/time-clock" element={<TimeClockPage />} />
+        <Route
+          path="/scheduling"
+          element={
+            <PlaceholderPage
+              title="Job Scheduling"
+              section="OPERATIONS"
+              description="Planificación de turnos, matriz horaria semanal y asignación de capacidad de agentes."
+            />
+          }
+        />
+        <Route path="/payroll" element={<PayrollPage />} />
+
+        {/* HR & SKILLS */}
+        <Route
+          path="/celebrations"
+          element={
+            <PlaceholderPage
+              title="Celebrations"
+              section="HR & SKILLS"
+              description="Reconocimientos por puntualidad, aniversarios laborales y logros de calidad (QA Score)."
+            />
+          }
+        />
+        <Route path="/time-off" element={<TimeOffPage />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
-
-      {/* 4. Dashboard B2B Ejecutivo (Posee su propio Sidebar & Header dedicado) */}
-      <Route path="/cliente" element={<ClientDashboardPage />} />
-
-      {/* 5. Portal del Agente (Reloj Checador y Consola con Sidebar & Header dedicado) */}
-      <Route path="/agente" element={<AgentPortalPage />} />
-
-      {/* Redirección por defecto ante rutas desconocidas */}
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
