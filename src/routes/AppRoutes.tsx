@@ -8,6 +8,7 @@ import { PayrollPage } from '@/pages/PayrollPage';
 import { OverviewPage } from '@/pages/OverviewPage';
 import { UsersPage } from '@/pages/UsersPage';
 import { GroupsPage } from '@/pages/GroupsPage';
+import { SchedulingPage } from '@/pages/SchedulingPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -104,16 +105,7 @@ export const AppRoutes: React.FC = () => {
 
         {/* OPERATIONS */}
         <Route path="/time-clock" element={<TimeClockPage />} />
-        <Route
-          path="/scheduling"
-          element={
-            <PlaceholderPage
-              title="Job Scheduling"
-              section="OPERATIONS"
-              description="Planificación de turnos, matriz horaria semanal y asignación de capacidad de agentes."
-            />
-          }
-        />
+        <Route path="/scheduling" element={<SchedulingPage />} />
         <Route path="/payroll" element={<PayrollPage />} />
 
         {/* HR & SKILLS */}
