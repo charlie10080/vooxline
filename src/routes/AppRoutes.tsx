@@ -9,6 +9,7 @@ import { OverviewPage } from '@/pages/OverviewPage';
 import { UsersPage } from '@/pages/UsersPage';
 import { GroupsPage } from '@/pages/GroupsPage';
 import { SchedulingPage } from '@/pages/SchedulingPage';
+import { MonitorPage } from '@/pages/MonitorPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -26,16 +27,7 @@ export const AppRoutes: React.FC = () => {
             />
           }
         />
-        <Route
-          path="/monitor"
-          element={
-            <PlaceholderPage
-              title="Monitor en Vivo"
-              section="GENERAL"
-              description="Consola de monitoreo en tiempo real con latencias SIP, estados de llamadas y agentes en simultáneo."
-            />
-          }
-        />
+        <Route path="/monitor" element={<MonitorPage />} />
 
         {/* USERS & GROUPS */}
         <Route path="/users" element={<UsersPage />} />
