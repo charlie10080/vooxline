@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import type { TimeEntry, EntryStatus, ActionResult } from '@/types';
+import type { AttendanceAlertKind } from '@/lib/punctuality';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
+import { useScheduleStore } from '@/store/useScheduleStore';
+import { useDirectoryStore } from '@/store/useDirectoryStore';
+import { getScheduledMinutesFor, todayStr } from '@/lib/schedule';
+import {
+  getEntryPunctuality,
+  getAttendanceAlerts,
+  countAlertsByKind,
+  describeAlert,
+  ALERT_KIND_LABELS,
+} from '@/lib/punctuality';
 import {
   formatClock,
   formatDuration,
@@ -35,15 +46,26 @@ type TabFilter = 'all' | EntryStatus;
 export const TimeClockPage: React.FC = () => {
   const {
     timeEntries,
+    timeOffRequests,
     agents,
     campaigns,
     approveEntry,
     rejectEntry,
-    approveBatch,
     clockIn,
     clockOut,
     resetDemoData,
   } = useWorkforceStore();
+  const { shifts } = useScheduleStore();
+  const { profiles } = useDirectoryStore();
+
+  const attendanceAlerts = getAttendanceAlerts({
+    entries: timeEntries,
+    shifts,
+    agents,
+    profiles,
+    timeOffRequests,
+  });
+  const alertCounts = countAlertsByKind(attendanceAlerts);
 
   const [activeTab, setActiveTab] = useState<TabFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -112,6 +134,25 @@ export const TimeClockPage: React.FC = () => {
 
   // Handler for approving a single entry
   const handleApprove = (entryId: string, supervisorConfirmed = false) => {
+    // Si no está confirmado por el supervisor, validar banderas de puntualidad
+    if (!supervisorConfirmed) {
+      const entry = timeEntries.find((e) => e.id === entryId);
+      if (entry) {
+        if (entry.clockOut === null) {
+          setActionAlert({
+            type: 'warning',
+            message: 'No se puede aprobar un turno abierto. El agente debe marcar salida primero.',
+          });
+          return;
+        }
+        const punctuality = getEntryPunctuality(entry, shifts);
+        if (punctuality.flags.length > 0) {
+          setPendingConfirmationEntry(entry);
+          return;
+        }
+      }
+    }
+
     const res: ActionResult = approveEntry(entryId, supervisorConfirmed);
     if (res.ok) {
       setActionAlert({
@@ -160,18 +201,40 @@ export const TimeClockPage: React.FC = () => {
     }
   };
 
-  // Handler for Batch Approval
+  // Handler for Batch Approval: NO llama a approveBatch
+  // Recorre las pendientes y cerradas, y solo para las que NO tengan banderas llama a approveEntry(id)
   const handleApproveBatch = () => {
-    const result = approveBatch();
+    const pendingClosed = timeEntries.filter(
+      (e) => e.status === 'pending' && e.clockOut !== null,
+    );
+    let approved = 0;
+    let blockedCount = 0;
+
+    for (const entry of pendingClosed) {
+      const punctuality = getEntryPunctuality(entry, shifts);
+      if (punctuality.flags.length > 0) {
+        blockedCount += 1;
+        continue;
+      }
+      const res = approveEntry(entry.id);
+      if (res.ok) {
+        approved += 1;
+      } else {
+        blockedCount += 1;
+      }
+    }
+
     setBatchNotice({
-      approved: result.approved,
-      blockedCount: result.blockedIds.length,
+      approved,
+      blockedCount,
     });
   };
 
   // Handler for Clock In / Clock Out per agent
   const handleAgentClockIn = (agentId: string) => {
-    const res = clockIn(agentId);
+    const today = todayStr();
+    const scheduled = getScheduledMinutesFor(shifts, agentId, today);
+    const res = clockIn(agentId, scheduled ?? undefined);
     const agent = agentMap.get(agentId);
     if (res.ok) {
       setActionAlert({
@@ -261,6 +324,81 @@ export const TimeClockPage: React.FC = () => {
             <RotateCcw className="w-4 h-4" />
           </button>
         </div>
+      </div>
+
+      {/* Panel Superior: Alertas de Asistencia */}
+      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-5 shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#242E3B] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#F59E0B]/15 text-[#F59E0B] flex items-center justify-center border border-[#F59E0B]/30">
+              <ShieldAlert className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <span>Alertas de Asistencia</span>
+                <span className="px-2 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30">
+                  {attendanceAlerts.length}
+                </span>
+              </h2>
+              <p className="text-xs text-[#C5C6C7]/70">
+                Puntualidad en turnos programados, demoras, salidas anticipadas y ausencias sin marcaje.
+              </p>
+            </div>
+          </div>
+
+          {/* Chips de conteo por tipo */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {(Object.keys(ALERT_KIND_LABELS) as AttendanceAlertKind[]).map((kind) => {
+              const count = alertCounts[kind];
+              return (
+                <span
+                  key={kind}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono border ${
+                    count > 0
+                      ? 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30 font-semibold'
+                      : 'bg-[#1F2833]/40 text-[#C5C6C7]/50 border-[#242E3B]'
+                  }`}
+                >
+                  <span>{ALERT_KIND_LABELS[kind]}:</span>
+                  <span className={count > 0 ? 'text-white font-bold' : ''}>{count}</span>
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
+        {attendanceAlerts.length === 0 ? (
+          <div className="flex items-center gap-2 py-2 text-xs text-[#10B981] font-mono">
+            <CheckCircle2 className="w-4 h-4" />
+            <span>Sin alertas</span>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+            {attendanceAlerts.map((alert) => {
+              const agent = agentMap.get(alert.agentId);
+              return (
+                <div
+                  key={alert.id}
+                  className="flex items-center justify-between p-3 rounded-xl bg-[#0B0C10] border border-[#242E3B] hover:border-[#F59E0B]/40 transition-colors text-xs"
+                >
+                  <div className="min-w-0 mr-2">
+                    <div className="font-semibold text-white truncate">
+                      {agent?.name ?? 'Desconocido'}
+                    </div>
+                    <div className="text-[10px] text-[#C5C6C7]/50 font-mono">
+                      {alert.date} • {agent?.employeeCode}
+                    </div>
+                  </div>
+
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30 shrink-0">
+                    <AlertTriangle className="w-3 h-3 shrink-0" />
+                    <span>{describeAlert(alert.kind, alert.minutes)}</span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Action Notification Alert */}
@@ -517,6 +655,7 @@ export const TimeClockPage: React.FC = () => {
                 <th className="py-3 px-4">Salida</th>
                 <th className="py-3 px-4">Horas</th>
                 <th className="py-3 px-4">Dif. Turno</th>
+                <th className="py-3 px-4">Puntualidad</th>
                 <th className="py-3 px-4">Estado</th>
                 <th className="py-3 px-4 text-right">Acciones</th>
               </tr>
@@ -524,7 +663,7 @@ export const TimeClockPage: React.FC = () => {
             <tbody className="divide-y divide-[#242E3B]/60 text-xs">
               {filteredEntries.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-[#C5C6C7]/50 font-mono">
+                  <td colSpan={9} className="py-12 text-center text-[#C5C6C7]/50 font-mono">
                     No se encontraron registros de turnos para los filtros seleccionados.
                   </td>
                 </tr>
@@ -648,6 +787,49 @@ export const TimeClockPage: React.FC = () => {
                             )}
                           </div>
                         )}
+                      </td>
+
+                      {/* Puntualidad */}
+                      <td className="py-3.5 px-4">
+                        {(() => {
+                          const punctuality = getEntryPunctuality(entry, shifts);
+                          if (!punctuality.shift) {
+                            return (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono text-[#C5C6C7]/50 bg-[#1F2833]/60 border border-[#242E3B]">
+                                Sin turno
+                              </span>
+                            );
+                          }
+                          if (punctuality.flags.length === 0) {
+                            return (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-medium text-[#10B981] bg-[#10B981]/15 border border-[#10B981]/30">
+                                <CheckCircle2 className="w-3 h-3" />
+                                <span>A tiempo</span>
+                              </span>
+                            );
+                          }
+                          return (
+                            <div className="flex flex-col gap-1">
+                              {punctuality.flags.map((flag) => {
+                                let mins: number | null = null;
+                                if (flag === 'late_arrival') mins = punctuality.arrivalMinutes;
+                                else if (flag === 'early_leave') mins = punctuality.departureMinutes === null ? null : Math.abs(punctuality.departureMinutes);
+                                else if (flag === 'late_leave') mins = punctuality.departureMinutes;
+                                else mins = punctuality.openOverdueMinutes;
+
+                                return (
+                                  <span
+                                    key={flag}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30 whitespace-nowrap"
+                                  >
+                                    <AlertTriangle className="w-3 h-3 shrink-0" />
+                                    <span>{describeAlert(flag, mins)}</span>
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          );
+                        })()}
                       </td>
 
                       {/* Estado */}
@@ -786,6 +968,37 @@ export const TimeClockPage: React.FC = () => {
                 </span>
               </div>
 
+              {(() => {
+                const p = getEntryPunctuality(pendingConfirmationEntry, shifts);
+                if (p.flags.length === 0) return null;
+                return (
+                  <div className="pt-2 border-t border-[#242E3B]/60 space-y-1.5">
+                    <span className="text-[#C5C6C7]/70 font-medium block">
+                      Incidencias de Puntualidad:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {p.flags.map((flag) => {
+                        let mins: number | null = null;
+                        if (flag === 'late_arrival') mins = p.arrivalMinutes;
+                        else if (flag === 'early_leave') mins = p.departureMinutes === null ? null : Math.abs(p.departureMinutes);
+                        else if (flag === 'late_leave') mins = p.departureMinutes;
+                        else mins = p.openOverdueMinutes;
+
+                        return (
+                          <span
+                            key={flag}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30"
+                          >
+                            <AlertTriangle className="w-3 h-3 shrink-0" />
+                            <span>{describeAlert(flag, mins)}</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {pendingConfirmationEntry.note && (
                 <div className="pt-2 text-[11px] text-[#C5C6C7]/70 italic bg-[#1F2833]/40 p-2 rounded">
                   Nota del sistema: "{pendingConfirmationEntry.note}"
@@ -853,6 +1066,10 @@ export const TimeClockPage: React.FC = () => {
                 );
                 const isClockedIn = Boolean(openEntry);
                 const campaign = campaignMap.get(agent.campaignId);
+                const today = todayStr();
+                const todayShift = shifts.find(
+                  (s) => s.agentId === agent.id && s.date === today && s.status === 'scheduled',
+                );
 
                 return (
                   <div
@@ -864,13 +1081,22 @@ export const TimeClockPage: React.FC = () => {
                         {agent.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="font-semibold text-white text-xs">
                             {agent.name}
                           </span>
                           <span className="text-[10px] font-mono text-[#C5C6C7]/50">
                             {agent.employeeCode}
                           </span>
+                          {todayShift ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
+                              Hoy {todayShift.startTime}-{todayShift.endTime}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/30">
+                              Sin turno programado hoy
+                            </span>
+                          )}
                         </div>
                         <div className="text-[11px] text-[#C5C6C7]/70 mt-0.5">
                           {campaign?.name} • Ext: {agent.sipExtension}

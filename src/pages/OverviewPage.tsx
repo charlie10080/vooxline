@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import type { TimeOffType, ActionResult } from '@/types';
+import type { AttendanceAlertKind } from '@/lib/punctuality';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
+import { useScheduleStore } from '@/store/useScheduleStore';
+import { useDirectoryStore } from '@/store/useDirectoryStore';
+import {
+  getAttendanceAlerts,
+  countAlertsByKind,
+  getEntryPunctuality,
+  describeAlert,
+  ALERT_KIND_LABELS,
+} from '@/lib/punctuality';
 import {
   getCampaignStats,
   getPayrollTotals,
@@ -40,6 +50,8 @@ export const OverviewPage: React.FC = () => {
     approveTimeOff,
     rejectTimeOff,
   } = useWorkforceStore();
+  const { shifts } = useScheduleStore();
+  const { profiles } = useDirectoryStore();
 
   // Mapeos auxiliares
   const agentMap = new Map(agents.map((a) => [a.id, a]));
@@ -61,14 +73,25 @@ export const OverviewPage: React.FC = () => {
   const campaignStats = getCampaignStats(campaigns, timeEntries);
   const totals = getPayrollTotals(campaignStats);
 
-  // Alertas Asistencia: timeEntries pending, CERRADAS (clockOut !== null) y con |desviación| > 15 min
+  // Alertas Asistencia: getAttendanceAlerts con desglose por tipo
+  const attendanceAlerts = getAttendanceAlerts({
+    entries: timeEntries,
+    shifts,
+    agents,
+    profiles,
+    timeOffRequests,
+  });
+  const countAttendanceAlertsTotal = attendanceAlerts.length;
+  const attendanceAlertCounts = countAlertsByKind(attendanceAlerts);
+
+  // Desviaciones de horas: timeEntries pending, CERRADAS (clockOut !== null) y con |desviación| > 15 min
   const assistanceAlertEntries = timeEntries.filter(
     (e) =>
       e.status === 'pending' &&
       e.clockOut !== null &&
       Math.abs(getDeviationMinutes(e)) > REVIEW_THRESHOLD_MIN,
   );
-  const countAssistanceAlerts = assistanceAlertEntries.length;
+  const countHourDeviations = assistanceAlertEntries.length;
 
   // Conexiones en Vivo: Conteo real de agents agrupado por status (on_call, available, break, offline)
   const countOnCall = agents.filter((a) => a.status === 'on_call').length;
@@ -82,6 +105,27 @@ export const OverviewPage: React.FC = () => {
     .slice(0, 5);
 
   const handleMiniApproveEntry = (entryId: string) => {
+    const entry = timeEntries.find((e) => e.id === entryId);
+    if (entry) {
+      if (entry.clockOut === null) {
+        setApprovalNotice({
+          entryId,
+          reason: 'Turno abierto en curso. El agente debe marcar salida primero.',
+        });
+        return;
+      }
+      const punctuality = getEntryPunctuality(entry, shifts);
+      if (punctuality.flags.length > 0) {
+        setApprovalNotice({
+          entryId,
+          reason: `Alerta de puntualidad (${punctuality.flags
+            .map((f) => describeAlert(f, null))
+            .join(', ')}). Requiere confirmación en Time Clock.`,
+        });
+        return;
+      }
+    }
+
     const res: ActionResult = approveEntry(entryId);
     if (res.ok) {
       setApprovalNotice(null);
@@ -244,45 +288,62 @@ export const OverviewPage: React.FC = () => {
           </p>
         </div>
 
-        {/* KPI 3: Alertas Asistencia (Pending, cerradas y con >15 min) */}
-        <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Alertas Asistencia
-            </span>
-            <div
-              className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
-                countAssistanceAlerts > 0
-                  ? 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30'
-                  : 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30'
-              }`}
-            >
-              <AlertTriangle className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-center justify-between">
-            <div className="flex items-baseline gap-2">
-              <span
-                className={`text-3xl font-extrabold font-mono ${
-                  countAssistanceAlerts > 0 ? 'text-[#EF4444]' : 'text-[#10B981]'
+        {/* KPI 3: Alertas Asistencia */}
+        <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
+                Alertas Asistencia
+              </span>
+              <div
+                className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
+                  countAttendanceAlertsTotal > 0
+                    ? 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30'
+                    : 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/30'
                 }`}
               >
-                {countAssistanceAlerts}
-              </span>
-              <span className="text-xs text-[#C5C6C7]/60 font-mono">desviaciones</span>
+                <AlertTriangle className="w-4 h-4" />
+              </div>
             </div>
 
-            <NavLink
-              to="/time-clock"
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#66FCF1]/10 text-[#66FCF1] hover:bg-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 transition-all"
-            >
-              <span>Resolver</span>
-              <ArrowRight className="w-3 h-3" />
-            </NavLink>
+            <div className="mt-2 flex items-center justify-between">
+              <div className="flex items-baseline gap-2">
+                <span
+                  className={`text-3xl font-extrabold font-mono ${
+                    countAttendanceAlertsTotal > 0 ? 'text-[#EF4444]' : 'text-[#10B981]'
+                  }`}
+                >
+                  {countAttendanceAlertsTotal}
+                </span>
+                <span className="text-xs text-[#C5C6C7]/60 font-mono">alertas</span>
+              </div>
+
+              <NavLink
+                to="/time-clock"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#66FCF1]/10 text-[#66FCF1] hover:bg-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 transition-all shrink-0"
+              >
+                <span>Resolver</span>
+                <ArrowRight className="w-3 h-3" />
+              </NavLink>
+            </div>
           </div>
-          <p className="text-[11px] text-[#C5C6C7]/50 mt-2 font-mono truncate">
-            Turnos cerrados con diff &gt; {REVIEW_THRESHOLD_MIN} min
-          </p>
+
+          <div className="mt-3 pt-2.5 border-t border-[#242E3B]/60 space-y-1 text-[11px] font-mono">
+            {(Object.keys(ALERT_KIND_LABELS) as AttendanceAlertKind[]).map((kind) => {
+              const count = attendanceAlertCounts[kind];
+              if (count === 0) return null;
+              return (
+                <div key={kind} className="flex items-center justify-between text-[#C5C6C7]/80">
+                  <span>{ALERT_KIND_LABELS[kind]}:</span>
+                  <span className="text-[#F59E0B] font-bold">{count}</span>
+                </div>
+              );
+            })}
+            <div className="flex items-center justify-between text-[#C5C6C7]/60 pt-0.5">
+              <span>Desviaciones de horas:</span>
+              <span className="text-white font-bold">{countHourDeviations}</span>
+            </div>
+          </div>
         </div>
 
         {/* KPI 4: Conexiones en Vivo */}

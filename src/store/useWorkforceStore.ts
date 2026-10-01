@@ -22,7 +22,7 @@ interface WorkforceState {
   timeOffRequests: TimeOffRequest[]
 
   // Time Clock
-  clockIn: (agentId: string) => ActionResult
+  clockIn: (agentId: string, scheduledMinutes?: number) => ActionResult
   clockOut: (agentId: string) => ActionResult
 
   // Motor de aprobación
@@ -51,7 +51,7 @@ export const useWorkforceStore = create<WorkforceState>()(
     (set, get) => ({
       ...seed(),
 
-      clockIn: (agentId) => {
+      clockIn: (agentId, scheduledMinutes) => {
         const { agents, timeEntries } = get()
         const agent = agents.find((a) => a.id === agentId)
         if (!agent) return { ok: false, reason: 'not_found' }
@@ -66,7 +66,10 @@ export const useWorkforceStore = create<WorkforceState>()(
           clockIn: now,
           clockOut: null,
           breakMinutes: 0,
-          scheduledMinutes: agent.shiftMinutes,
+          scheduledMinutes:
+            scheduledMinutes !== undefined && Number.isFinite(scheduledMinutes) && scheduledMinutes > 0
+              ? scheduledMinutes
+              : agent.shiftMinutes,
           status: 'pending',
           note: null,
         }
