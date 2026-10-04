@@ -3,6 +3,7 @@ import type { Shift } from '@/types/scheduling';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { useDirectoryStore } from '@/store/useDirectoryStore';
 import { useScheduleStore } from '@/store/useScheduleStore';
+import { resetApplicationState } from '@/lib/globalReset';
 import { getProfile } from '@/lib/groups';
 import {
   startOfWeek,
@@ -42,7 +43,6 @@ export const SchedulingPage: React.FC = () => {
     cancelShift,
     deleteShift,
     copyWeek,
-    resetScheduleDemo,
   } = useScheduleStore();
 
   // Semana actual: lunes
@@ -119,11 +119,13 @@ export const SchedulingPage: React.FC = () => {
   };
 
   const handleResetDemo = () => {
-    resetScheduleDemo();
-    setAlertNotice({
-      type: 'info',
-      message: 'Turnos de demostración reiniciados a sus valores originales.',
-    });
+    if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+      resetApplicationState();
+      setAlertNotice({
+        type: 'info',
+        message: 'Todos los datos de demostración han sido restablecidos.',
+      });
+    }
   };
 
   // Copiar semana anterior

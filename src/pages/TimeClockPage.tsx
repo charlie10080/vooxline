@@ -11,7 +11,9 @@ import {
   countAlertsByKind,
   describeAlert,
   ALERT_KIND_LABELS,
+  entryNeedsReview,
 } from '@/lib/punctuality';
+import { resetApplicationState } from '@/lib/globalReset';
 import {
   formatClock,
   formatDuration,
@@ -20,7 +22,6 @@ import {
 import {
   getWorkedMinutes,
   getDeviationMinutes,
-  needsSupervisorReview,
   REVIEW_THRESHOLD_MIN,
 } from '@/lib/metrics';
 import {
@@ -53,7 +54,6 @@ export const TimeClockPage: React.FC = () => {
     rejectEntry,
     clockIn,
     clockOut,
-    resetDemoData,
   } = useWorkforceStore();
   const { shifts } = useScheduleStore();
   const { profiles } = useDirectoryStore();
@@ -145,8 +145,7 @@ export const TimeClockPage: React.FC = () => {
           });
           return;
         }
-        const punctuality = getEntryPunctuality(entry, shifts);
-        if (punctuality.flags.length > 0) {
+        if (entryNeedsReview(entry, shifts)) {
           setPendingConfirmationEntry(entry);
           return;
         }
@@ -211,8 +210,7 @@ export const TimeClockPage: React.FC = () => {
     let blockedCount = 0;
 
     for (const entry of pendingClosed) {
-      const punctuality = getEntryPunctuality(entry, shifts);
-      if (punctuality.flags.length > 0) {
+      if (entryNeedsReview(entry, shifts)) {
         blockedCount += 1;
         continue;
       }
@@ -317,8 +315,12 @@ export const TimeClockPage: React.FC = () => {
           {/* Botón Reset Demo */}
           <button
             type="button"
-            onClick={resetDemoData}
-            title="Reiniciar datos de prueba en localStorage"
+            onClick={() => {
+              if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+                resetApplicationState();
+              }
+            }}
+            title="Reiniciar todos los datos de prueba"
             className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
@@ -674,7 +676,7 @@ export const TimeClockPage: React.FC = () => {
                   const isOpen = entry.clockOut === null;
                   const workedMinutes = getWorkedMinutes(entry);
                   const deviationMinutes = getDeviationMinutes(entry);
-                  const needsReview = needsSupervisorReview(entry);
+                  const needsReview = entryNeedsReview(entry, shifts);
 
                   return (
                     <tr

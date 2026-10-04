@@ -11,6 +11,7 @@ import {
   getEntryPunctuality,
   describeAlert,
   ALERT_KIND_LABELS,
+  entryNeedsReview,
 } from '@/lib/punctuality';
 import {
   getCampaignStats,
@@ -114,13 +115,16 @@ export const OverviewPage: React.FC = () => {
         });
         return;
       }
-      const punctuality = getEntryPunctuality(entry, shifts);
-      if (punctuality.flags.length > 0) {
+      if (entryNeedsReview(entry, shifts)) {
+        const punctuality = getEntryPunctuality(entry, shifts);
+        const reason = punctuality.flags.length > 0
+          ? `Alerta de puntualidad (${punctuality.flags
+              .map((f) => describeAlert(f, null))
+              .join(', ')}). Requiere confirmación en Time Clock.`
+          : `Desviación > ${REVIEW_THRESHOLD_MIN} min requiere autorización formal del supervisor.`;
         setApprovalNotice({
           entryId,
-          reason: `Alerta de puntualidad (${punctuality.flags
-            .map((f) => describeAlert(f, null))
-            .join(', ')}). Requiere confirmación en Time Clock.`,
+          reason,
         });
         return;
       }

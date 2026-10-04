@@ -2,7 +2,7 @@ import type { Agent, TimeEntry, TimeOffRequest } from '@/types'
 import type { UserProfile } from '@/types/directory'
 import type { Shift } from '@/types/scheduling'
 import { getProfile } from '@/lib/groups'
-import { REVIEW_THRESHOLD_MIN } from '@/lib/metrics'
+import { REVIEW_THRESHOLD_MIN, needsSupervisorReview } from '@/lib/metrics'
 import { addDays, isOnApprovedTimeOff, toDateStr } from '@/lib/schedule'
 import { minutesBetween } from '@/lib/time'
 
@@ -195,4 +195,13 @@ export function describeAlert(kind: AttendanceAlertKind, minutes: number | null)
     case 'no_show':
       return 'Ausencia sin marcaje'
   }
+}
+
+/**
+ * Regla ÚNICA de "esta entrada necesita revisión del supervisor":
+ * desviación de horas mayor a 15 min O alguna bandera de puntualidad.
+ * Las páginas (Time Clock, Overview) deben usar esta función en vez de repetir la condición.
+ */
+export function entryNeedsReview(entry: TimeEntry, shifts: Shift[], now: Date = new Date()): boolean {
+  return needsSupervisorReview(entry) || getEntryPunctuality(entry, shifts, now).flags.length > 0
 }

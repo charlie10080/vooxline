@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import type { MonitorMode, LiveError } from '@/types/live';
 import { useLiveStore, TICK_MS } from '@/store/useLiveStore';
+import { resetApplicationState } from '@/lib/globalReset';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import {
   getActiveCalls,
@@ -46,7 +47,6 @@ export const MonitorPage: React.FC = () => {
     stopMonitoring,
     setSimulationEnabled,
     tick,
-    resetLiveDemo,
   } = useLiveStore();
 
   // 1) Reloj local para que los cronómetros avancen continuamente cada 1 s
@@ -247,11 +247,13 @@ export const MonitorPage: React.FC = () => {
   };
 
   const handleReset = () => {
-    resetLiveDemo();
-    setActionAlert({
-      type: 'info',
-      message: 'Simulación reiniciada a sus llamadas y estados originales.',
-    });
+    if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+      resetApplicationState();
+      setActionAlert({
+        type: 'info',
+        message: 'Todos los datos de demostración han sido restablecidos.',
+      });
+    }
   };
 
   // Helper para tiempo en estado

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { CampaignStats } from '@/lib/metrics';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
+import { resetApplicationState } from '@/lib/globalReset';
 import {
   getCampaignStats,
   getPayrollTotals,
@@ -27,7 +28,7 @@ import {
 } from 'lucide-react';
 
 export const PayrollPage: React.FC = () => {
-  const { campaigns, timeEntries, agents, resetDemoData } = useWorkforceStore();
+  const { campaigns, timeEntries, agents } = useWorkforceStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCampaignId, setSelectedCampaignId] = useState<string>('all');
 
@@ -144,8 +145,12 @@ export const PayrollPage: React.FC = () => {
 
           <button
             type="button"
-            onClick={resetDemoData}
-            title="Reiniciar datos de prueba en localStorage"
+            onClick={() => {
+              if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+                resetApplicationState();
+              }
+            }}
+            title="Reiniciar todos los datos de prueba"
             className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
           >
             <RotateCcw className="w-4 h-4" />

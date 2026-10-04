@@ -10,6 +10,7 @@ import { UsersPage } from '@/pages/UsersPage';
 import { GroupsPage } from '@/pages/GroupsPage';
 import { SchedulingPage } from '@/pages/SchedulingPage';
 import { MonitorPage } from '@/pages/MonitorPage';
+import { ActivityPage } from '@/pages/ActivityPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -17,16 +18,7 @@ export const AppRoutes: React.FC = () => {
       <Route element={<AppLayout />}>
         {/* GENERAL */}
         <Route path="/" element={<OverviewPage />} />
-        <Route
-          path="/activity"
-          element={
-            <PlaceholderPage
-              title="Activity"
-              section="GENERAL"
-              description="Registro y auditoría de eventos de agentes, sesiones, llamadas e incidencias del centro de mando."
-            />
-          }
-        />
+        <Route path="/activity" element={<ActivityPage />} />
         <Route path="/monitor" element={<MonitorPage />} />
 
         {/* USERS & GROUPS */}

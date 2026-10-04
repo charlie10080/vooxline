@@ -4,6 +4,7 @@ import type { UserRole } from '@/types/directory';
 import type { Agent } from '@/types';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { useDirectoryStore } from '@/store/useDirectoryStore';
+import { resetApplicationState } from '@/lib/globalReset';
 import type { UserPatch } from '@/store/useDirectoryStore';
 import { getProfile, getGroupMembers } from '@/lib/groups';
 import {
@@ -29,7 +30,6 @@ export const UsersPage: React.FC = () => {
     createUser,
     updateUser,
     setUserActive,
-    resetDirectoryDemo,
   } = useDirectoryStore();
 
   // Filtros y búsqueda
@@ -281,8 +281,12 @@ export const UsersPage: React.FC = () => {
 
           <button
             type="button"
-            onClick={resetDirectoryDemo}
-            title="Reiniciar perfiles de demostración"
+            onClick={() => {
+              if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+                resetApplicationState();
+              }
+            }}
+            title="Reiniciar todos los datos de prueba"
             className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
