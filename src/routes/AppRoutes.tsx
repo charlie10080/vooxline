@@ -11,6 +11,7 @@ import { GroupsPage } from '@/pages/GroupsPage';
 import { SchedulingPage } from '@/pages/SchedulingPage';
 import { MonitorPage } from '@/pages/MonitorPage';
 import { ActivityPage } from '@/pages/ActivityPage';
+import { DirectorPage } from '@/pages/DirectorPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -56,16 +57,7 @@ export const AppRoutes: React.FC = () => {
             />
           }
         />
-        <Route
-          path="/director"
-          element={
-            <PlaceholderPage
-              title="Director"
-              section="COMMUNICATION"
-              description="Canal de comunicación de dirección y avisos ejecutivos para operaciones de call center."
-            />
-          }
-        />
+        <Route path="/director" element={<DirectorPage />} />
         <Route
           path="/forms"
           element={
