@@ -1,1 +1,2 @@
-export { AdminCommandCenterPage, default } from '../AdminCommandCenterPage';
+import AdminCommandCenterPage from '../AdminCommandCenterPage';
+export default AdminCommandCenterPage;

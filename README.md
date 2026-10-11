@@ -1,33 +1,74 @@
-# React + TypeScript + Vite
+# Vooxline - Plataforma B2B & Contact Center de Nueva Generación
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Vooxline es una plataforma omnicanal de alto rendimiento para gestión de Contact Centers B2B, telefonía WebRTC SIP, telemetría en tiempo real y supervisión ejecutiva.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Módulos Principales
 
-## React Compiler
+1. **Landing Page Pública (`/`)**
+   - Presentación ejecutiva de servicios B2B, propuesta de valor, telemetría simulada en tiempo real y formulario para agendar demostraciones.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. **Portal de Autenticación (`/login`)**
+   - Acceso con credenciales corporativas, verificación de token SIP Vault y redirección al Centro de Mando.
 
-## Expanding the Oxlint configuration
+3. **Portal del Agente (`/agente`)**
+   - Reloj checador de jornada laboral, estado ACD (Disponible, En Llamada, After Call Work, Receso), telemetría remota de red/periféricos y cola omnicanal.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+4. **Dashboard B2B Cliente Executivo (`/cliente`)**
+   - Resumen de métricas operativas, SLA de voz, facturación por minuto, nivel de ocupación y supervisión de campañas.
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+5. **Centro de Mando Maestro / Super Admin (`/admin`)**
+   - Visualización global del cluster, directorio de usuarios, historial de auditoría y monitor en vivo. Soporte multilingüe (ES / EN).
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Core:** React 19 + TypeScript + Vite 8
+- **Routing:** React Router v7
+- **Styling:** Tailwind CSS v4 + Google Fonts (Plus Jakarta Sans, Sora, JetBrains Mono, Material Symbols)
+- **Icons:** Lucide React & Google Material Symbols Outlined
+- **Linting & Code Quality:** Oxlint
+- **Testing:** Vitest + React Testing Library + JSDOM
+
+---
+
+## 💻 Desarrollo Local
+
+### Requisitos
+- Node.js >= 18
+- npm
+
+### Pasos para ejecutar
+
+```bash
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
+
+# Ejecutar el linter (Oxlint)
+npm run lint
+
+# Ejecutar pruebas unitarias (Vitest)
+npm run test
+
+# Compilar para producción
+npm run build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
-# vooxline
+---
+
+## 🔒 Cifrado & Seguridad
+
+- WebRTC SRTP & TLS 1.3
+- Certificación HIPAA & SOC2 Type II (simulada)
+- Cifrado Vault AES-256
+
+---
+
+## 📑 Licencia y Créditos
+
+© 2025 Vooxline Inc. Todos los derechos reservados.
