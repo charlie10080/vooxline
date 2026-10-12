@@ -204,12 +204,14 @@ export const useDirectoryStore = create<DirectoryState>()(
     }),
     {
       name: 'vooxline-directory',
-      version: 2,
-      // v2: agrega a los datos ya guardados los perfiles semilla nuevos (admin y cliente)
-      migrate: (persisted) => {
+      version: 3,
+      // v2: agrega los perfiles semilla nuevos (cliente). v3: el admin de la demo es Valeria (un usuario completo), no 'u-admin'
+      migrate: (persisted, version) => {
         const s = persisted as DirectoryState
-        const missing = mockProfiles.filter((m) => !s.profiles.some((p) => p.agentId === m.agentId))
-        return { ...s, profiles: [...s.profiles, ...missing] }
+        let profiles = s.profiles.filter((p) => p.agentId !== 'u-admin')
+        if (version < 3) profiles = profiles.map((p) => (p.agentId === 'a-valeria' ? { ...p, role: 'admin' as const } : p))
+        const missing = mockProfiles.filter((m) => !profiles.some((p) => p.agentId === m.agentId))
+        return { ...s, profiles: [...profiles, ...missing] }
       },
     },
   ),

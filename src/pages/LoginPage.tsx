@@ -7,7 +7,7 @@ import type { UserRole } from '@/types/directory';
 
 /** Accesos demo: un usuario semilla por rol */
 const DEMO_USERS: { id: string; role: UserRole; label: string; icon: string }[] = [
-  { id: 'u-admin', role: 'admin', label: 'Admin', icon: 'shield' },
+  { id: 'a-valeria', role: 'admin', label: 'Admin', icon: 'shield' },
   { id: 'a-carlos', role: 'supervisor', label: 'Supervisor', icon: 'groups' },
   { id: 'a-maria', role: 'agent', label: 'Agente', icon: 'headphones' },
   { id: 'c-cliente', role: 'client', label: 'Cliente', icon: 'bar_chart' },

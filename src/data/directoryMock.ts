@@ -3,13 +3,12 @@ import type { SmartGroup, UserProfile } from '@/types/directory'
 export const mockProfiles: UserProfile[] = [
   { agentId: 'a-maria', email: 'maria.lopez@vooxline.com', role: 'agent', active: true, hireDate: '2025-03-10' },
   { agentId: 'a-carlos', email: 'carlos.mendoza@vooxline.com', role: 'supervisor', active: true, hireDate: '2024-11-04' },
-  { agentId: 'a-valeria', email: 'valeria.rios@vooxline.com', role: 'supervisor', active: true, hireDate: '2024-06-17' },
+  { agentId: 'a-valeria', email: 'valeria.rios@vooxline.com', role: 'admin', active: true, hireDate: '2024-06-17' },
   { agentId: 'a-alejandro-t', email: 'alejandro.torres@vooxline.com', role: 'agent', active: true, hireDate: '2025-08-01' },
   { agentId: 'a-sofia', email: 'sofia.navarro@vooxline.com', role: 'agent', active: true, hireDate: '2026-01-12' },
   { agentId: 'a-alejandro-m', email: 'alejandro.moreno@vooxline.com', role: 'agent', active: true, hireDate: '2025-05-26' },
   { agentId: 'a-david', email: 'david.morales@vooxline.com', role: 'agent', active: true, hireDate: '2025-09-15' },
-  // Sin ficha en workforce: no fichan ni cobran nómina
-  { agentId: 'u-admin', email: 'admin@vooxline.com', role: 'admin', active: true, hireDate: '2024-01-08' },
+  // Sin ficha en workforce: no ficha ni cobra nómina
   { agentId: 'c-cliente', email: 'cliente@nationalassemblers.com', role: 'client', active: true, hireDate: '2025-02-03' },
 ]
 

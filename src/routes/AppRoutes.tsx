@@ -26,11 +26,6 @@ import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/Login/LoginPage';
 import { ClientPortalPage } from '@/pages/Client/ClientPortalPage';
 import { RequireRole } from '@/components/layout/RequireRole';
-import { AdminLayout } from '@/layouts/AdminLayout';
-import { AdminCommandCenterPage } from '@/pages/admin/AdminCommandCenterPage';
-import { AdminActivityPage } from '@/pages/admin/AdminActivityPage';
-import { AdminMonitorPage } from '@/pages/admin/AdminMonitorPage';
-import { AdminUsersPage } from '@/pages/admin/AdminUsersPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -41,13 +36,8 @@ export const AppRoutes: React.FC = () => {
       <Route path="/cliente" element={<RequireRole roles={['client']}><ClientPortalPage /></RequireRole>} />
       {/* Un solo portal de agente: el nuevo */}
       <Route path="/agente" element={<Navigate to="/portal" replace />} />
-      <Route path="/admin" element={<RequireRole roles={['admin']}><AdminLayout /></RequireRole>}>
-        <Route index element={<AdminCommandCenterPage />} />
-        <Route path="activity" element={<AdminActivityPage />} />
-        <Route path="monitor" element={<AdminMonitorPage />} />
-        <Route path="users" element={<AdminUsersPage />} />
-        <Route path="*" element={<Navigate to="/admin" replace />} />
-      </Route>
+      {/* El admin trabaja en la consola: un solo diseño y datos reales. Las páginas viejas de admin quedan como referencia */}
+      <Route path="/admin/*" element={<Navigate to="/" replace />} />
 
       <Route element={<RequireRole roles={['supervisor', 'admin']}><AppLayout /></RequireRole>}>
         {/* GENERAL */}

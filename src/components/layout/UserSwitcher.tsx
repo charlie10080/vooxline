@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, Check, LayoutDashboard, LogOut, ShieldCheck, UserCircle2 } from 'lucide-react';
+import { ChevronDown, Check, LayoutDashboard, LogOut, UserCircle2 } from 'lucide-react';
 import { Avatar } from '@/components/ui';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { useDirectoryStore } from '@/store/useDirectoryStore';
@@ -97,20 +97,6 @@ export const UserSwitcher: React.FC = () => {
                 <UserCircle2 className="h-3.5 w-3.5 text-[#66FCF1]" />
                 Mi portal
               </button>
-              {role === 'admin' && (
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => {
-                    setOpen(false);
-                    navigate('/admin');
-                  }}
-                  className="col-span-2 flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#C5C6C7] hover:bg-white/5 hover:text-white"
-                >
-                  <ShieldCheck className="h-3.5 w-3.5 text-[#66FCF1]" />
-                  Panel de administración
-                </button>
-              )}
             </div>
           )}
           <div className="px-3 pb-1 pt-3 font-mono text-[10px] font-bold uppercase tracking-wider text-[#C5C6C7]/40">
