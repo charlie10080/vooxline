@@ -211,6 +211,8 @@ export const DirectorPage: React.FC = () => {
         return <Badge tone="warning">SUPERVISOR</Badge>;
       case 'agent':
         return <Badge tone="accent">AGENTE</Badge>;
+      case 'client':
+        return <Badge tone="neutral">CLIENTE</Badge>;
     }
   };
 

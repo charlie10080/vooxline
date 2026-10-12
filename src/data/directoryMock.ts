@@ -8,6 +8,9 @@ export const mockProfiles: UserProfile[] = [
   { agentId: 'a-sofia', email: 'sofia.navarro@vooxline.com', role: 'agent', active: true, hireDate: '2026-01-12' },
   { agentId: 'a-alejandro-m', email: 'alejandro.moreno@vooxline.com', role: 'agent', active: true, hireDate: '2025-05-26' },
   { agentId: 'a-david', email: 'david.morales@vooxline.com', role: 'agent', active: true, hireDate: '2025-09-15' },
+  // Sin ficha en workforce: no fichan ni cobran nómina
+  { agentId: 'u-admin', email: 'admin@vooxline.com', role: 'admin', active: true, hireDate: '2024-01-08' },
+  { agentId: 'c-cliente', email: 'cliente@nationalassemblers.com', role: 'client', active: true, hireDate: '2025-02-03' },
 ]
 
 export const mockGroups: SmartGroup[] = [

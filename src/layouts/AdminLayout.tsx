@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
+import { useSessionStore } from '@/store/useSessionStore';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const logout = useSessionStore((s) => s.logout);
   const [lang, setLang] = useState<'es' | 'en'>('es');
 
   // Helper function to check if route is active
@@ -146,7 +149,7 @@ export const AdminLayout: React.FC = () => {
                   )}
                 </Link>
                 <Link
-                  to="/admin/groups"
+                  to="/groups"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/groups')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -159,7 +162,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/automations"
+                  to="/automations"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/automations')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -183,7 +186,7 @@ export const AdminLayout: React.FC = () => {
               </span>
               <div className="flex flex-col gap-0.5">
                 <Link
-                  to="/admin/chat"
+                  to="/chat"
                   className={`flex items-center justify-between px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/chat')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -199,7 +202,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/updates"
+                  to="/updates"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/updates')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -212,7 +215,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/directory"
+                  to="/director"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/directory')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -225,7 +228,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/forms"
+                  to="/forms"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/forms')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -238,7 +241,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/helpdesk"
+                  to="/helpdesk"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/helpdesk')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -262,7 +265,7 @@ export const AdminLayout: React.FC = () => {
               </span>
               <div className="flex flex-col gap-0.5">
                 <Link
-                  to="/agente"
+                  to="/portal"
                   className="flex items-center gap-space-sm px-space-sm py-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
                 >
                   <span className="material-symbols-outlined text-[19px]">schedule</span>
@@ -280,7 +283,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/payroll"
+                  to="/payroll"
                   className={`flex items-center justify-between px-space-sm py-2 rounded-xl transition-all group ${
                     isActive('/admin/payroll')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -311,7 +314,7 @@ export const AdminLayout: React.FC = () => {
               </span>
               <div className="flex flex-col gap-0.5">
                 <Link
-                  to="/admin/celebrations"
+                  to="/celebrations"
                   className={`flex items-center gap-space-sm px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/celebrations')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -324,7 +327,7 @@ export const AdminLayout: React.FC = () => {
                   </span>
                 </Link>
                 <Link
-                  to="/admin/time-off"
+                  to="/time-off"
                   className={`flex items-center justify-between px-space-sm py-2 rounded-xl transition-all ${
                     isActive('/admin/time-off')
                       ? 'bg-primary/15 text-primary border-l-[3px] border-primary shadow-[0_0_20px_rgba(102,252,241,0.2)] font-semibold'
@@ -359,15 +362,19 @@ export const AdminLayout: React.FC = () => {
                 {lang === 'es' ? 'TLS 1.3 Cifrado Activo' : 'TLS 1.3 Active Encryption'}
               </div>
             </div>
-            <Link
-              to="/login"
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                navigate('/inicio');
+              }}
               className="flex items-center gap-space-sm px-space-sm py-2 rounded-xl text-error hover:bg-error-container hover:text-on-error-container transition-all"
             >
               <span className="material-symbols-outlined text-[18px]">logout</span>
               <span className="font-body-sm text-body-sm font-medium">
                 {lang === 'es' ? 'Cerrar Sesión' : 'Sign Out'}
               </span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

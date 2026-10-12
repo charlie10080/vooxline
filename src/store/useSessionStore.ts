@@ -11,17 +11,32 @@ import { useWorkforceStore } from '@/store/useWorkforceStore'
  * shortcut: sin contraseña, cualquiera puede "entrar como" otro usuario; con backend esto lo da el inicio de sesión real.
  */
 interface SessionState {
+  /** Sin sesión conserva el último usuario: las páginas siempre tienen un id válido; las guardias revisan isAuthenticated */
   currentUserId: string
+  isAuthenticated: boolean
   setCurrentUser: (agentId: string) => void
+  login: (agentId: string) => void
+  logout: () => void
 }
 
 export const DEFAULT_USER_ID = 'a-carlos'
+
+/** Página de inicio de cada rol después de entrar */
+export function homePathFor(role: UserRole): string {
+  if (role === 'admin') return '/admin'
+  if (role === 'client') return '/cliente'
+  if (role === 'agent') return '/portal'
+  return '/'
+}
 
 export const useSessionStore = create<SessionState>()(
   persist(
     (set) => ({
       currentUserId: DEFAULT_USER_ID,
+      isAuthenticated: false,
       setCurrentUser: (agentId) => set({ currentUserId: agentId }),
+      login: (agentId) => set({ currentUserId: agentId, isAuthenticated: true }),
+      logout: () => set({ isAuthenticated: false }),
     }),
     { name: 'vooxline-session', version: 1 },
   ),

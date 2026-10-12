@@ -1,4 +1,4 @@
-export type UserRole = 'agent' | 'supervisor' | 'admin'
+export type UserRole = 'agent' | 'supervisor' | 'admin' | 'client'
 
 /** Datos de cuenta de un agente. Se enlaza con Agent por agentId (no duplica sus campos). */
 export interface UserProfile {

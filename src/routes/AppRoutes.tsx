@@ -25,7 +25,7 @@ import { PortalSchedulePage } from '@/pages/portal/PortalSchedulePage';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/Login/LoginPage';
 import { ClientDashboardPage } from '@/pages/Client/ClientDashboardPage';
-import { AgentPortalPage } from '@/pages/Agent/AgentPortalPage';
+import { RequireRole } from '@/components/layout/RequireRole';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { AdminCommandCenterPage } from '@/pages/admin/AdminCommandCenterPage';
 import { AdminActivityPage } from '@/pages/admin/AdminActivityPage';
@@ -38,9 +38,10 @@ export const AppRoutes: React.FC = () => {
       {/* Web pública y portales de clientes/admin (conviven con el apartado de trabajadores) */}
       <Route path="/inicio" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/cliente" element={<ClientDashboardPage />} />
-      <Route path="/agente" element={<AgentPortalPage />} />
-      <Route path="/admin" element={<AdminLayout />}>
+      <Route path="/cliente" element={<RequireRole roles={['client']}><ClientDashboardPage /></RequireRole>} />
+      {/* Un solo portal de agente: el nuevo */}
+      <Route path="/agente" element={<Navigate to="/portal" replace />} />
+      <Route path="/admin" element={<RequireRole roles={['admin']}><AdminLayout /></RequireRole>}>
         <Route index element={<AdminCommandCenterPage />} />
         <Route path="activity" element={<AdminActivityPage />} />
         <Route path="monitor" element={<AdminMonitorPage />} />
@@ -48,7 +49,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>
 
-      <Route element={<AppLayout />}>
+      <Route element={<RequireRole roles={['supervisor', 'admin']}><AppLayout /></RequireRole>}>
         {/* GENERAL */}
         <Route path="/" element={<OverviewPage />} />
         <Route path="/activity" element={<ActivityPage />} />
@@ -80,7 +81,7 @@ export const AppRoutes: React.FC = () => {
       </Route>
 
       {/* Portal del agente */}
-      <Route path="/portal" element={<PortalLayout />}>
+      <Route path="/portal" element={<RequireRole roles={['agent', 'supervisor', 'admin']}><PortalLayout /></RequireRole>}>
         <Route index element={<PortalHomePage />} />
         <Route path="horario" element={<PortalSchedulePage />} />
         <Route path="horas" element={<PortalTimesheetPage />} />

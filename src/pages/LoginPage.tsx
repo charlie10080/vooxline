@@ -1,16 +1,43 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
+import { useDirectoryStore } from '@/store/useDirectoryStore';
+import { homePathFor, useSessionStore } from '@/store/useSessionStore';
+import type { UserRole } from '@/types/directory';
+
+/** Accesos demo: un usuario semilla por rol */
+const DEMO_USERS: { id: string; role: UserRole; label: string; icon: string }[] = [
+  { id: 'u-admin', role: 'admin', label: 'Admin', icon: 'shield' },
+  { id: 'a-carlos', role: 'supervisor', label: 'Supervisor', icon: 'groups' },
+  { id: 'a-maria', role: 'agent', label: 'Agente', icon: 'headphones' },
+  { id: 'c-cliente', role: 'client', label: 'Cliente', icon: 'bar_chart' },
+];
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [authSuccess, setAuthSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const profiles = useDirectoryStore((s) => s.profiles);
+  const login = useSessionStore((s) => s.login);
 
+  const enterAs = (id: string, role: UserRole) => {
+    login(id);
+    navigate(homePathFor(role));
+  };
+
+  // shortcut: la contraseña no se valida (no hay backend); con API se reemplaza por autenticación real
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
+
+    const input = e.currentTarget.elements.namedItem('agent-identity') as HTMLInputElement;
+    const typed = input.value.trim().toLowerCase();
+    const profile = profiles.find((p) => p.email.toLowerCase() === typed || p.agentId === typed);
+    if (!profile) return setError('No encontramos ese correo o ID.');
+    if (!profile.active) return setError('Este usuario está desactivado. Pide acceso a tu administrador.');
+    setError('');
 
     setIsSubmitting(true);
     setAuthSuccess(false);
@@ -22,7 +49,7 @@ export const LoginPage: React.FC = () => {
       setTimeout(() => {
         setIsSubmitting(false);
         setAuthSuccess(false);
-        navigate('/admin');
+        enterAs(profile.agentId, profile.role);
       }, 700);
     }, 1200);
   };
@@ -169,6 +196,12 @@ export const LoginPage: React.FC = () => {
               </a>
             </div>
 
+            {error && (
+              <p role="alert" className="font-body-sm text-body-sm text-error">
+                {error}
+              </p>
+            )}
+
             {/* Master Action Button */}
             <button
               className={`mt-space-sm w-full py-3.5 px-space-lg rounded-full font-headline-sm text-headline-sm font-semibold transition-all duration-200 flex items-center justify-center gap-space-sm cursor-pointer ${
@@ -209,31 +242,21 @@ export const LoginPage: React.FC = () => {
               <div className="flex items-center gap-space-sm text-on-surface-variant">
                 <span className="material-symbols-outlined text-[16px] text-primary">hub</span>
                 <p className="font-label-tag text-label-tag text-center text-outline">
-                  Acceso directo a módulos:
+                  Entrar como (demo):
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-wrap justify-center">
-                <Link
-                  to="/admin"
-                  className="px-3 py-1 rounded-full bg-primary-container/20 hover:bg-primary-container text-primary hover:text-on-primary-container font-label-code text-[11px] font-semibold border border-primary/30 transition-all flex items-center gap-1 shadow-sm"
-                >
-                  <span className="material-symbols-outlined text-[13px]">shield</span>
-                  Super Admin (/admin)
-                </Link>
-                <Link
-                  to="/agente"
-                  className="px-3 py-1 rounded-full bg-surface-container-highest hover:bg-surface-variant text-secondary hover:text-white font-label-code text-[11px] font-semibold border border-white/10 transition-all flex items-center gap-1 shadow-sm"
-                >
-                  <span className="material-symbols-outlined text-[13px]">headphones</span>
-                  Agente (/agente)
-                </Link>
-                <Link
-                  to="/cliente"
-                  className="px-3 py-1 rounded-full bg-surface-container-highest hover:bg-surface-variant text-on-surface-variant hover:text-white font-label-code text-[11px] font-semibold border border-white/10 transition-all flex items-center gap-1 shadow-sm"
-                >
-                  <span className="material-symbols-outlined text-[13px]">bar_chart</span>
-                  Cliente B2B (/cliente)
-                </Link>
+                {DEMO_USERS.map((u) => (
+                  <button
+                    key={u.id}
+                    type="button"
+                    onClick={() => enterAs(u.id, u.role)}
+                    className="px-3 py-1 rounded-full bg-surface-container-highest hover:bg-surface-variant text-secondary hover:text-white font-label-code text-[11px] font-semibold border border-white/10 transition-all flex items-center gap-1 shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[13px]">{u.icon}</span>
+                    {u.label}
+                  </button>
+                ))}
               </div>
             </div>
           </form>

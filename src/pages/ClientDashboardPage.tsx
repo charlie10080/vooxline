@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSessionStore } from '@/store/useSessionStore';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 
 export const ClientDashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+  const logout = useSessionStore((s) => s.logout);
   // Estado para la pestaña de navegación lateral activa
   const [activeNav, setActiveNav] = useState<string>('resumen-operativo');
 
@@ -95,13 +98,17 @@ export const ClientDashboardPage: React.FC = () => {
             <span className="material-symbols-outlined text-inherit">support_agent</span>
             <span className="font-body-sm text-body-sm font-medium">Centro de Soporte B2B</span>
           </a>
-          <Link
-            to="/"
+          <button
+            type="button"
+            onClick={() => {
+              logout();
+              navigate('/inicio');
+            }}
             className="flex items-center gap-space-md px-space-md py-space-sm rounded-lg text-error hover:bg-surface-container-high transition-all"
           >
             <span className="material-symbols-outlined text-inherit">logout</span>
             <span className="font-body-sm text-body-sm font-medium">Cerrar Sesión</span>
-          </Link>
+          </button>
         </div>
       </aside>
 

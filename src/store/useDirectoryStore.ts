@@ -202,6 +202,15 @@ export const useDirectoryStore = create<DirectoryState>()(
 
       resetDirectoryDemo: () => set(seed()),
     }),
-    { name: 'vooxline-directory', version: 1 },
+    {
+      name: 'vooxline-directory',
+      version: 2,
+      // v2: agrega a los datos ya guardados los perfiles semilla nuevos (admin y cliente)
+      migrate: (persisted) => {
+        const s = persisted as DirectoryState
+        const missing = mockProfiles.filter((m) => !s.profiles.some((p) => p.agentId === m.agentId))
+        return { ...s, profiles: [...s.profiles, ...missing] }
+      },
+    },
   ),
 )
