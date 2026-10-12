@@ -85,11 +85,12 @@ export const LandingPage: React.FC = () => {
               title="Acceder al Portal del Agente / Admin"
               className="relative group cursor-pointer"
             >
-              <img
-                alt="Profile Avatar"
-                className="w-8 h-8 rounded-full object-cover shadow-[0_0_10px_rgba(255,255,255,0.1)] border border-primary/30 group-hover:border-primary transition-colors"
-                src="https://lh3.googleusercontent.com/aida/AEtjO1Vpdj4zBkcIbakoVSu1MlExRa4vGNX5HuQhjcpHmy_J2h6Js8npikvNJO92N66SMLoWJUzGUw12Ado7Wy8Knfj0EeisL1kWFOcunMIjv2N5rwu-kBDTXt3Dpt7_K31ApEFYoOsT_qGnFvTcNzf8rNM8mRjdD6kEDy8fx7MK_TcajzlJmqeLuaU_pq4MGx8o2apQxRxtg-keRwzNq7x6HT_9NrSi-suSPKxgGObcSxVjovmgle1gskIAfg47hERneZ3sqapYjQU"
-              />
+              <span
+                aria-label="Acceder"
+                className="material-symbols-outlined flex w-8 h-8 items-center justify-center rounded-full text-[22px] text-primary border border-primary/30 group-hover:border-primary transition-colors"
+              >
+                account_circle
+              </span>
               <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-primary border border-[#121317]" />
             </Link>
           </div>
