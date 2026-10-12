@@ -13,6 +13,12 @@ Reglas:
 - Tema oscuro, colores: fondo #0B0C10, acento #66FCF1.
 - Trabajar un módulo a la vez. No tocar módulos que no se pidieron.
 
+## Forma de trabajo (regla de Carlos, obligatoria también para ayudantes en paralelo)
+- Ponytail: el código más corto que funcione; revisar cambios con `/ponytail-review`.
+- Agent Skills: cada módulo nuevo sigue `/spec` → `/plan` → `/build` → `/test` → `/review` → `/ship`.
+- Claude Mem: consultar la memoria al empezar y guardar las decisiones importantes.
+- Avisar del costo en tokens antes de lanzar varios ayudantes en paralelo.
+
 ## Arquitectura y convenciones
 
 Lee docs/ARCHITECTURE.md antes de crear o cambiar nada.
