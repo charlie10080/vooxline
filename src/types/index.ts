@@ -32,6 +32,28 @@ export interface Agent {
   /** Duración del turno programado, en minutos */
   shiftMinutes: number
   ptoBalanceHours: number
+  /** Casa u oficina desde donde debe trabajar; sin ella no se compara la ubicación */
+  authorizedLocation?: AuthorizedLocation
+}
+
+export interface GeoPoint {
+  lat: number
+  lng: number
+}
+
+export interface AuthorizedLocation extends GeoPoint {
+  radiusM: number
+}
+
+export type GeoCheckStatus = 'inside' | 'outside' | 'denied' | 'unavailable' | 'no_reference'
+
+/** Resultado de revisar la ubicación al marcar entrada o salida */
+export interface GeoCheck {
+  status: GeoCheckStatus
+  point: GeoPoint | null
+  accuracyM: number | null
+  /** Distancia a la ubicación autorizada, null si no hay lectura o referencia */
+  distanceM: number | null
 }
 
 export interface TimeEntry {
@@ -46,6 +68,9 @@ export interface TimeEntry {
   scheduledMinutes: number
   status: EntryStatus
   note: string | null
+  /** Opcionales: las entradas anteriores al GPS no los tienen */
+  clockInGeo?: GeoCheck
+  clockOutGeo?: GeoCheck
 }
 
 export interface TimeOffRequest {

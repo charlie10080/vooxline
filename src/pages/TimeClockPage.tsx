@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { TimeEntry, EntryStatus, ActionResult } from '@/types';
+import type { TimeEntry, EntryStatus, ActionResult, GeoCheck } from '@/types';
 import type { AttendanceAlertKind } from '@/lib/punctuality';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { useScheduleStore } from '@/store/useScheduleStore';
@@ -14,6 +14,14 @@ import {
   entryNeedsReview,
 } from '@/lib/punctuality';
 import { resetApplicationState } from '@/lib/globalReset';
+import {
+  readBrowserLocation,
+  checkLocation,
+  getEntryLocationFlags,
+  describeGeoCheck,
+  DEFAULT_RADIUS_M,
+} from '@/lib/geo';
+import type { GeoReading } from '@/lib/geo';
 import {
   formatClock,
   formatDuration,
@@ -40,9 +48,28 @@ import {
   Sparkles,
   UserCheck,
   Building2,
+  MapPin,
 } from 'lucide-react';
 
 type TabFilter = 'all' | EntryStatus;
+
+const GeoBadge: React.FC<{ check: GeoCheck }> = ({ check }) => {
+  const color =
+    check.status === 'inside'
+      ? 'text-[#10B981]'
+      : check.status === 'no_reference'
+        ? 'text-[#C5C6C7]/50'
+        : 'text-[#F59E0B]';
+  return (
+    <div
+      className={`flex items-center gap-1 text-[10px] mt-0.5 ${color}`}
+      title={check.accuracyM !== null ? `Precisión ±${check.accuracyM} m` : undefined}
+    >
+      <MapPin className="w-3 h-3 shrink-0" />
+      <span>{describeGeoCheck(check)}</span>
+    </div>
+  );
+};
 
 export const TimeClockPage: React.FC = () => {
   const {
@@ -54,6 +81,7 @@ export const TimeClockPage: React.FC = () => {
     rejectEntry,
     clockIn,
     clockOut,
+    setAuthorizedLocation,
   } = useWorkforceStore();
   const { shifts } = useScheduleStore();
   const { profiles } = useDirectoryStore();
@@ -88,6 +116,8 @@ export const TimeClockPage: React.FC = () => {
 
   // Drawer / Modal for Agent Clock In / Clock Out
   const [isClockModalOpen, setIsClockModalOpen] = useState(false);
+  // Agente cuya ubicación se está leyendo (bloquea sus botones mientras responde el navegador)
+  const [locatingAgentId, setLocatingAgentId] = useState<string | null>(null);
 
   // Agent & Campaign lookup helpers
   const agentMap = new Map(agents.map((a) => [a.id, a]));
@@ -229,15 +259,30 @@ export const TimeClockPage: React.FC = () => {
   };
 
   // Handler for Clock In / Clock Out per agent
-  const handleAgentClockIn = (agentId: string) => {
+  // Avisa al supervisor si la ubicación de la marca quedó como alerta
+  const geoWarning = (reading: GeoReading, agentId: string): string => {
+    if (reading === 'denied') return ' Se negó el permiso de ubicación: queda como alerta.';
+    if (reading === 'unavailable') return ' No se pudo obtener la ubicación: queda como alerta.';
+    const authorized = agentMap.get(agentId)?.authorizedLocation;
+    if (authorized && checkLocation(reading, authorized).status === 'outside') {
+      return ' Marcó fuera de su ubicación autorizada: queda como alerta.';
+    }
+    return '';
+  };
+
+  const handleAgentClockIn = async (agentId: string) => {
+    setLocatingAgentId(agentId);
+    const reading = await readBrowserLocation();
+    setLocatingAgentId(null);
     const today = todayStr();
     const scheduled = getScheduledMinutesFor(shifts, agentId, today);
-    const res = clockIn(agentId, scheduled ?? undefined);
+    const res = clockIn(agentId, scheduled ?? undefined, reading);
     const agent = agentMap.get(agentId);
     if (res.ok) {
+      const warning = geoWarning(reading, agentId);
       setActionAlert({
-        type: 'success',
-        message: `Turno iniciado para ${agent?.name ?? 'agente'}. Entrada registrada ahora.`,
+        type: warning ? 'warning' : 'success',
+        message: `Turno iniciado para ${agent?.name ?? 'agente'}. Entrada registrada ahora.${warning}`,
       });
     } else {
       setActionAlert({
@@ -247,13 +292,42 @@ export const TimeClockPage: React.FC = () => {
     }
   };
 
-  const handleAgentClockOut = (agentId: string) => {
-    const res = clockOut(agentId);
+  const handleSetAuthorizedLocation = async (agentId: string) => {
+    setLocatingAgentId(agentId);
+    const reading = await readBrowserLocation();
+    setLocatingAgentId(null);
+    const agent = agentMap.get(agentId);
+    if (reading === 'denied' || reading === 'unavailable') {
+      setActionAlert({
+        type: 'error',
+        message: reading === 'denied'
+          ? 'El navegador negó el permiso de ubicación. Actívalo para fijar la ubicación autorizada.'
+          : 'No se pudo obtener la ubicación actual. Inténtalo de nuevo.',
+      });
+      return;
+    }
+    const res = setAuthorizedLocation(agentId, reading.point);
+    setActionAlert(
+      res.ok
+        ? {
+            type: 'success',
+            message: `Ubicación autorizada de ${agent?.name ?? 'agente'} fijada aquí (radio ${DEFAULT_RADIUS_M} m, precisión ±${reading.accuracyM} m).`,
+          }
+        : { type: 'error', message: 'No se encontró al agente.' },
+    );
+  };
+
+  const handleAgentClockOut =async (agentId: string) => {
+    setLocatingAgentId(agentId);
+    const reading = await readBrowserLocation();
+    setLocatingAgentId(null);
+    const res = clockOut(agentId, reading);
     const agent = agentMap.get(agentId);
     if (res.ok) {
+      const warning = geoWarning(reading, agentId);
       setActionAlert({
-        type: 'success',
-        message: `Turno finalizado para ${agent?.name ?? 'agente'}. Salida registrada ahora.`,
+        type: warning ? 'warning' : 'success',
+        message: `Turno finalizado para ${agent?.name ?? 'agente'}. Salida registrada ahora.${warning}`,
       });
     } else {
       setActionAlert({
@@ -725,6 +799,7 @@ export const TimeClockPage: React.FC = () => {
                             day: 'numeric',
                           })}
                         </div>
+                        {entry.clockInGeo && <GeoBadge check={entry.clockInGeo} />}
                       </td>
 
                       {/* Salida */}
@@ -745,6 +820,7 @@ export const TimeClockPage: React.FC = () => {
                                 day: 'numeric',
                               })}
                             </div>
+                            {entry.clockOutGeo && <GeoBadge check={entry.clockOutGeo} />}
                           </div>
                         )}
                       </td>
@@ -1001,6 +1077,28 @@ export const TimeClockPage: React.FC = () => {
                 );
               })()}
 
+              {getEntryLocationFlags(pendingConfirmationEntry).length > 0 && (
+                <div className="pt-2 border-t border-[#242E3B]/60 space-y-1.5">
+                  <span className="text-[#C5C6C7]/70 font-medium block">
+                    Incidencias de Ubicación:
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {getEntryLocationFlags(pendingConfirmationEntry).map((flag) => (
+                      <span
+                        key={flag}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30"
+                      >
+                        <MapPin className="w-3 h-3 shrink-0" />
+                        <span>{describeAlert(flag, null)}</span>
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-[#C5C6C7]/50">
+                    En computadora la ubicación se estima por wifi o IP y puede fallar por decenas de metros. Revisa antes de decidir.
+                  </p>
+                </div>
+              )}
+
               {pendingConfirmationEntry.note && (
                 <div className="pt-2 text-[11px] text-[#C5C6C7]/70 italic bg-[#1F2833]/40 p-2 rounded">
                   Nota del sistema: "{pendingConfirmationEntry.note}"
@@ -1107,6 +1205,23 @@ export const TimeClockPage: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleSetAuthorizedLocation(agent.id)}
+                        disabled={locatingAgentId !== null}
+                        title={
+                          agent.authorizedLocation
+                            ? `Ubicación autorizada fijada (radio ${agent.authorizedLocation.radiusM} m). Clic para fijarla de nuevo aquí.`
+                            : 'Sin ubicación autorizada. Clic para fijarla en la ubicación actual.'
+                        }
+                        className={`p-1.5 rounded-lg border transition-colors disabled:opacity-40 ${
+                          agent.authorizedLocation
+                            ? 'text-[#10B981] border-[#10B981]/30 hover:bg-[#10B981]/10'
+                            : 'text-[#C5C6C7]/50 border-[#242E3B] hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        <MapPin className="w-3.5 h-3.5" />
+                      </button>
                       {isClockedIn ? (
                         <div className="flex items-center gap-2">
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
@@ -1116,10 +1231,11 @@ export const TimeClockPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleAgentClockOut(agent.id)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EF4444]/15 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 text-xs font-semibold transition-all"
+                            disabled={locatingAgentId !== null}
+                            className="disabled:opacity-40inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EF4444]/15 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 text-xs font-semibold transition-all"
                           >
                             <Square className="w-3.5 h-3.5" />
-                            <span>Marcar Salida</span>
+                            <span>{locatingAgentId === agent.id ? 'Ubicando…' : 'Marcar Salida'}</span>
                           </button>
                         </div>
                       ) : (
@@ -1130,10 +1246,11 @@ export const TimeClockPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleAgentClockIn(agent.id)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#66FCF1]/10 hover:bg-[#66FCF1] text-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(102,252,241,0.15)]"
+                            disabled={locatingAgentId !== null}
+                            className="disabled:opacity-40inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#66FCF1]/10 hover:bg-[#66FCF1] text-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(102,252,241,0.15)]"
                           >
                             <Play className="w-3.5 h-3.5" />
-                            <span>Marcar Entrada</span>
+                            <span>{locatingAgentId === agent.id ? 'Ubicando…' : 'Marcar Entrada'}</span>
                           </button>
                         </div>
                       )}

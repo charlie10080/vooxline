@@ -2,6 +2,8 @@ import type { Agent, TimeEntry, TimeOffRequest } from '@/types'
 import type { UserProfile } from '@/types/directory'
 import type { Shift } from '@/types/scheduling'
 import { getProfile } from '@/lib/groups'
+import { getEntryLocationFlags } from '@/lib/geo'
+import type { LocationFlag } from '@/lib/geo'
 import { REVIEW_THRESHOLD_MIN, needsSupervisorReview } from '@/lib/metrics'
 import { addDays, isOnApprovedTimeOff, toDateStr } from '@/lib/schedule'
 import { minutesBetween } from '@/lib/time'
@@ -12,7 +14,7 @@ export const PUNCTUALITY_TOLERANCE_MIN = REVIEW_THRESHOLD_MIN
 export const MISSED_CLOCKOUT_GRACE_MIN = 30
 
 export type PunctualityFlag = 'late_arrival' | 'early_leave' | 'late_leave' | 'missed_clock_out'
-export type AttendanceAlertKind = PunctualityFlag | 'no_show'
+export type AttendanceAlertKind = PunctualityFlag | LocationFlag | 'no_show'
 
 export interface EntryPunctuality {
   /** Turno contra el que se comparó, o null si ese día no tenía turno */
@@ -127,6 +129,17 @@ export function getAttendanceAlerts(args: {
 
   for (const entry of args.entries) {
     if (entry.status !== 'pending') continue
+    // La ubicación se revisa aunque ese día no haya turno programado
+    for (const flag of getEntryLocationFlags(entry)) {
+      alerts.push({
+        id: `${flag}:${entry.id}`,
+        kind: flag,
+        agentId: entry.agentId,
+        date: toDateStr(new Date(entry.clockIn)),
+        minutes: null,
+        entryId: entry.id,
+      })
+    }
     const p = getEntryPunctuality(entry, args.shifts, now)
     if (!p.shift) continue
     const base = { agentId: entry.agentId, date: p.shift.date, entryId: entry.id }
@@ -159,6 +172,8 @@ export function countAlertsByKind(alerts: AttendanceAlert[]): Record<AttendanceA
     early_leave: 0,
     late_leave: 0,
     missed_clock_out: 0,
+    outside_location: 0,
+    location_missing: 0,
     no_show: 0,
   }
   for (const a of alerts) counts[a.kind] += 1
@@ -177,6 +192,8 @@ export const ALERT_KIND_LABELS: Record<AttendanceAlertKind, string> = {
   early_leave: 'Salidas tempranas',
   late_leave: 'Salidas tardías',
   missed_clock_out: 'Olvidos de marcaje',
+  outside_location: 'Fuera de ubicación',
+  location_missing: 'Sin ubicación',
   no_show: 'Ausencias sin marcaje',
 }
 
@@ -192,6 +209,10 @@ export function describeAlert(kind: AttendanceAlertKind, minutes: number | null)
       return `Salida tardía (+${m})`
     case 'missed_clock_out':
       return `Sin marcar salida (+${m})`
+    case 'outside_location':
+      return 'Marcó fuera de su ubicación'
+    case 'location_missing':
+      return 'Marcó sin compartir ubicación'
     case 'no_show':
       return 'Ausencia sin marcaje'
   }
@@ -199,9 +220,13 @@ export function describeAlert(kind: AttendanceAlertKind, minutes: number | null)
 
 /**
  * Regla ÚNICA de "esta entrada necesita revisión del supervisor":
- * desviación de horas mayor a 15 min O alguna bandera de puntualidad.
+ * desviación de horas mayor a 15 min O alguna bandera de puntualidad O de ubicación.
  * Las páginas (Time Clock, Overview) deben usar esta función en vez de repetir la condición.
  */
 export function entryNeedsReview(entry: TimeEntry, shifts: Shift[], now: Date = new Date()): boolean {
-  return needsSupervisorReview(entry) || getEntryPunctuality(entry, shifts, now).flags.length > 0
+  return (
+    needsSupervisorReview(entry) ||
+    getEntryPunctuality(entry, shifts, now).flags.length > 0 ||
+    getEntryLocationFlags(entry).length > 0
+  )
 }

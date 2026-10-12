@@ -4,11 +4,14 @@ import type {
   ActionResult,
   Agent,
   Campaign,
+  GeoPoint,
   TimeEntry,
   TimeOffRequest,
 } from '@/types'
 import { mockAgents, mockCampaigns, mockTimeEntries, mockTimeOffRequests } from '@/data/mock'
 import { needsSupervisorReview } from '@/lib/metrics'
+import { checkLocation, DEFAULT_RADIUS_M } from '@/lib/geo'
+import type { GeoReading } from '@/lib/geo'
 
 type NewTimeOffInput = Pick<
   TimeOffRequest,
@@ -22,8 +25,10 @@ interface WorkforceState {
   timeOffRequests: TimeOffRequest[]
 
   // Time Clock
-  clockIn: (agentId: string, scheduledMinutes?: number) => ActionResult
-  clockOut: (agentId: string) => ActionResult
+  /** `location`: lectura del navegador al marcar; sin ella la entrada queda sin revisión de ubicación */
+  clockIn: (agentId: string, scheduledMinutes?: number, location?: GeoReading) => ActionResult
+  clockOut: (agentId: string, location?: GeoReading) => ActionResult
+  setAuthorizedLocation: (agentId: string, point: GeoPoint, radiusM?: number) => ActionResult
 
   // Motor de aprobación
   approveEntry: (entryId: string, supervisorConfirmed?: boolean) => ActionResult
@@ -51,7 +56,7 @@ export const useWorkforceStore = create<WorkforceState>()(
     (set, get) => ({
       ...seed(),
 
-      clockIn: (agentId, scheduledMinutes) => {
+      clockIn: (agentId, scheduledMinutes, location) => {
         const { agents, timeEntries } = get()
         const agent = agents.find((a) => a.id === agentId)
         if (!agent) return { ok: false, reason: 'not_found' }
@@ -72,6 +77,7 @@ export const useWorkforceStore = create<WorkforceState>()(
               : agent.shiftMinutes,
           status: 'pending',
           note: null,
+          ...(location && { clockInGeo: checkLocation(location, agent.authorizedLocation) }),
         }
         set((s) => ({
           timeEntries: [entry, ...s.timeEntries],
@@ -82,14 +88,27 @@ export const useWorkforceStore = create<WorkforceState>()(
         return { ok: true }
       },
 
-      clockOut: (agentId) => {
-        const open = get().timeEntries.find((e) => e.agentId === agentId && e.clockOut === null)
+      clockOut: (agentId, location) => {
+        const { agents, timeEntries } = get()
+        const open = timeEntries.find((e) => e.agentId === agentId && e.clockOut === null)
         if (!open) return { ok: false, reason: 'not_clocked_in' }
         const now = new Date().toISOString()
+        const authorized = agents.find((a) => a.id === agentId)?.authorizedLocation
+        const geo = location ? { clockOutGeo: checkLocation(location, authorized) } : {}
         set((s) => ({
-          timeEntries: s.timeEntries.map((e) => (e.id === open.id ? { ...e, clockOut: now } : e)),
+          timeEntries: s.timeEntries.map((e) => (e.id === open.id ? { ...e, clockOut: now, ...geo } : e)),
           agents: s.agents.map((a) =>
             a.id === agentId ? { ...a, status: 'offline', statusSince: now } : a,
+          ),
+        }))
+        return { ok: true }
+      },
+
+      setAuthorizedLocation: (agentId, point, radiusM = DEFAULT_RADIUS_M) => {
+        if (!get().agents.some((a) => a.id === agentId)) return { ok: false, reason: 'not_found' }
+        set((s) => ({
+          agents: s.agents.map((a) =>
+            a.id === agentId ? { ...a, authorizedLocation: { lat: point.lat, lng: point.lng, radiusM } } : a,
           ),
         }))
         return { ok: true }
