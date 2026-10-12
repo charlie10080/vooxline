@@ -6,6 +6,8 @@ import { useChatStore } from '@/store/useChatStore'
 import { useUpdatesStore } from '@/store/useUpdatesStore'
 import { useFormsStore } from '@/store/useFormsStore'
 import { useCelebrationsStore } from '@/store/useCelebrationsStore'
+import { useAutomationsStore } from '@/store/useAutomationsStore'
+import { useNotificationsStore } from '@/store/useNotificationsStore'
 import { useLiveStore } from '@/store/useLiveStore'
 import { useScheduleStore } from '@/store/useScheduleStore'
 import { useWorkforceStore } from '@/store/useWorkforceStore'
@@ -28,6 +30,8 @@ export function resetApplicationState(): void {
     useUpdatesStore.getState().resetUpdatesDemo()
     useFormsStore.getState().resetFormsDemo()
     useCelebrationsStore.getState().resetCelebrationsDemo()
+    useAutomationsStore.getState().resetAutomationsDemo()
+    useNotificationsStore.getState().resetNotificationsDemo()
   })
   useActivityStore.getState().record([
     { category: 'system', agentId: null, message: 'Se reiniciaron todos los datos de demostración' },

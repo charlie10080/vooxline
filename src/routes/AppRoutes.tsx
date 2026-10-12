@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { PlaceholderPage } from '@/pages/PlaceholderPage';
+import { AutomationsPage } from '@/pages/AutomationsPage';
 import { TimeClockPage } from '@/pages/TimeClockPage';
 import { TimeOffPage } from '@/pages/TimeOffPage';
 import { PayrollPage } from '@/pages/PayrollPage';
@@ -35,16 +35,7 @@ export const AppRoutes: React.FC = () => {
         {/* USERS & GROUPS */}
         <Route path="/users" element={<UsersPage />} />
         <Route path="/groups" element={<GroupsPage />} />
-        <Route
-          path="/automations"
-          element={
-            <PlaceholderPage
-              title="Automations"
-              section="USERS & GROUPS"
-              description="Flujos automatizados de alertas de ausentismo, reportes de turnos y sincronización de eventos."
-            />
-          }
-        />
+        <Route path="/automations" element={<AutomationsPage />} />
 
         {/* COMMUNICATION */}
         <Route path="/chat" element={<ChatPage />} />

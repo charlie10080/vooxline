@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 import { UserSwitcher } from '@/components/layout/UserSwitcher';
+import { NotificationBell } from '@/components/layout/NotificationBell';
 import { SidebarCount } from '@/components/layout/SidebarCount';
 import type { BadgeKey } from '@/components/layout/SidebarCount';
 import { useSessionStore } from '@/store/useSessionStore';
@@ -117,7 +118,10 @@ export const PortalLayout: React.FC = () => {
             <Menu className="h-5 w-5" />
           </button>
           <span className="hidden font-mono text-xs text-[#C5C6C7]/60 lg:block">VOOXLINE / PORTAL</span>
-          <UserSwitcher />
+          <div className="flex items-center gap-3">
+            <NotificationBell />
+            <UserSwitcher />
+          </div>
         </header>
         <main className="flex-1 p-4 lg:p-8">
           <Outlet />

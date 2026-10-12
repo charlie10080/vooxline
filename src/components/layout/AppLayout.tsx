@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 import { UserSwitcher } from '@/components/layout/UserSwitcher';
+import { NotificationBell } from '@/components/layout/NotificationBell';
 import { useCurrentUser, useSessionStore } from '@/store/useSessionStore';
 import { SidebarCount } from '@/components/layout/SidebarCount';
 import type { BadgeKey } from '@/components/layout/SidebarCount';
@@ -205,6 +206,7 @@ export const AppLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            <NotificationBell />
             <UserSwitcher />
           </div>
         </header>
