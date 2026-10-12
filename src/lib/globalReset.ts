@@ -3,6 +3,9 @@ import { useActivityStore } from '@/store/useActivityStore'
 import { useDirectoryStore } from '@/store/useDirectoryStore'
 import { useHelpdeskStore } from '@/store/useHelpdeskStore'
 import { useChatStore } from '@/store/useChatStore'
+import { useUpdatesStore } from '@/store/useUpdatesStore'
+import { useFormsStore } from '@/store/useFormsStore'
+import { useCelebrationsStore } from '@/store/useCelebrationsStore'
 import { useLiveStore } from '@/store/useLiveStore'
 import { useScheduleStore } from '@/store/useScheduleStore'
 import { useWorkforceStore } from '@/store/useWorkforceStore'
@@ -22,6 +25,9 @@ export function resetApplicationState(): void {
     useLiveStore.getState().resetLiveDemo()
     useHelpdeskStore.getState().resetHelpdeskDemo()
     useChatStore.getState().resetChatDemo()
+    useUpdatesStore.getState().resetUpdatesDemo()
+    useFormsStore.getState().resetFormsDemo()
+    useCelebrationsStore.getState().resetCelebrationsDemo()
   })
   useActivityStore.getState().record([
     { category: 'system', agentId: null, message: 'Se reiniciaron todos los datos de demostración' },

@@ -2,7 +2,9 @@ import React from 'react';
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 import { UserSwitcher } from '@/components/layout/UserSwitcher';
-import { useCurrentUser } from '@/store/useSessionStore';
+import { useCurrentUser, useSessionStore } from '@/store/useSessionStore';
+import { SidebarCount } from '@/components/layout/SidebarCount';
+import type { BadgeKey } from '@/components/layout/SidebarCount';
 import {
   LayoutDashboard,
   Activity,
@@ -11,7 +13,7 @@ import {
   Network,
   Cpu,
   MessageSquare,
-  Bell,
+  Megaphone,
   BookUser,
   ClipboardList,
   LifeBuoy,
@@ -28,6 +30,7 @@ interface SidebarItem {
   path: string;
   icon: React.ComponentType<{ className?: string }>;
   exact?: boolean;
+  badge?: BadgeKey;
 }
 
 interface SidebarSection {
@@ -39,42 +42,42 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
   {
     title: 'GENERAL',
     items: [
-      { name: 'Overview', path: '/', icon: LayoutDashboard, exact: true },
-      { name: 'Activity', path: '/activity', icon: Activity },
-      { name: 'Monitor en Vivo', path: '/monitor', icon: Radio },
+      { name: 'Resumen', path: '/', icon: LayoutDashboard, exact: true },
+      { name: 'Actividad', path: '/activity', icon: Activity },
+      { name: 'Monitor en vivo', path: '/monitor', icon: Radio },
     ],
   },
   {
-    title: 'USERS & GROUPS',
+    title: 'USUARIOS Y GRUPOS',
     items: [
-      { name: 'Users', path: '/users', icon: Users },
-      { name: 'Smart Groups', path: '/groups', icon: Network },
-      { name: 'Automations', path: '/automations', icon: Cpu },
+      { name: 'Usuarios', path: '/users', icon: Users },
+      { name: 'Grupos inteligentes', path: '/groups', icon: Network },
+      { name: 'Automatizaciones', path: '/automations', icon: Cpu },
     ],
   },
   {
-    title: 'COMMUNICATION',
+    title: 'COMUNICACIÓN',
     items: [
-      { name: 'Chat', path: '/chat', icon: MessageSquare },
-      { name: 'Updates', path: '/updates', icon: Bell },
-      { name: 'Director', path: '/director', icon: BookUser },
-      { name: 'Forms', path: '/forms', icon: ClipboardList },
+      { name: 'Chat', path: '/chat', icon: MessageSquare, badge: 'chat' },
+      { name: 'Avisos', path: '/updates', icon: Megaphone, badge: 'updates' },
+      { name: 'Directorio', path: '/director', icon: BookUser },
+      { name: 'Formularios', path: '/forms', icon: ClipboardList },
       { name: 'Help Desk', path: '/helpdesk', icon: LifeBuoy },
     ],
   },
   {
-    title: 'OPERATIONS',
+    title: 'OPERACIÓN',
     items: [
       { name: 'Time Clock', path: '/time-clock', icon: Clock },
-      { name: 'Job Scheduling', path: '/scheduling', icon: Calendar },
-      { name: 'Rentabilidad y Nómina', path: '/payroll', icon: DollarSign },
+      { name: 'Horarios y turnos', path: '/scheduling', icon: Calendar },
+      { name: 'Rentabilidad y nómina', path: '/payroll', icon: DollarSign },
     ],
   },
   {
-    title: 'HR & SKILLS',
+    title: 'RR. HH.',
     items: [
-      { name: 'Celebrations', path: '/celebrations', icon: PartyPopper },
-      { name: 'Time Off', path: '/time-off', icon: CalendarOff },
+      { name: 'Celebraciones', path: '/celebrations', icon: PartyPopper },
+      { name: 'Vacaciones y permisos', path: '/time-off', icon: CalendarOff },
     ],
   },
 ];
@@ -82,6 +85,7 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 export const AppLayout: React.FC = () => {
   const location = useLocation();
   const { isManager } = useCurrentUser();
+  const currentUserId = useSessionStore((s) => s.currentUserId);
 
   // La consola es solo para supervisores y administradores; un agente va a su portal
   if (!isManager) return <Navigate to="/portal" replace />;
@@ -150,6 +154,7 @@ export const AppLayout: React.FC = () => {
                           <span className="truncate whitespace-nowrap leading-none">
                             {item.name}
                           </span>
+                          {item.badge && <SidebarCount badge={item.badge} userId={currentUserId} />}
                           {item.path === '/time-clock' && (
                             <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#66FCF1] animate-pulse" />
                           )}

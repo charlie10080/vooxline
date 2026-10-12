@@ -6,7 +6,7 @@ import {
   Timer,
   CalendarOff,
   MessageSquare,
-  Bell,
+  Megaphone,
   ClipboardList,
   LifeBuoy,
   Award,
@@ -15,12 +15,16 @@ import {
 } from 'lucide-react';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 import { UserSwitcher } from '@/components/layout/UserSwitcher';
+import { SidebarCount } from '@/components/layout/SidebarCount';
+import type { BadgeKey } from '@/components/layout/SidebarCount';
+import { useSessionStore } from '@/store/useSessionStore';
 
 interface PortalItem {
   name: string;
   path: string;
   icon: React.ComponentType<{ className?: string }>;
   end?: boolean;
+  badge?: BadgeKey;
 }
 
 const PORTAL_ITEMS: PortalItem[] = [
@@ -28,8 +32,8 @@ const PORTAL_ITEMS: PortalItem[] = [
   { name: 'Mi horario', path: '/portal/horario', icon: CalendarDays },
   { name: 'Mis horas', path: '/portal/horas', icon: Timer },
   { name: 'Permisos', path: '/portal/permisos', icon: CalendarOff },
-  { name: 'Chat', path: '/portal/chat', icon: MessageSquare },
-  { name: 'Avisos', path: '/portal/avisos', icon: Bell },
+  { name: 'Chat', path: '/portal/chat', icon: MessageSquare, badge: 'chat' },
+  { name: 'Avisos', path: '/portal/avisos', icon: Megaphone, badge: 'updates' },
   { name: 'Formularios', path: '/portal/formularios', icon: ClipboardList },
   { name: 'Soporte', path: '/portal/soporte', icon: LifeBuoy },
   { name: 'Reconocimientos', path: '/portal/reconocimientos', icon: Award },
@@ -38,6 +42,7 @@ const PORTAL_ITEMS: PortalItem[] = [
 /** Portal del agente: la app que usa cada agente para marcar, ver su horario y comunicarse */
 export const PortalLayout: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const currentUserId = useSessionStore((s) => s.currentUserId);
 
   const nav = (
     <nav aria-label="Portal del agente" className="space-y-0.5">
@@ -59,6 +64,7 @@ export const PortalLayout: React.FC = () => {
           >
             <Icon className="h-4 w-4 shrink-0" />
             <span>{item.name}</span>
+            {item.badge && <SidebarCount badge={item.badge} userId={currentUserId} />}
           </NavLink>
         );
       })}

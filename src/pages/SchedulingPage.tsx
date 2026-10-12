@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import type { Shift } from '@/types/scheduling';
+import type { ScheduleError, ScheduleResult, Shift } from '@/types/scheduling';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { useDirectoryStore } from '@/store/useDirectoryStore';
 import { useScheduleStore } from '@/store/useScheduleStore';
+import { useCurrentUser } from '@/store/useSessionStore';
 import { resetApplicationState } from '@/lib/globalReset';
 import { getProfile } from '@/lib/groups';
 import {
@@ -13,7 +14,12 @@ import {
   formatDayLabel,
   getWeekMinutes,
   isOnApprovedTimeOff,
+  isUpcoming,
+  SCHEDULE_ERROR_MESSAGES,
+  SWAP_STATUS_META,
+  CLAIM_STATUS_META,
 } from '@/lib/schedule';
+import { Badge, Button, Card, EmptyState, Field, Input, Modal, Select, Tabs, TextArea } from '@/components/ui';
 import { formatDuration } from '@/lib/time';
 import {
   Calendar,
@@ -43,6 +49,8 @@ export const SchedulingPage: React.FC = () => {
     cancelShift,
     deleteShift,
     copyWeek,
+    claims,
+    swaps,
   } = useScheduleStore();
 
   // Semana actual: lunes
@@ -87,23 +95,14 @@ export const SchedulingPage: React.FC = () => {
     return profile.active;
   });
 
-  // Helper para traducir errores de scheduling
-  const translateError = (reason: string): string => {
-    switch (reason) {
-      case 'overlap':
-        return 'El turno se traslapa con otro turno del mismo agente en esa fecha.';
-      case 'on_time_off':
-        return 'El agente tiene un permiso aprobado ese día.';
-      case 'inactive_user':
-        return 'No se puede programar a un usuario inactivo.';
-      case 'invalid':
-        return 'Revisa horas y descanso (la hora de fin debe ser posterior al inicio y el descanso menor que el turno).';
-      case 'not_found':
-        return 'Turno o agente no encontrado.';
-      default:
-        return `Error en la programación: ${reason}`;
-    }
-  };
+  const translateError = (reason: ScheduleError): string => SCHEDULE_ERROR_MESSAGES[reason];
+
+  // Vista activa y avisos de los paneles de turnos abiertos / intercambios
+  const [view, setView] = useState<'calendar' | 'open' | 'swaps'>('calendar');
+  const pendingClaims = claims.filter((c) => c.status === 'pending').length;
+  const pendingSwaps = swaps.filter((w) => w.status === 'pending_approval').length;
+  const report = (res: ScheduleResult, success: string) =>
+    setAlertNotice(res.ok ? { type: 'success', message: success } : { type: 'error', message: translateError(res.reason) });
 
   // Navegación de semanas
   const handlePrevWeek = () => {
@@ -326,6 +325,21 @@ export const SchedulingPage: React.FC = () => {
         </div>
       )}
 
+      <Tabs
+        value={view}
+        onChange={setView}
+        options={[
+          { value: 'calendar', label: 'Calendario' },
+          { value: 'open', label: 'Turnos abiertos', count: pendingClaims },
+          { value: 'swaps', label: 'Intercambios', count: pendingSwaps },
+        ]}
+      />
+
+      {view === 'open' && <OpenShiftsPanel report={report} />}
+      {view === 'swaps' && <SwapsPanel report={report} />}
+
+      {view === 'calendar' && (
+      <>
       {/* 2. Barra de Navegación de Semana */}
       <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
         <div className="flex items-center gap-2">
@@ -492,6 +506,8 @@ export const SchedulingPage: React.FC = () => {
           </table>
         </div>
       </div>
+      </>
+      )}
 
       {/* 5. Modal "Nuevo Turno" */}
       {isNewShiftModalOpen && (
@@ -781,5 +797,295 @@ export const SchedulingPage: React.FC = () => {
         </div>
       )}
     </div>
+  );
+};
+
+// ---------- Turnos abiertos e intercambios (vista del supervisor) ----------
+
+type Report = (res: ScheduleResult, success: string) => void;
+
+const useNames = () => {
+  const agents = useWorkforceStore((s) => s.agents);
+  const campaigns = useWorkforceStore((s) => s.campaigns);
+  return {
+    agentName: (id: string | null) => agents.find((a) => a.id === id)?.name ?? 'Usuario desconocido',
+    campaignName: (id: string) => campaigns.find((c) => c.id === id)?.name ?? id,
+  };
+};
+
+const ShiftSummary: React.FC<{ date: string; startTime: string; endTime: string; campaign: string; breakMinutes: number }> = ({
+  date,
+  startTime,
+  endTime,
+  campaign,
+  breakMinutes,
+}) => (
+  <div className="flex items-center gap-3">
+    <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-[#66FCF1]/25 bg-[#66FCF1]/10 font-mono text-[#66FCF1]">
+      <span className="text-[10px] uppercase">{formatDayLabel(date).split(' ')[0]}</span>
+      <span className="text-base font-bold leading-none">{date.slice(8)}</span>
+    </div>
+    <div>
+      <div className="font-mono text-sm font-bold text-white">
+        {startTime} – {endTime}
+      </div>
+      <div className="text-[11px] text-[#C5C6C7]/60">
+        {campaign}
+        {breakMinutes > 0 && ` · Descanso ${breakMinutes} min`}
+      </div>
+    </div>
+  </div>
+);
+
+const emptyOpenShiftForm = () => ({
+  campaignId: '',
+  date: addDays(todayStr(), 1),
+  startTime: '18:00',
+  endTime: '22:00',
+  breakMinutes: 0,
+  requiresApproval: true,
+  note: '',
+});
+
+const OpenShiftsPanel: React.FC<{ report: Report }> = ({ report }) => {
+  const { profile } = useCurrentUser();
+  const campaigns = useWorkforceStore((s) => s.campaigns);
+  const { openShifts, claims, shifts, createOpenShift, deleteOpenShift, decideClaim } = useScheduleStore();
+  const { agentName, campaignName } = useNames();
+  const [form, setForm] = useState<ReturnType<typeof emptyOpenShiftForm> | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const sorted = [...openShifts].sort((a, b) =>
+    a.status === b.status ? `${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`) : a.status === 'open' ? -1 : 1,
+  );
+
+  const openForm = () => {
+    setForm({ ...emptyOpenShiftForm(), campaignId: campaigns[0]?.id ?? '' });
+    setFormError(null);
+  };
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form) return;
+    const res = createOpenShift(profile.agentId, { ...form, breakMinutes: Number(form.breakMinutes) });
+    if (!res.ok) return setFormError(SCHEDULE_ERROR_MESSAGES[res.reason]);
+    setForm(null);
+    report(res, 'Turno abierto publicado. Tu equipo ya puede tomarlo.');
+  };
+
+  return (
+    <Card
+      title="Turnos abiertos"
+      subtitle="Publica turnos sin agente asignado para que tu equipo los tome. Cada turno abierto cubre un cupo."
+      actions={
+        <Button variant="primary" icon={Plus} onClick={openForm}>
+          Publicar turno abierto
+        </Button>
+      }
+      bodyClassName="p-0"
+    >
+      {sorted.length === 0 ? (
+        <EmptyState icon={Calendar} title="No hay turnos abiertos" description="Publica uno para cubrir picos de llamadas o ausencias." />
+      ) : (
+        <ul className="divide-y divide-[#242E3B]">
+          {sorted.map((os) => {
+            const osClaims = claims.filter((c) => c.openShiftId === os.id);
+            const filledBy = shifts.find((s) => s.id === os.filledShiftId)?.agentId ?? null;
+            return (
+              <li key={os.id} className="space-y-3 px-5 py-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <ShiftSummary {...os} campaign={campaignName(os.campaignId)} />
+                  <div className="flex flex-wrap items-center gap-2">
+                    {os.requiresApproval ? <Badge tone="info">Requiere aprobación</Badge> : <Badge tone="accent">Asignación inmediata</Badge>}
+                    {os.status === 'filled' ? (
+                      <Badge tone="success">Cubierto · {agentName(filledBy)}</Badge>
+                    ) : isUpcoming(os) ? (
+                      <Badge tone="warning">Disponible</Badge>
+                    ) : (
+                      <Badge tone="neutral">Vencido</Badge>
+                    )}
+                    <button
+                      type="button"
+                      aria-label="Eliminar turno abierto"
+                      title="Eliminar turno abierto"
+                      onClick={() => report(deleteOpenShift(profile.agentId, os.id), 'Turno abierto eliminado.')}
+                      className="rounded-lg border border-[#EF4444]/30 bg-[#EF4444]/10 p-1.5 text-[#EF4444] transition-colors hover:bg-[#EF4444] hover:text-white"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+                {os.note && <p className="text-xs text-[#C5C6C7]/70">{os.note}</p>}
+                {osClaims.length > 0 && (
+                  <ul className="space-y-2 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
+                    {osClaims.map((c) => (
+                      <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <span className="text-white">
+                          <span className="font-semibold">{agentName(c.agentId)}</span>
+                          <span className="text-[#C5C6C7]/60"> quiere tomar este turno</span>
+                        </span>
+                        {c.status === 'pending' ? (
+                          <span className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="primary"
+                              icon={CheckCircle2}
+                              onClick={() => report(decideClaim(profile.agentId, c.id, true), `Turno asignado a ${agentName(c.agentId)}.`)}
+                            >
+                              Aprobar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="danger"
+                              icon={X}
+                              onClick={() => report(decideClaim(profile.agentId, c.id, false), 'Solicitud rechazada.')}
+                            >
+                              Rechazar
+                            </Button>
+                          </span>
+                        ) : (
+                          <Badge tone={CLAIM_STATUS_META[c.status].tone}>{CLAIM_STATUS_META[c.status].label}</Badge>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <Modal
+        open={form !== null}
+        onClose={() => setForm(null)}
+        title="Publicar turno abierto"
+        description="Sin agente asignado: lo toma quien esté disponible."
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setForm(null)}>
+              Cancelar
+            </Button>
+            <Button variant="primary" type="submit" form="open-shift-form">
+              Publicar
+            </Button>
+          </>
+        }
+      >
+        {form && (
+          <form id="open-shift-form" onSubmit={submit} className="space-y-3.5">
+            {formError && (
+              <div role="alert" className="flex items-center gap-2 rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/15 p-3 text-xs text-[#EF4444]">
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+                <span>{formError}</span>
+              </div>
+            )}
+            <Field label="Campaña">
+              <Select value={form.campaignId} onChange={(e) => setForm({ ...form, campaignId: e.target.value })}>
+                {campaigns.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+            <Field label="Fecha">
+              <Input type="date" required value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Hora inicio">
+                <Input type="time" required value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} />
+              </Field>
+              <Field label="Hora fin">
+                <Input type="time" required value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} />
+              </Field>
+            </div>
+            <Field label="Descanso (minutos)">
+              <Input
+                type="number"
+                min={0}
+                value={form.breakMinutes}
+                onChange={(e) => setForm({ ...form, breakMinutes: Number(e.target.value) })}
+              />
+            </Field>
+            <Field label="Nota (opcional)">
+              <TextArea value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder="Ej: refuerzo por campaña de cobranza" />
+            </Field>
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
+              <input
+                type="checkbox"
+                checked={form.requiresApproval}
+                onChange={(e) => setForm({ ...form, requiresApproval: e.target.checked })}
+                className="mt-0.5 h-4 w-4 accent-[#66FCF1]"
+              />
+              <span>
+                <span className="block text-xs font-semibold text-white">Requiere mi aprobación</span>
+                <span className="block text-[11px] text-[#C5C6C7]/60">
+                  Si lo desmarcas, el turno se asigna al primer agente que lo tome.
+                </span>
+              </span>
+            </label>
+          </form>
+        )}
+      </Modal>
+    </Card>
+  );
+};
+
+const SwapsPanel: React.FC<{ report: Report }> = ({ report }) => {
+  const { profile } = useCurrentUser();
+  const { swaps, shifts, decideSwap } = useScheduleStore();
+  const { agentName, campaignName } = useNames();
+  const rank = (status: string) => (status === 'pending_approval' ? 0 : status === 'pending_peer' ? 1 : 2);
+  const sorted = [...swaps].sort((a, b) => rank(a.status) - rank(b.status) || b.createdAt.localeCompare(a.createdAt));
+
+  return (
+    <Card title="Intercambios de turno" subtitle="Los agentes se ofrecen turnos entre sí; tú das la aprobación final." bodyClassName="p-0">
+      {sorted.length === 0 ? (
+        <EmptyState icon={Calendar} title="Sin solicitudes de intercambio" />
+      ) : (
+        <ul className="divide-y divide-[#242E3B]">
+          {sorted.map((w) => {
+            const shift = shifts.find((s) => s.id === w.shiftId);
+            const target = w.acceptedBy ?? w.toAgentId;
+            return (
+              <li key={w.id} className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
+                <div className="space-y-2">
+                  {shift ? (
+                    <ShiftSummary {...shift} campaign={campaignName(shift.campaignId)} />
+                  ) : (
+                    <span className="text-xs text-[#C5C6C7]/60">Turno eliminado</span>
+                  )}
+                  <div className="text-xs text-white">
+                    <span className="font-semibold">{agentName(w.fromAgentId)}</span>
+                    <span className="text-[#C5C6C7]/60"> → </span>
+                    <span className="font-semibold">{target ? agentName(target) : 'Cualquiera de la campaña'}</span>
+                  </div>
+                  {w.note && <p className="text-[11px] text-[#C5C6C7]/60">“{w.note}”</p>}
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge tone={SWAP_STATUS_META[w.status].tone}>{SWAP_STATUS_META[w.status].label}</Badge>
+                  {w.status === 'pending_approval' && (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        icon={CheckCircle2}
+                        onClick={() => report(decideSwap(profile.agentId, w.id, true), 'Intercambio aprobado: el turno cambió de agente.')}
+                      >
+                        Aprobar
+                      </Button>
+                      <Button size="sm" variant="danger" icon={X} onClick={() => report(decideSwap(profile.agentId, w.id, false), 'Intercambio rechazado.')}>
+                        Rechazar
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </Card>
   );
 };

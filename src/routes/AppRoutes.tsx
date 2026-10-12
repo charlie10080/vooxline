@@ -15,9 +15,13 @@ import { DirectorPage } from '@/pages/DirectorPage';
 import { PortalLayout } from '@/components/layout/PortalLayout';
 import { HelpDeskPage } from '@/pages/HelpDeskPage';
 import { ChatPage } from '@/pages/ChatPage';
+import { UpdatesPage } from '@/pages/UpdatesPage';
+import { FormsPage } from '@/pages/FormsPage';
+import { CelebrationsPage } from '@/pages/CelebrationsPage';
 import { PortalHomePage } from '@/pages/portal/PortalHomePage';
 import { PortalTimesheetPage } from '@/pages/portal/PortalTimesheetPage';
 import { PortalTimeOffPage } from '@/pages/portal/PortalTimeOffPage';
+import { PortalSchedulePage } from '@/pages/portal/PortalSchedulePage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -44,27 +48,9 @@ export const AppRoutes: React.FC = () => {
 
         {/* COMMUNICATION */}
         <Route path="/chat" element={<ChatPage />} />
-        <Route
-          path="/updates"
-          element={
-            <PlaceholderPage
-              title="Updates"
-              section="COMMUNICATION"
-              description="Boletines operativos, avisos urgentes y actualizaciones de procesos para el equipo."
-            />
-          }
-        />
+        <Route path="/updates" element={<UpdatesPage />} />
         <Route path="/director" element={<DirectorPage />} />
-        <Route
-          path="/forms"
-          element={
-            <PlaceholderPage
-              title="Forms"
-              section="COMMUNICATION"
-              description="Formularios de control de calidad, encuestas de clima y cuestionarios de soporte."
-            />
-          }
-        />
+        <Route path="/forms" element={<FormsPage />} />
         <Route path="/helpdesk" element={<HelpDeskPage />} />
 
         {/* OPERATIONS */}
@@ -73,16 +59,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="/payroll" element={<PayrollPage />} />
 
         {/* HR & SKILLS */}
-        <Route
-          path="/celebrations"
-          element={
-            <PlaceholderPage
-              title="Celebrations"
-              section="HR & SKILLS"
-              description="Reconocimientos por puntualidad, aniversarios laborales y logros de calidad (QA Score)."
-            />
-          }
-        />
+        <Route path="/celebrations" element={<CelebrationsPage />} />
         <Route path="/time-off" element={<TimeOffPage />} />
 
         {/* Fallback */}
@@ -92,10 +69,14 @@ export const AppRoutes: React.FC = () => {
       {/* Portal del agente */}
       <Route path="/portal" element={<PortalLayout />}>
         <Route index element={<PortalHomePage />} />
+        <Route path="horario" element={<PortalSchedulePage />} />
         <Route path="horas" element={<PortalTimesheetPage />} />
         <Route path="permisos" element={<PortalTimeOffPage />} />
         <Route path="soporte" element={<HelpDeskPage />} />
         <Route path="chat" element={<ChatPage />} />
+        <Route path="avisos" element={<UpdatesPage />} />
+        <Route path="formularios" element={<FormsPage />} />
+        <Route path="reconocimientos" element={<CelebrationsPage />} />
         <Route path="*" element={<Navigate to="/portal" replace />} />
       </Route>
     </Routes>

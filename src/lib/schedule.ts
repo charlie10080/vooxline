@@ -1,5 +1,5 @@
 import type { TimeOffRequest } from '@/types'
-import type { Shift } from '@/types/scheduling'
+import type { ClaimStatus, ScheduleError, Shift, SwapRequest, SwapStatus } from '@/types/scheduling'
 
 const pad = (n: number): string => String(n).padStart(2, '0')
 
@@ -56,6 +56,45 @@ export function getScheduledMinutesFor(shifts: Shift[], agentId: string, date: s
   const day = shifts.filter((s) => s.agentId === agentId && s.date === date && s.status === 'scheduled')
   if (day.length === 0) return null
   return day.reduce((sum, s) => sum + shiftPaidMinutes(s), 0)
+}
+
+/** El turno aún no empieza (hora local) */
+export function isUpcoming(s: Pick<Shift, 'date' | 'startTime'>, now: Date = new Date()): boolean {
+  const today = toDateStr(now)
+  return s.date > today || (s.date === today && toMinutes(s.startTime) > now.getHours() * 60 + now.getMinutes())
+}
+
+export const isSwapPending = (s: Pick<SwapRequest, 'status'>): boolean =>
+  s.status === 'pending_peer' || s.status === 'pending_approval'
+
+type StatusTone = 'accent' | 'success' | 'warning' | 'danger' | 'neutral' | 'info'
+
+export const SWAP_STATUS_META: Record<SwapStatus, { label: string; tone: StatusTone }> = {
+  pending_peer: { label: 'Esperando compañero', tone: 'info' },
+  pending_approval: { label: 'Esperando supervisor', tone: 'warning' },
+  approved: { label: 'Aprobado', tone: 'success' },
+  declined: { label: 'Rechazado por compañero', tone: 'neutral' },
+  rejected: { label: 'Rechazado por supervisor', tone: 'danger' },
+  cancelled: { label: 'Cancelado', tone: 'neutral' },
+}
+
+export const CLAIM_STATUS_META: Record<ClaimStatus, { label: string; tone: StatusTone }> = {
+  pending: { label: 'Pendiente', tone: 'warning' },
+  approved: { label: 'Aprobada', tone: 'success' },
+  rejected: { label: 'Rechazada', tone: 'danger' },
+}
+
+/** Mensaje en español por cada motivo de error del módulo de turnos */
+export const SCHEDULE_ERROR_MESSAGES: Record<ScheduleError, string> = {
+  not_found: 'Turno, solicitud o agente no encontrado.',
+  invalid: 'Revisa fecha, horas y descanso (la hora de fin debe ser posterior al inicio y el descanso menor que el turno).',
+  overlap: 'El turno se traslapa con otro turno del mismo agente en esa fecha.',
+  on_time_off: 'El agente tiene un permiso aprobado ese día.',
+  inactive_user: 'No se puede programar a un usuario inactivo.',
+  forbidden: 'No tienes permiso para realizar esta acción.',
+  past_shift: 'El turno ya inició o ya pasó.',
+  not_pending: 'La solicitud ya no está pendiente o el turno ya no está disponible.',
+  duplicate: 'Ya existe una solicitud pendiente para este turno.',
 }
 
 export function getWeekMinutes(shifts: Shift[], agentId: string, dates: string[]): number {
