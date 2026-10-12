@@ -20,6 +20,7 @@ import {
   Check,
   RotateCcw,
 } from 'lucide-react';
+import { PageHeader, Card, Button, Badge, EmptyState, Modal } from '@/components/ui';
 
 interface CategoryConfig {
   key: ActivityCategory;
@@ -54,10 +55,10 @@ const CATEGORIES: CategoryConfig[] = [
     key: 'users',
     label: 'Usuarios',
     icon: Users,
-    badgeBg: 'bg-[#A855F7]/10',
-    badgeText: 'text-[#A855F7]',
-    badgeBorder: 'border-[#A855F7]/30',
-    dotColor: 'bg-[#A855F7]',
+    badgeBg: 'bg-[#818CF8]/10',
+    badgeText: 'text-[#A5B4FC]',
+    badgeBorder: 'border-[#818CF8]/30',
+    dotColor: 'bg-[#818CF8]',
   },
   {
     key: 'schedule',
@@ -246,46 +247,24 @@ export const ActivityPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13151c] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
-
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              GENERAL
-            </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">
-              Bitácora Unificada & Trazabilidad de Auditoría
-            </span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Activity className="w-7 h-7 text-[#66FCF1]" />
-            <span>Activity</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Registro cronológico en tiempo real de operaciones, asistencias, turnos, llamadas y cambios de estado.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="px-3.5 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs font-mono text-[#C5C6C7]/80">
-            Total en buffer:{' '}
-            <strong className="text-white font-bold">{events.length}</strong> / 300
-          </div>
-
-          {events.length > 0 && (
-            <button
-              type="button"
-              onClick={() => setConfirmClearOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 transition-all font-mono"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Limpiar historial</span>
-            </button>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        icon={Activity}
+        eyebrow="BITÁCORA · AUDITORÍA"
+        title="Actividad"
+        description="Registro cronológico en tiempo real de operaciones, asistencias, turnos, llamadas y cambios de estado."
+        actions={
+          <>
+            <Badge className="px-3 py-1.5">
+              Eventos guardados: <strong className="text-white">{events.length}</strong> / 300
+            </Badge>
+            {events.length > 0 && (
+              <Button variant="danger" icon={Trash2} onClick={() => setConfirmClearOpen(true)}>
+                Limpiar historial
+              </Button>
+            )}
+          </>
+        }
+      />
 
       {/* Barra de Filtros */}
       <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-xl space-y-4">
@@ -298,6 +277,7 @@ export const ActivityPage: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Buscar eventos"
               placeholder="Buscar en la descripción de los eventos (ej. Sofía, vacaciones, turno)..."
               className="w-full pl-10 pr-9 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs text-white placeholder-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]/50 font-mono transition-colors"
             />
@@ -305,6 +285,7 @@ export const ActivityPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
+                aria-label="Limpiar búsqueda"
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C5C6C7]/50 hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
@@ -318,6 +299,7 @@ export const ActivityPage: React.FC = () => {
             <select
               value={selectedAgentId}
               onChange={(e) => setSelectedAgentId(e.target.value)}
+              aria-label="Filtrar por agente"
               className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs text-white focus:outline-none focus:border-[#66FCF1]/50 font-mono appearance-none transition-colors cursor-pointer"
             >
               <option value="all">Todos los agentes ({agents.length})</option>
@@ -367,6 +349,7 @@ export const ActivityPage: React.FC = () => {
                   key={cat.key}
                   type="button"
                   onClick={() => toggleCategory(cat.key)}
+                  aria-pressed={isActive}
                   className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all border ${
                     isActive
                       ? `${cat.badgeBg} ${cat.badgeText} ${cat.badgeBorder} shadow-[0_0_10px_rgba(0,0,0,0.2)]`
@@ -389,7 +372,7 @@ export const ActivityPage: React.FC = () => {
         </div>
 
         {/* Resumen de conteo */}
-        <div className="pt-2 border-t border-[#242E3B]/60 flex items-center justify-between text-xs font-mono text-[#C5C6C7]/60">
+        <div className="pt-2 border-t border-[#242E3B]/60 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-[#C5C6C7]/60">
           <span>
             Mostrando <strong className="text-white">{filteredEvents.length}</strong> de{' '}
             <strong className="text-white">{events.length}</strong> eventos registrados
@@ -410,57 +393,35 @@ export const ActivityPage: React.FC = () => {
       {/* Lista de Eventos Agrupados por Día */}
       {events.length === 0 ? (
         // Estado vacío global: aún no hay eventos
-        <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-12 text-center shadow-xl space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-[#66FCF1]/10 text-[#66FCF1] flex items-center justify-center mx-auto border border-[#66FCF1]/20">
-            <Activity className="w-8 h-8 animate-pulse" />
-          </div>
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <h3 className="text-base font-bold text-white">
-              Aún no hay actividad: haz una acción en la app y aparecerá aquí
-            </h3>
-            <p className="text-xs text-[#C5C6C7]/70">
-              El observador de actividad se encuentra activo escuchando todos los cambios de asistencia, turnos, nómina, permisos y supervisión.
-            </p>
-          </div>
-          <div className="pt-2 flex flex-wrap justify-center gap-2 text-xs font-mono text-[#C5C6C7]/50">
-            <span className="px-2.5 py-1 rounded-lg bg-[#0B0C10] border border-[#242E3B]">
-              Marcajes en Time Clock
-            </span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#0B0C10] border border-[#242E3B]">
-              Aprobaciones de permisos
-            </span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#0B0C10] border border-[#242E3B]">
-              Turnos en Job Scheduling
-            </span>
-            <span className="px-2.5 py-1 rounded-lg bg-[#0B0C10] border border-[#242E3B]">
-              Llamadas en Monitor en Vivo
-            </span>
-          </div>
-        </div>
+        <Card bodyClassName="">
+          <EmptyState
+            icon={Activity}
+            title="Aún no hay actividad: haz una acción en la app y aparecerá aquí"
+            description="La bitácora registra los cambios de asistencia, turnos, nómina, permisos y supervisión."
+            action={
+              <div className="flex flex-wrap justify-center gap-2">
+                <Badge>Marcajes en Time Clock</Badge>
+                <Badge>Aprobaciones de permisos</Badge>
+                <Badge>Programación de turnos</Badge>
+                <Badge>Llamadas en el monitor en vivo</Badge>
+              </div>
+            }
+          />
+        </Card>
       ) : filteredEvents.length === 0 ? (
         // Estado vacío por filtros
-        <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-10 text-center shadow-xl space-y-3">
-          <div className="w-12 h-12 rounded-xl bg-[#1F2833] text-[#C5C6C7] flex items-center justify-center mx-auto border border-[#242E3B]">
-            <Search className="w-6 h-6" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-sm font-bold text-white">
-              No se encontraron eventos con los filtros seleccionados
-            </h3>
-            <p className="text-xs text-[#C5C6C7]/60">
-              Prueba cambiando las categorías seleccionadas, el agente o el término de búsqueda.
-            </p>
-          </div>
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={handleResetFilters}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold bg-[#66FCF1] text-[#0B0C10] hover:bg-[#66FCF1]/90 transition-colors"
-            >
-              Restablecer filtros
-            </button>
-          </div>
-        </div>
+        <Card bodyClassName="">
+          <EmptyState
+            icon={Search}
+            title="No se encontraron eventos con los filtros seleccionados"
+            description="Prueba cambiando las categorías seleccionadas, el agente o el término de búsqueda."
+            action={
+              <Button variant="primary" icon={RotateCcw} onClick={handleResetFilters}>
+                Restablecer filtros
+              </Button>
+            }
+          />
+        </Card>
       ) : (
         // Lista cronológica con grupos de día
         <div className="space-y-6">
@@ -488,7 +449,7 @@ export const ActivityPage: React.FC = () => {
                       key={ev.id}
                       className="p-4 flex items-start sm:items-center justify-between gap-3 hover:bg-[#1A202C]/40 transition-colors"
                     >
-                      <div className="flex items-start sm:items-center gap-3.5">
+                      <div className="flex min-w-0 items-start sm:items-center gap-3.5">
                         {/* Ícono de categoría */}
                         <div
                           className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${cfg.badgeBg} ${cfg.badgeBorder} ${cfg.badgeText}`}
@@ -497,8 +458,8 @@ export const ActivityPage: React.FC = () => {
                         </div>
 
                         {/* Mensaje & detalles */}
-                        <div className="space-y-0.5">
-                          <div className="text-sm font-medium text-white flex flex-wrap items-center gap-2">
+                        <div className="min-w-0 space-y-0.5">
+                          <div className="text-sm font-medium text-white break-words flex flex-wrap items-center gap-2">
                             <span>{ev.message}</span>
                           </div>
 
@@ -530,28 +491,27 @@ export const ActivityPage: React.FC = () => {
       )}
 
       {/* Modal de confirmación: Limpiar Historial */}
-      {confirmClearOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13151c] border border-[#EF4444]/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#242E3B] pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#EF4444]/20 text-[#EF4444] flex items-center justify-center border border-[#EF4444]/40">
-                  <Trash2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-white">Confirmar Limpieza</h3>
-                  <p className="text-[11px] text-[#EF4444] font-mono">Acción destructiva de historial</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setConfirmClearOpen(false)}
-                className="p-1 rounded-lg text-[#C5C6C7] hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
+      <Modal
+        open={confirmClearOpen}
+        onClose={() => setConfirmClearOpen(false)}
+        title="Confirmar limpieza"
+        description="Esta acción vacía el historial de actividad."
+        footer={
+          <>
+            <Button onClick={() => setConfirmClearOpen(false)}>Cancelar</Button>
+            <Button
+              variant="danger"
+              icon={Trash2}
+              onClick={() => {
+                clearActivity();
+                setConfirmClearOpen(false);
+              }}
+            >
+              Sí, limpiar historial
+            </Button>
+          </>
+        }
+      >
             <div className="p-3.5 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/30 space-y-2 text-xs text-[#C5C6C7]">
               <p className="text-white font-semibold flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4 text-[#EF4444] shrink-0" />
@@ -564,29 +524,7 @@ export const ActivityPage: React.FC = () => {
                 El observador continuará activo y registrará los nuevos eventos a partir de este momento.
               </p>
             </div>
-
-            <div className="pt-2 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setConfirmClearOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#C5C6C7] hover:text-white bg-[#1F2833] hover:bg-[#253240]"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  clearActivity();
-                  setConfirmClearOpen(false);
-                }}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#EF4444] hover:bg-[#dc2626] shadow-[0_0_15px_rgba(239,68,68,0.35)]"
-              >
-                Sí, limpiar historial
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </Modal>
     </div>
   );
 };

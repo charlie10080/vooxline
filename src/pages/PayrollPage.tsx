@@ -26,6 +26,7 @@ import {
   Wallet,
   RotateCcw,
 } from 'lucide-react';
+import { PageHeader, Button, Badge, StatCard, EmptyState } from '@/components/ui';
 
 export const PayrollPage: React.FC = () => {
   const { campaigns, timeEntries, agents } = useWorkforceStore();
@@ -110,150 +111,90 @@ export const PayrollPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Encabezado Principal */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13171F] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
-
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              OPERACIONES & FINANZAS
-            </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">
-              Sincronización en Vivo con Horas Aprobadas
-            </span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <DollarSign className="w-7 h-7 text-[#66FCF1]" />
-            <span>Rentabilidad y Nómina</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Control de costos de personal, márgenes brutos por cuenta B2B y conciliación de turnos.
-          </p>
-        </div>
-
-        {/* Acciones del encabezado */}
-        <div className="flex flex-wrap items-center gap-3 relative z-10">
-          <button
-            type="button"
-            onClick={handleExportCSV}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#66FCF1] hover:bg-[#52e0d6] text-[#0B0C10] text-xs font-bold transition-all shadow-[0_0_16px_rgba(102,252,241,0.25)] cursor-pointer"
-          >
-            <Download className="w-4 h-4" />
-            <span>Exportar Registro de Nómina (CSV)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
-                resetApplicationState();
-              }
-            }}
-            title="Reiniciar todos los datos de prueba"
-            className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        icon={DollarSign}
+        eyebrow="OPERACIONES Y FINANZAS"
+        title="Rentabilidad y nómina"
+        description="Control de costos de personal, márgenes brutos por campaña y conciliación de turnos aprobados."
+        actions={
+          <>
+            <Button variant="primary" icon={Download} onClick={handleExportCSV}>
+              Exportar nómina (CSV)
+            </Button>
+            <Button
+              icon={RotateCcw}
+              onClick={() => {
+                if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+                  resetApplicationState();
+                }
+              }}
+              title="Reiniciar todos los datos de prueba"
+              aria-label="Reiniciar todos los datos de prueba"
+            />
+          </>
+        }
+      />
 
       {/* 1. Tarjetas de Resumen Arriba: Total Horas, Inversión Total Nómina, Margen Promedio */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Total horas semanales */}
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Total Horas Acumuladas
-            </span>
-            <div className="w-8 h-8 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
-              <Clock className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white font-mono">
-              {totals.totalHours.toLocaleString('en-US', { maximumFractionDigits: 1 })}
-            </span>
-            <span className="text-xs text-[#C5C6C7]/60 font-mono">hrs</span>
-          </div>
-          <p className="text-[11px] text-[#C5C6C7]/50 mt-2 font-mono">
-            Horas base de campaña + turnos aprobados
-          </p>
-        </div>
-
-        {/* Inversión total de nómina */}
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Inversión Total de Nómina
-            </span>
-            <div className="w-8 h-8 rounded-xl bg-[#F59E0B]/15 text-[#F59E0B] flex items-center justify-center border border-[#F59E0B]/30">
-              <Wallet className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-white font-mono">
-              {formatUSD(totals.totalCost)}
-            </span>
-            <span className="text-xs text-[#F59E0B] font-mono">USD</span>
-          </div>
-          <p className="text-[11px] text-[#C5C6C7]/50 mt-2 font-mono">
-            Costo directo de fuerza laboral B2B
-          </p>
-        </div>
-
-        {/* Margen promedio */}
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Margen Bruto Promedio
-            </span>
-            <div className="w-8 h-8 rounded-xl bg-[#10B981]/15 text-[#10B981] flex items-center justify-center border border-[#10B981]/30">
-              <TrendingUp className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-3xl font-extrabold text-[#10B981] font-mono">
+        <StatCard
+          label="Horas acumuladas"
+          value={`${totals.totalHours.toLocaleString('en-US', { maximumFractionDigits: 1 })} h`}
+          hint="Horas base de campaña + turnos aprobados"
+          tone="accent"
+          icon={Clock}
+        />
+        <StatCard
+          label="Inversión total de nómina"
+          value={formatUSD(totals.totalCost)}
+          hint="Costo directo del personal (USD)"
+          tone="warning"
+          icon={Wallet}
+        />
+        <StatCard
+          label="Margen bruto promedio"
+          value={
+            <span className="inline-flex items-baseline gap-2 text-[#10B981]">
               {totals.avgMarginPct.toFixed(1)}%
+              <span className="inline-flex items-center gap-0.5 text-xs">
+                <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+                Rentable
+              </span>
             </span>
-            <span className="inline-flex items-center gap-0.5 text-xs text-[#10B981] font-mono">
-              <ArrowUpRight className="w-3.5 h-3.5" />
-              Rentable
-            </span>
-          </div>
-          <p className="text-[11px] text-[#C5C6C7]/50 mt-2 font-mono">
-            Sobre ingresos brutos de facturación
-          </p>
-        </div>
+          }
+          hint="Sobre ingresos brutos de facturación"
+          tone="success"
+          icon={TrendingUp}
+        />
       </div>
 
       {/* 2. Sección "Rentabilidad por Campaña" */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-5 border-b border-[#242E3B] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-5 border-b border-[#242E3B] flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <div className="w-2.5 h-2.5 rounded-full bg-[#66FCF1]" />
             <h2 className="text-base font-bold text-white tracking-wide">
-              Rentabilidad por Campaña
+              Rentabilidad por campaña
             </h2>
             <span className="text-xs font-mono text-[#C5C6C7]/60">
-              ({campaignStats.length} cuentas B2B activas)
+              ({campaignStats.length} campañas activas)
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 text-xs text-[#66FCF1] font-mono">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Fórmulas automáticas de metrics.ts</span>
+            <ShieldCheck className="w-4 h-4" aria-hidden="true" />
+            <span>Cálculo automático</span>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[820px] text-left border-collapse">
             <thead>
               <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
                 <th className="py-3 px-4">Campaña</th>
-                <th className="py-3 px-4">Horas Acumuladas</th>
-                <th className="py-3 px-4">Monto Facturado</th>
-                <th className="py-3 px-4">Costo de Nómina</th>
+                <th className="py-3 px-4">Horas acumuladas</th>
+                <th className="py-3 px-4">Monto facturado</th>
+                <th className="py-3 px-4">Costo de nómina</th>
                 <th className="py-3 px-4 text-center">% Margen</th>
                 <th className="py-3 px-4 min-w-[160px]">Rendimiento</th>
               </tr>
@@ -270,14 +211,14 @@ export const PayrollPage: React.FC = () => {
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0">
-                          <Building2 className="w-4 h-4" />
+                          <Building2 className="w-4 h-4" aria-hidden="true" />
                         </div>
                         <div>
                           <span className="font-semibold text-white block">
                             {stat.campaign.name}
                           </span>
                           <span className="text-[11px] text-[#C5C6C7]/60 font-mono">
-                            Bill: {formatUSD(stat.campaign.billRate)}/h • Cost:{' '}
+                            Tarifa: {formatUSD(stat.campaign.billRate)}/h • Costo:{' '}
                             {formatUSD(stat.campaign.costRate)}/h
                           </span>
                         </div>
@@ -306,9 +247,7 @@ export const PayrollPage: React.FC = () => {
 
                     {/* % de Margen */}
                     <td className="py-3.5 px-4 text-center">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-mono text-xs font-bold bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
-                        {stat.marginPct.toFixed(1)}%
-                      </span>
+                      <Badge tone="success">{stat.marginPct.toFixed(1)}%</Badge>
                     </td>
 
                     {/* Barra de Progreso Proporcional al Margen */}
@@ -336,12 +275,12 @@ export const PayrollPage: React.FC = () => {
       </div>
 
       {/* 3. Tabla "Horas Aprobadas" */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
         <div className="p-5 border-b border-[#242E3B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2.5">
             <div className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
             <h2 className="text-base font-bold text-white tracking-wide">
-              Horas Aprobadas
+              Horas aprobadas
             </h2>
             <span className="text-xs font-mono text-[#C5C6C7]/60">
               ({approvedEntries.length} turnos validados para nómina)
@@ -350,13 +289,14 @@ export const PayrollPage: React.FC = () => {
 
           {/* Filtros de búsqueda y campaña */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-            <div className="relative">
+            <div className="relative w-full sm:w-auto">
               <select
                 value={selectedCampaignId}
                 onChange={(e) => setSelectedCampaignId(e.target.value)}
-                className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+                aria-label="Filtrar por campaña"
+                className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
               >
-                <option value="all">Todas las Campañas</option>
+                <option value="all">Todas las campañas</option>
                 {campaigns.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name}
@@ -367,11 +307,12 @@ export const PayrollPage: React.FC = () => {
             </div>
 
             <div className="relative w-full sm:w-56">
-              <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Buscar agente o campaña"
                 placeholder="Buscar agente..."
                 className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
               />
@@ -380,22 +321,26 @@ export const PayrollPage: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[760px] text-left border-collapse">
             <thead>
               <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
                 <th className="py-3 px-4">Agente</th>
                 <th className="py-3 px-4">Campaña</th>
-                <th className="py-3 px-4">Fecha Turno</th>
-                <th className="py-3 px-4">Horas Trabajadas</th>
+                <th className="py-3 px-4">Fecha del turno</th>
+                <th className="py-3 px-4">Horas trabajadas</th>
                 <th className="py-3 px-4">Desviación</th>
-                <th className="py-3 px-4 text-right">Costo Estimado</th>
+                <th className="py-3 px-4 text-right">Costo estimado</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#242E3B]/60 text-xs">
               {approvedEntries.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-[#C5C6C7]/50 font-mono">
-                    No hay turnos con estado 'approved' que coincidan con la búsqueda.
+                  <td colSpan={6}>
+                    <EmptyState
+                      icon={Search}
+                      title="No hay turnos aprobados que coincidan con la búsqueda"
+                      description="Prueba con otra campaña u otro nombre de agente."
+                    />
                   </td>
                 </tr>
               ) : (
@@ -448,7 +393,7 @@ export const PayrollPage: React.FC = () => {
                       {/* Horas Trabajadas */}
                       <td className="py-3.5 px-4 font-mono">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#1F2833] text-white font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" aria-hidden="true" />
                           {formatDuration(workedMinutes)}
                         </span>
                       </td>

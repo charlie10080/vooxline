@@ -11,8 +11,6 @@ import { getTenure, formatTenure } from '@/lib/tenure';
 import {
   BookOpen,
   Search,
-  LayoutGrid,
-  List,
   Building2,
   Shield,
   Phone,
@@ -20,7 +18,6 @@ import {
   Calendar,
   Clock,
   ExternalLink,
-  X,
   Coffee,
   Layers,
   UserX,
@@ -28,6 +25,7 @@ import {
   Filter,
   Sparkles,
 } from 'lucide-react';
+import { PageHeader, Card, Button, Badge, Avatar, EmptyState, Modal, Tabs } from '@/components/ui';
 
 export const DirectorPage: React.FC = () => {
   const navigate = useNavigate();
@@ -176,31 +174,31 @@ export const DirectorPage: React.FC = () => {
     switch (status) {
       case 'on_call':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-[#66FCF1]/15 text-[#66FCF1] border border-[#66FCF1]/30">
+          <Badge tone="accent">
             <span className="w-1.5 h-1.5 rounded-full bg-[#66FCF1] animate-pulse" />
             En llamada
-          </span>
+          </Badge>
         );
       case 'available':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
+          <Badge tone="success">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
             Disponible
-          </span>
+          </Badge>
         );
       case 'break':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30">
+          <Badge tone="warning">
             <Coffee className="w-3 h-3" />
             En pausa
-          </span>
+          </Badge>
         );
       case 'offline':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-[#1F2833] text-[#C5C6C7]/60 border border-[#242E3B]">
+          <Badge tone="neutral">
             <span className="w-1.5 h-1.5 rounded-full bg-[#C5C6C7]/40" />
             Desconectado
-          </span>
+          </Badge>
         );
     }
   };
@@ -208,23 +206,11 @@ export const DirectorPage: React.FC = () => {
   const renderRoleBadge = (role: UserRole) => {
     switch (role) {
       case 'admin':
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/30">
-            ADMIN
-          </span>
-        );
+        return <Badge tone="danger">ADMIN</Badge>;
       case 'supervisor':
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30">
-            SUPERVISOR
-          </span>
-        );
+        return <Badge tone="warning">SUPERVISOR</Badge>;
       case 'agent':
-        return (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full font-mono text-[10px] font-medium bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/20">
-            AGENTE
-          </span>
-        );
+        return <Badge tone="accent">AGENTE</Badge>;
     }
   };
 
@@ -246,7 +232,16 @@ export const DirectorPage: React.FC = () => {
     return (
       <div
         key={agent.id}
+        role="button"
+        tabIndex={0}
+        aria-label={`Ver ficha de ${agent.name}`}
         onClick={() => setSelectedAgentId(agent.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setSelectedAgentId(agent.id);
+          }
+        }}
         className={`group bg-[#13151c] border rounded-2xl p-5 shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between hover:border-[#66FCF1]/50 hover:shadow-[0_0_20px_rgba(102,252,241,0.12)] relative ${
           !profile.active ? 'border-[#EF4444]/30 bg-[#13151c]/80' : 'border-[#242E3B]'
         }`}
@@ -255,23 +250,17 @@ export const DirectorPage: React.FC = () => {
           {/* Fila superior: Avatar, Nombre, Código y Estado */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-sm shrink-0 group-hover:border-[#66FCF1]/40 group-hover:scale-105 transition-all">
-                {agent.name.charAt(0)}
-              </div>
+              <Avatar name={agent.name} />
               <div>
                 <h3 className="text-sm font-bold text-white group-hover:text-[#66FCF1] transition-colors leading-tight">
                   {agent.name}
                 </h3>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex flex-wrap items-center gap-2 mt-1">
                   <span className="text-[11px] font-mono text-[#C5C6C7]/60">
                     {agent.employeeCode}
                   </span>
                   {renderRoleBadge(profile.role)}
-                  {!profile.active && (
-                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40">
-                      Inactivo
-                    </span>
-                  )}
+                  {!profile.active && <Badge tone="danger">Inactivo</Badge>}
                 </div>
               </div>
             </div>
@@ -336,67 +325,32 @@ export const DirectorPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* 1. Encabezado */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13151c] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
+      <PageHeader
+        icon={BookOpen}
+        eyebrow="COMUNICACIÓN"
+        title="Directorio de personal"
+        description="Consulta a tu equipo: datos de contacto, campaña, extensión y estado operativo en tiempo real."
+        actions={
+          <>
+            {/* Contador de personas */}
+            <div className="px-3.5 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs font-mono text-[#C5C6C7]">
+              Mostrando{' '}
+              <strong className="text-[#66FCF1] font-bold">{filteredAgents.length}</strong> de{' '}
+              <strong className="text-white">{agents.length}</strong> personas
+            </div>
 
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              COMMUNICATION & DIRECTORY
-            </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">
-              Libreta de Personal en Vivo
-            </span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <BookOpen className="w-7 h-7 text-[#66FCF1]" />
-            <span>Directorio de Personal</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Libreta de contactos corporativa: consulta personas, canales de contacto, campañas y estado operativo en tiempo real.
-          </p>
-        </div>
-
-        {/* Alternador de Vistas & Contador */}
-        <div className="flex flex-wrap items-center gap-3 relative z-10">
-          {/* Contador de personas */}
-          <div className="px-3.5 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs font-mono text-[#C5C6C7]">
-            Mostrando{' '}
-            <strong className="text-[#66FCF1] font-bold">{filteredAgents.length}</strong> de{' '}
-            <strong className="text-white">{agents.length}</strong> personas
-          </div>
-
-          {/* Toggle Tarjetas / Tabla */}
-          <div className="inline-flex rounded-xl p-1 bg-[#0B0C10] border border-[#242E3B]">
-            <button
-              type="button"
-              onClick={() => setViewMode('cards')}
-              title="Vista de Tarjetas"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'cards'
-                  ? 'bg-[#66FCF1] text-[#0B0C10] shadow-[0_0_12px_rgba(102,252,241,0.3)]'
-                  : 'text-[#C5C6C7] hover:text-white'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Tarjetas</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('table')}
-              title="Vista de Tabla"
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'table'
-                  ? 'bg-[#66FCF1] text-[#0B0C10] shadow-[0_0_12px_rgba(102,252,241,0.3)]'
-                  : 'text-[#C5C6C7] hover:text-white'
-              }`}
-            >
-              <List className="w-3.5 h-3.5" />
-              <span>Tabla</span>
-            </button>
-          </div>
-        </div>
-      </div>
+            {/* Toggle Tarjetas / Tabla */}
+            <Tabs
+              value={viewMode}
+              onChange={setViewMode}
+              options={[
+                { value: 'cards', label: 'Tarjetas' },
+                { value: 'table', label: 'Tabla' },
+              ]}
+            />
+          </>
+        }
+      />
 
       {/* 2. Barra de Filtros y Búsqueda */}
       <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -405,6 +359,7 @@ export const DirectorPage: React.FC = () => {
           <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
+            aria-label="Buscar personas"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, correo, código o extensión..."
@@ -418,10 +373,11 @@ export const DirectorPage: React.FC = () => {
           <div className="relative">
             <select
               value={selectedCampaignId}
+              aria-label="Filtrar por campaña"
               onChange={(e) => setSelectedCampaignId(e.target.value)}
               className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
             >
-              <option value="all">Todas las Campañas</option>
+              <option value="all">Todas las campañas</option>
               {campaigns.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -435,10 +391,11 @@ export const DirectorPage: React.FC = () => {
           <div className="relative">
             <select
               value={selectedRole}
+              aria-label="Filtrar por rol"
               onChange={(e) => setSelectedRole(e.target.value)}
               className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
             >
-              <option value="all">Todos los Roles</option>
+              <option value="all">Todos los roles</option>
               <option value="agent">Agente</option>
               <option value="supervisor">Supervisor</option>
               <option value="admin">Administrador</option>
@@ -450,10 +407,11 @@ export const DirectorPage: React.FC = () => {
           <div className="relative">
             <select
               value={selectedStatus}
+              aria-label="Filtrar por estado"
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
             >
-              <option value="all">Todos los Estados</option>
+              <option value="all">Todos los estados</option>
               <option value="on_call">En llamada</option>
               <option value="available">Disponible</option>
               <option value="break">En pausa</option>
@@ -489,26 +447,18 @@ export const DirectorPage: React.FC = () => {
       {/* 3. Contenido Principal: Tarjetas o Tabla */}
       {filteredAgents.length === 0 ? (
         /* Estado vacío */
-        <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-12 text-center space-y-4 shadow-xl">
-          <div className="w-14 h-14 rounded-2xl bg-[#1F2833] text-[#66FCF1] flex items-center justify-center mx-auto border border-[#242E3B]">
-            <UserX className="w-7 h-7 text-[#C5C6C7]/60" />
-          </div>
-          <div className="space-y-1">
-            <h3 className="text-base font-bold text-white">
-              No se encontraron personas
-            </h3>
-            <p className="text-xs text-[#C5C6C7]/60 max-w-md mx-auto">
-              Ninguna persona coincide con los filtros de búsqueda seleccionados. Prueba modificando los términos o restableciendo los filtros.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#66FCF1]/10 hover:bg-[#66FCF1]/20 text-[#66FCF1] border border-[#66FCF1]/30 text-xs font-bold transition-colors cursor-pointer"
-          >
-            <span>Restablecer Filtros</span>
-          </button>
-        </div>
+        <Card>
+          <EmptyState
+            icon={UserX}
+            title="No se encontraron personas"
+            description="Ninguna persona coincide con los filtros seleccionados. Prueba otros términos o restablece los filtros."
+            action={
+              <Button variant="primary" onClick={resetFilters}>
+                Restablecer filtros
+              </Button>
+            }
+          />
+        </Card>
       ) : groupByCampaign && groupedAgents ? (
         /* Vista Agrupada por Campaña */
         <div className="space-y-8">
@@ -563,11 +513,9 @@ export const DirectorPage: React.FC = () => {
                             >
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0 group-hover:border-[#66FCF1]/40">
-                                    {agent.name.charAt(0)}
-                                  </div>
+                                  <Avatar name={agent.name} size="sm" />
                                   <div>
-                                    <span className="font-semibold text-white group-hover:text-[#66FCF1] transition-colors block">
+                                    <span className="font-semibold text-white group-hover:text-[#66FCF1] transition-colors block whitespace-nowrap">
                                       {agent.name}
                                     </span>
                                     {!profile.active && (
@@ -609,10 +557,14 @@ export const DirectorPage: React.FC = () => {
                               </td>
 
                               <td className="py-3 px-4 text-right">
-                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66FCF1] group-hover:underline">
+                                <button
+                                  type="button"
+                                  aria-label={`Ver ficha de ${agent.name}`}
+                                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66FCF1] group-hover:underline"
+                                >
                                   <span>Ver</span>
                                   <ChevronRight className="w-3.5 h-3.5" />
-                                </span>
+                                </button>
                               </td>
                             </tr>
                           );
@@ -662,11 +614,9 @@ export const DirectorPage: React.FC = () => {
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0 group-hover:border-[#66FCF1]/40">
-                            {agent.name.charAt(0)}
-                          </div>
+                          <Avatar name={agent.name} size="sm" />
                           <div>
-                            <span className="font-semibold text-white group-hover:text-[#66FCF1] transition-colors block">
+                            <span className="font-semibold text-white group-hover:text-[#66FCF1] transition-colors block whitespace-nowrap">
                               {agent.name}
                             </span>
                             {!profile.active && (
@@ -710,10 +660,14 @@ export const DirectorPage: React.FC = () => {
                       </td>
 
                       <td className="py-3 px-4 text-right">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66FCF1] group-hover:underline">
+                        <button
+                          type="button"
+                          aria-label={`Ver ficha de ${agent.name}`}
+                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66FCF1] group-hover:underline"
+                        >
                           <span>Ver</span>
                           <ChevronRight className="w-3.5 h-3.5" />
-                        </span>
+                        </button>
                       </td>
                     </tr>
                   );
@@ -726,48 +680,47 @@ export const DirectorPage: React.FC = () => {
 
       {/* 4. Modal / Panel Lateral de Detalle de Persona */}
       {selectedAgent && selectedProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-            {/* Cabecera del Modal */}
-            <div className="flex items-start justify-between border-b border-[#242E3B] pb-4">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-xl bg-[#1F2833] text-[#66FCF1] flex items-center justify-center border border-[#242E3B] font-mono font-bold text-lg shrink-0">
-                  {selectedAgent.name.charAt(0)}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-white">{selectedAgent.name}</h3>
-                    {selectedProfile.active ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                        Activo
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" />
-                        Inactivo
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs font-mono text-[#C5C6C7]/60">
-                      {selectedAgent.employeeCode}
-                    </span>
-                    <span className="text-[#C5C6C7]/40">•</span>
-                    {renderRoleBadge(selectedProfile.role)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="shrink-0">{renderStatusBadge(selectedAgent.status)}</div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedAgentId(null)}
-                  className="p-1 rounded-lg text-[#C5C6C7] hover:text-white hover:bg-[#1F2833] transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+        <Modal
+          open
+          onClose={() => setSelectedAgentId(null)}
+          title={selectedAgent.name}
+          description={`Ficha de ${selectedAgent.employeeCode}`}
+          footer={
+            <>
+              <Button variant="ghost" onClick={() => setSelectedAgentId(null)}>
+                Cerrar
+              </Button>
+              <Button
+                variant="primary"
+                icon={ExternalLink}
+                onClick={() => {
+                  setSelectedAgentId(null);
+                  navigate('/users');
+                }}
+              >
+                Editar en Usuarios
+              </Button>
+            </>
+          }
+        >
+          <div className="space-y-6">
+            {/* Cabecera de la ficha */}
+            <div className="flex flex-wrap items-center gap-3.5">
+              <Avatar name={selectedAgent.name} size="lg" />
+              <div className="flex flex-wrap items-center gap-2">
+                {selectedProfile.active ? (
+                  <Badge tone="success">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                    Activo
+                  </Badge>
+                ) : (
+                  <Badge tone="danger">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" />
+                    Inactivo
+                  </Badge>
+                )}
+                {renderRoleBadge(selectedProfile.role)}
+                {renderStatusBadge(selectedAgent.status)}
               </div>
             </div>
 
@@ -832,10 +785,14 @@ export const DirectorPage: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
-                      Rol Asignado
+                      Rol asignado
                     </span>
-                    <span className="text-white capitalize">
-                      {selectedProfile.role}
+                    <span className="text-white">
+                      {selectedProfile.role === 'admin'
+                        ? 'Administrador'
+                        : selectedProfile.role === 'supervisor'
+                          ? 'Supervisor'
+                          : 'Agente'}
                     </span>
                   </div>
                 </div>
@@ -846,7 +803,7 @@ export const DirectorPage: React.FC = () => {
             <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3 text-xs">
               <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
                 <Calendar className="w-3.5 h-3.5" />
-                <span>Antigüedad y Trayectoria</span>
+                <span>Antigüedad y trayectoria</span>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -873,12 +830,10 @@ export const DirectorPage: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
                   <Clock className="w-3.5 h-3.5" />
-                  <span>Turno de Hoy ({today})</span>
+                  <span>Turno de hoy ({today})</span>
                 </div>
                 {selectedTodayShift && (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
-                    Programado
-                  </span>
+                  <Badge tone="success">Programado</Badge>
                 )}
               </div>
 
@@ -909,7 +864,7 @@ export const DirectorPage: React.FC = () => {
             <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3 text-xs">
               <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
                 <Layers className="w-3.5 h-3.5" />
-                <span>Grupos Asignados ({selectedAgentGroups.length})</span>
+                <span>Grupos asignados ({selectedAgentGroups.length})</span>
               </div>
 
               {selectedAgentGroups.length > 0 ? (
@@ -922,7 +877,7 @@ export const DirectorPage: React.FC = () => {
                       <Sparkles className="w-3 h-3 text-[#66FCF1]" />
                       <span>{group.name}</span>
                       <span className="text-[10px] text-[#C5C6C7]/50 font-sans uppercase">
-                        ({group.kind})
+                        ({group.kind === 'smart' ? 'inteligente' : 'manual'})
                       </span>
                     </div>
                   ))}
@@ -933,32 +888,8 @@ export const DirectorPage: React.FC = () => {
                 </p>
               )}
             </div>
-
-            {/* Pie del Modal: Botones de Acción */}
-            <div className="pt-4 border-t border-[#242E3B] flex items-center justify-between">
-              {/* Botón Editar en Users */}
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedAgentId(null);
-                  navigate('/users');
-                }}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#66FCF1] hover:bg-[#52e0d6] text-[#0B0C10] text-xs font-bold transition-all shadow-[0_0_12px_rgba(102,252,241,0.25)] cursor-pointer"
-              >
-                <ExternalLink className="w-4 h-4" />
-                <span>Editar en Users</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedAgentId(null)}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#C5C6C7] hover:text-white bg-[#1F2833] hover:bg-[#253240] border border-[#242E3B] transition-colors"
-              >
-                Cerrar
-              </button>
-            </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

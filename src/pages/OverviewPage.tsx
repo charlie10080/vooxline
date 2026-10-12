@@ -41,6 +41,7 @@ import {
   Activity,
   Layers,
 } from 'lucide-react';
+import { PageHeader, Badge } from '@/components/ui';
 
 export const OverviewPage: React.FC = () => {
   const {
@@ -75,7 +76,7 @@ export const OverviewPage: React.FC = () => {
   const campaignStats = getCampaignStats(campaigns, timeEntries);
   const totals = getPayrollTotals(campaignStats);
 
-  // Alertas Asistencia: getAttendanceAlerts con desglose por tipo
+  // Alertas de asistencia: getAttendanceAlerts con desglose por tipo
   const attendanceAlerts = getAttendanceAlerts({
     entries: timeEntries,
     shifts,
@@ -200,59 +201,42 @@ export const OverviewPage: React.FC = () => {
     switch (type) {
       case 'vacation':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-            <Palmtree className="w-3 h-3" />
+          <Badge tone="accent">
+            <Palmtree className="w-3 h-3" aria-hidden="true" />
             Vacaciones
-          </span>
+          </Badge>
         );
       case 'medical':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/30">
-            <Stethoscope className="w-3 h-3" />
+          <Badge tone="info">
+            <Stethoscope className="w-3 h-3" aria-hidden="true" />
             Médico
-          </span>
+          </Badge>
         );
       case 'personal':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-[#A78BFA]/10 text-[#A78BFA] border border-[#A78BFA]/30">
-            <User className="w-3 h-3" />
+          <Badge tone="neutral">
+            <User className="w-3 h-3" aria-hidden="true" />
             Personal
-          </span>
+          </Badge>
         );
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Header del Overview */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13151c] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
-
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              CENTRO DE MANDO B2B
-            </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">
-              Consola General • En tiempo real
-            </span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Activity className="w-7 h-7 text-[#66FCF1]" />
-            <span>Dashboard Principal</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Visión unificada de asistencia, contingencias operativas, rentabilidad por campaña y talento activo.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 relative z-10">
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs font-mono text-[#66FCF1]">
-            <Radio className="w-3.5 h-3.5 animate-pulse text-[#66FCF1]" />
-            <span>Store Sincronizado</span>
-          </span>
-        </div>
-      </div>
+      <PageHeader
+        icon={Activity}
+        eyebrow="CENTRO DE MANDO · EN TIEMPO REAL"
+        title="Panel general"
+        description="Visión unificada de asistencia, contingencias operativas, rentabilidad por campaña y agentes conectados."
+        actions={
+          <Badge tone="accent" className="px-3 py-1.5">
+            <Radio className="h-3.5 w-3.5 animate-pulse" aria-hidden="true" />
+            Datos sincronizados
+          </Badge>
+        }
+      />
 
       {/* 1. TARJETAS KPI SUPERIORES (4 MÉTRICAS) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -260,7 +244,7 @@ export const OverviewPage: React.FC = () => {
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Atención Requerida
+              Atención requerida
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#F59E0B]/15 text-[#F59E0B] flex items-center justify-center border border-[#F59E0B]/30">
               <Clock className="w-4 h-4" />
@@ -281,7 +265,7 @@ export const OverviewPage: React.FC = () => {
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Costo Laboral
+              Costo laboral
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
               <DollarSign className="w-4 h-4" />
@@ -298,12 +282,12 @@ export const OverviewPage: React.FC = () => {
           </p>
         </div>
 
-        {/* KPI 3: Alertas Asistencia */}
+        {/* KPI 3: Alertas de asistencia */}
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-                Alertas Asistencia
+                Alertas de asistencia
               </span>
               <div
                 className={`w-8 h-8 rounded-xl flex items-center justify-center border ${
@@ -360,7 +344,7 @@ export const OverviewPage: React.FC = () => {
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Conexiones en Vivo
+              Conexiones en vivo
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#1F2833] text-[#66FCF1] flex items-center justify-center border border-[#242E3B]">
               <Radio className="w-4 h-4" />
@@ -370,22 +354,22 @@ export const OverviewPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs font-mono">
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-                <span className="text-[#C5C6C7]/70">Llamada:</span>
+                <span className="text-[#C5C6C7]/70">En llamada:</span>
                 <strong className="text-white font-bold">{countOnCall}</strong>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#66FCF1]" />
-                <span className="text-[#C5C6C7]/70">Libre:</span>
+                <span className="text-[#C5C6C7]/70">Disponible:</span>
                 <strong className="text-white font-bold">{countAvailable}</strong>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#F59E0B]" />
-                <span className="text-[#C5C6C7]/70">Break:</span>
+                <span className="text-[#C5C6C7]/70">Descanso:</span>
                 <strong className="text-white font-bold">{countBreak}</strong>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#C5C6C7]/40" />
-                <span className="text-[#C5C6C7]/70">Offline:</span>
+                <span className="text-[#C5C6C7]/70">Desconectado:</span>
                 <strong className="text-white font-bold">{countOffline}</strong>
               </div>
             </div>
@@ -405,7 +389,7 @@ export const OverviewPage: React.FC = () => {
               <div className="flex items-center gap-2.5">
                 <div className="w-2 h-2 rounded-full bg-[#F59E0B]" />
                 <h2 className="text-sm font-bold text-white tracking-wide">
-                  Motor de Aprobación (Turnos Pendientes)
+                  Aprobación de turnos pendientes
                 </h2>
               </div>
               <NavLink
@@ -419,7 +403,7 @@ export const OverviewPage: React.FC = () => {
 
             {/* Aviso contextual si la aprobación requiere confirmación */}
             {approvalNotice && (
-              <div className="p-3 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-xs text-[#F59E0B] flex items-center justify-between gap-3 animate-fadeIn">
+              <div className="p-3 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-xs text-[#F59E0B] flex flex-wrap items-center justify-between gap-3 animate-fadeIn">
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{approvalNotice.reason}</span>
@@ -435,7 +419,7 @@ export const OverviewPage: React.FC = () => {
 
             {/* Tabla simple */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
+              <table className="w-full min-w-[520px] text-left border-collapse text-xs">
                 <thead>
                   <tr className="border-b border-[#242E3B] text-[11px] font-mono text-[#C5C6C7]/60 uppercase">
                     <th className="py-2 px-3">Agente</th>
@@ -515,14 +499,14 @@ export const OverviewPage: React.FC = () => {
               <div className="flex items-center gap-2.5">
                 <div className="w-2 h-2 rounded-full bg-[#10B981]" />
                 <h2 className="text-sm font-bold text-white tracking-wide">
-                  Top Rentabilidad por Cuenta
+                  Campañas más rentables
                 </h2>
               </div>
               <NavLink
                 to="/payroll"
                 className="text-xs font-mono text-[#66FCF1] hover:underline inline-flex items-center gap-1"
               >
-                <span>Ver Nómina</span>
+                <span>Ver nómina</span>
                 <ArrowRight className="w-3 h-3" />
               </NavLink>
             </div>
@@ -570,7 +554,7 @@ export const OverviewPage: React.FC = () => {
           </div>
 
           <div className="pt-3 mt-3 border-t border-[#242E3B]/60 text-[11px] text-[#C5C6C7]/50 flex justify-between items-center font-mono">
-            <span>Margen Promedio: {totals.avgMarginPct.toFixed(1)}%</span>
+            <span>Margen promedio: {totals.avgMarginPct.toFixed(1)}%</span>
             <NavLink to="/payroll" className="text-[#66FCF1] hover:underline">
               Ver finanzas y conciliación →
             </NavLink>
@@ -584,20 +568,20 @@ export const OverviewPage: React.FC = () => {
               <div className="flex items-center gap-2.5">
                 <div className="w-2 h-2 rounded-full bg-[#66FCF1]" />
                 <h2 className="text-sm font-bold text-white tracking-wide">
-                  Gestión de Permisos (Pendientes)
+                  Solicitudes de ausencia pendientes
                 </h2>
               </div>
               <NavLink
                 to="/time-off"
                 className="text-xs font-mono text-[#66FCF1] hover:underline inline-flex items-center gap-1"
               >
-                <span>Ir a Time Off</span>
+                <span>Ir a Ausencias</span>
                 <ArrowRight className="w-3 h-3" />
               </NavLink>
             </div>
 
             {timeOffNotice && (
-              <div className="p-3 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-xs text-[#F59E0B] flex items-center justify-between animate-fadeIn">
+              <div className="p-3 rounded-xl bg-[#F59E0B]/10 border border-[#F59E0B]/30 text-xs text-[#F59E0B] flex flex-wrap items-center justify-between gap-2 animate-fadeIn">
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{timeOffNotice}</span>
@@ -641,6 +625,7 @@ export const OverviewPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleMiniApproveTimeOff(req.id)}
+                          aria-label={`Aprobar solicitud de ${agent?.name ?? 'agente'}`}
                           className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30 hover:bg-[#66FCF1] hover:text-[#0B0C10] transition-all"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
@@ -648,6 +633,7 @@ export const OverviewPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleMiniRejectTimeOff(req.id)}
+                          aria-label={`Rechazar solicitud de ${agent?.name ?? 'agente'}`}
                           className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/30 hover:bg-[#EF4444] hover:text-white transition-all"
                         >
                           <XCircle className="w-3.5 h-3.5" />
@@ -673,9 +659,9 @@ export const OverviewPage: React.FC = () => {
           <div>
             <div className="flex items-center justify-between border-b border-[#242E3B] pb-3 mb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-[#38BDF8]" />
+                <div className="w-2 h-2 rounded-full bg-[#66FCF1]" />
                 <h2 className="text-sm font-bold text-white tracking-wide">
-                  Telemetría SIP & Geolocalización
+                  Telemetría SIP y geolocalización
                 </h2>
               </div>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#1F2833] text-[#66FCF1] border border-[#242E3B]">
@@ -816,10 +802,10 @@ export const OverviewPage: React.FC = () => {
 
           <div className="pt-3 mt-3 border-t border-[#242E3B]/60 text-[11px] text-[#C5C6C7]/50 flex justify-between items-center font-mono">
             <span className="flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-[#38BDF8]" />
+              <Layers className="w-3.5 h-3.5 text-[#66FCF1]" />
               Topología SIP distribuida
             </span>
-            <span className="text-[#C5C6C7]/40">Módulo en telemetría visual</span>
+            <span className="text-[#C5C6C7]/40">Vista ilustrativa</span>
           </div>
         </div>
       </div>

@@ -34,6 +34,20 @@ import {
   REVIEW_THRESHOLD_MIN,
 } from '@/lib/metrics';
 import {
+  PageHeader,
+  Card,
+  Button,
+  Badge,
+  StatCard,
+  Avatar,
+  EmptyState,
+  Modal,
+  Input,
+  Select,
+  Tabs,
+  Notice,
+} from '@/components/ui';
+import {
   Clock,
   CheckCircle2,
   XCircle,
@@ -45,14 +59,19 @@ import {
   RotateCcw,
   CheckCheck,
   ShieldAlert,
-  Info,
   Sparkles,
-  UserCheck,
-  Building2,
   MapPin,
+  Inbox,
 } from 'lucide-react';
 
 type TabFilter = 'all' | EntryStatus;
+
+const NOTICE_TONE = {
+  success: 'success',
+  warning: 'warning',
+  error: 'danger',
+  info: 'info',
+} as const;
 
 const GeoBadge: React.FC<{ check: GeoCheck }> = ({ check }) => {
   const color =
@@ -335,110 +354,62 @@ export const TimeClockPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Banner / Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13171F] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
-
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              OPERACIONES & ASISTENCIA
-            </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">Regla de Negocio: ±15 min</span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Clock className="w-7 h-7 text-[#66FCF1]" />
-            <span>Time Clock & Aprobación</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Control horario de agentes B2B, motor de aprobación de turnos y sincronización con nómina.
-          </p>
-        </div>
-
-        {/* Global Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 relative z-10">
-          {/* Botón Marcar Entrada/Salida por Agente */}
-          <button
-            type="button"
-            onClick={() => setIsClockModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1F2833] hover:bg-[#253240] text-white text-xs font-semibold border border-[#242E3B] transition-all hover:border-[#66FCF1]/40 shadow-sm"
-          >
-            <Users className="w-4 h-4 text-[#66FCF1]" />
-            <span>Marcar Entrada / Salida</span>
-          </button>
-
-          {/* Botón Aprobar Lote */}
-          <button
-            type="button"
-            onClick={handleApproveBatch}
-            disabled={countPending === 0}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-md ${
-              countPending > 0
-                ? 'bg-[#66FCF1] text-[#0B0C10] hover:bg-[#52e0d6] shadow-[0_0_16px_rgba(102,252,241,0.25)] cursor-pointer'
-                : 'bg-[#1F2833] text-[#C5C6C7]/40 border border-[#242E3B] cursor-not-allowed'
-            }`}
-          >
-            <CheckCheck className="w-4 h-4" />
-            <span>Aprobar Lote ({countPending})</span>
-          </button>
-
-          {/* Botón Reset Demo */}
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
-                resetApplicationState();
-              }
-            }}
-            title="Reiniciar todos los datos de prueba"
-            className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        icon={Clock}
+        eyebrow="OPERACIONES · ASISTENCIA"
+        title="Time Clock y aprobación"
+        description={`Control horario de agentes, aprobación de marcajes y cierre para nómina. Tolerancia operativa: ±${REVIEW_THRESHOLD_MIN} min.`}
+        actions={
+          <>
+            <Button icon={Users} onClick={() => setIsClockModalOpen(true)}>
+              Marcar entrada / salida
+            </Button>
+            <Button
+              variant="primary"
+              icon={CheckCheck}
+              onClick={handleApproveBatch}
+              disabled={countPending === 0}
+            >
+              Aprobar lote ({countPending})
+            </Button>
+            <Button
+              variant="ghost"
+              icon={RotateCcw}
+              aria-label="Reiniciar todos los datos de demostración"
+              title="Reiniciar todos los datos de demostración"
+              onClick={() => {
+                if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+                  resetApplicationState();
+                }
+              }}
+            />
+          </>
+        }
+      />
 
       {/* Panel Superior: Alertas de Asistencia */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-5 shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#242E3B] pb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#F59E0B]/15 text-[#F59E0B] flex items-center justify-center border border-[#F59E0B]/30">
-              <ShieldAlert className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>Alertas de Asistencia</span>
-                <span className="px-2 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30">
-                  {attendanceAlerts.length}
-                </span>
-              </h2>
-              <p className="text-xs text-[#C5C6C7]/70">
-                Puntualidad en turnos programados, demoras, salidas anticipadas y ausencias sin marcaje.
-              </p>
-            </div>
-          </div>
-
-          {/* Chips de conteo por tipo */}
+      <Card
+        title={
+          <span className="flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4 text-[#F59E0B]" />
+            <span>Alertas de asistencia</span>
+            <Badge tone="warning">{attendanceAlerts.length}</Badge>
+          </span>
+        }
+        subtitle="Puntualidad en turnos programados, demoras, salidas anticipadas y ausencias sin marcaje."
+        actions={
           <div className="flex flex-wrap items-center gap-1.5">
             {(Object.keys(ALERT_KIND_LABELS) as AttendanceAlertKind[]).map((kind) => {
               const count = alertCounts[kind];
               return (
-                <span
-                  key={kind}
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono border ${
-                    count > 0
-                      ? 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30 font-semibold'
-                      : 'bg-[#1F2833]/40 text-[#C5C6C7]/50 border-[#242E3B]'
-                  }`}
-                >
-                  <span>{ALERT_KIND_LABELS[kind]}:</span>
-                  <span className={count > 0 ? 'text-white font-bold' : ''}>{count}</span>
-                </span>
+                <Badge key={kind} tone={count > 0 ? 'warning' : 'neutral'}>
+                  {ALERT_KIND_LABELS[kind]}: <span className={count > 0 ? 'text-white' : ''}>{count}</span>
+                </Badge>
               );
             })}
           </div>
-        </div>
-
+        }
+      >
         {attendanceAlerts.length === 0 ? (
           <div className="flex items-center gap-2 py-2 text-xs text-[#10B981] font-mono">
             <CheckCircle2 className="w-4 h-4" />
@@ -462,50 +433,27 @@ export const TimeClockPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30 shrink-0">
+                  <Badge tone="warning" className="shrink-0">
                     <AlertTriangle className="w-3 h-3 shrink-0" />
                     <span>{describeAlert(alert.kind, alert.minutes)}</span>
-                  </span>
+                  </Badge>
                 </div>
               );
             })}
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Action Notification Alert */}
       {actionAlert && (
-        <div
-          className={`flex items-center justify-between p-4 rounded-xl border text-sm animate-fadeIn ${
-            actionAlert.type === 'success'
-              ? 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
-              : actionAlert.type === 'warning'
-                ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30 text-[#F59E0B]'
-                : actionAlert.type === 'error'
-                  ? 'bg-[#EF4444]/10 border-[#EF4444]/30 text-[#EF4444]'
-                  : 'bg-[#66FCF1]/10 border-[#66FCF1]/30 text-[#66FCF1]'
-          }`}
-        >
-          <div className="flex items-center gap-2.5">
-            {actionAlert.type === 'success' && <CheckCircle2 className="w-5 h-5 shrink-0" />}
-            {actionAlert.type === 'warning' && <AlertTriangle className="w-5 h-5 shrink-0" />}
-            {actionAlert.type === 'error' && <XCircle className="w-5 h-5 shrink-0" />}
-            {actionAlert.type === 'info' && <Info className="w-5 h-5 shrink-0" />}
-            <span className="font-medium">{actionAlert.message}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setActionAlert(null)}
-            className="text-xs opacity-70 hover:opacity-100 uppercase tracking-wider font-mono ml-4"
-          >
-            Cerrar
-          </button>
-        </div>
+        <Notice tone={NOTICE_TONE[actionAlert.type]} onClose={() => setActionAlert(null)}>
+          {actionAlert.message}
+        </Notice>
       )}
 
       {/* Batch Notice Banner */}
       {batchNotice && (
-        <div className="bg-[#13171F] border border-[#66FCF1]/40 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
+        <div role="status" className="bg-[#13151c] border border-[#66FCF1]/40 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start sm:items-center gap-3">
               <div className="p-2.5 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] border border-[#66FCF1]/30">
@@ -531,215 +479,91 @@ export const TimeClockPage: React.FC = () => {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setBatchNotice(null)}
-              className="px-3.5 py-1.5 rounded-lg bg-[#1F2833] hover:bg-[#253240] text-xs font-semibold text-white border border-[#242E3B] transition-colors self-end sm:self-center"
-            >
+            <Button size="sm" onClick={() => setBatchNotice(null)} className="self-end sm:self-center">
               Entendido
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {/* Stats Summary Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4">
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-xl p-4">
-          <span className="text-xs text-[#C5C6C7]/60 font-mono block">Total Registros</span>
-          <span className="text-2xl font-bold text-white font-mono mt-1 block">{countAll}</span>
-        </div>
-
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-xl p-4 relative">
-          <span className="text-xs text-[#F59E0B] font-mono block flex items-center justify-between">
-            <span>Pendientes</span>
-            {countPending > 0 && (
-              <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping" />
-            )}
-          </span>
-          <span className="text-2xl font-bold text-[#F59E0B] font-mono mt-1 block">
-            {countPending}
-          </span>
-        </div>
-
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-xl p-4">
-          <span className="text-xs text-[#10B981] font-mono block">Aprobadas</span>
-          <span className="text-2xl font-bold text-[#10B981] font-mono mt-1 block">
-            {countApproved}
-          </span>
-        </div>
-
-        <div className="bg-[#13171F] border border-[#242E3B] rounded-xl p-4">
-          <span className="text-xs text-[#EF4444] font-mono block">Rechazadas</span>
-          <span className="text-2xl font-bold text-[#EF4444] font-mono mt-1 block">
-            {countRejected}
-          </span>
-        </div>
+        <StatCard label="Total registros" value={countAll} icon={Clock} tone="accent" />
+        <StatCard label="Pendientes" value={countPending} icon={AlertTriangle} tone="warning" />
+        <StatCard label="Aprobadas" value={countApproved} icon={CheckCircle2} tone="success" />
+        <StatCard label="Rechazadas" value={countRejected} icon={XCircle} tone="danger" />
       </div>
 
-      {/* Controls Bar: Tabs + Search + Campaign Filter */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Tabs con contadores reales */}
-        <div className="flex items-center gap-1.5 bg-[#0B0C10] p-1 rounded-xl border border-[#242E3B] overflow-x-auto">
-          <button
-            type="button"
-            onClick={() => setActiveTab('all')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'all'
-                ? 'bg-[#66FCF1] text-[#0B0C10] shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Todas</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'all'
-                  ? 'bg-[#0B0C10]/20 text-[#0B0C10]'
-                  : 'bg-[#1F2833] text-[#C5C6C7]'
-              }`}
-            >
-              {countAll}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('pending')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'pending'
-                ? 'bg-[#F59E0B] text-[#0B0C10] shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Pendientes</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'pending'
-                  ? 'bg-[#0B0C10]/20 text-[#0B0C10]'
-                  : 'bg-[#1F2833] text-[#F59E0B]'
-              }`}
-            >
-              {countPending}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('approved')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'approved'
-                ? 'bg-[#10B981] text-[#0B0C10] shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Aprobadas</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'approved'
-                  ? 'bg-[#0B0C10]/20 text-[#0B0C10]'
-                  : 'bg-[#1F2833] text-[#10B981]'
-              }`}
-            >
-              {countApproved}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('rejected')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'rejected'
-                ? 'bg-[#EF4444] text-white shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Rechazadas</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'rejected'
-                  ? 'bg-[#0B0C10]/20 text-white'
-                  : 'bg-[#1F2833] text-[#EF4444]'
-              }`}
-            >
-              {countRejected}
-            </span>
-          </button>
-        </div>
-
-        {/* Filter inputs */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-          {/* Selector de campaña */}
-          <div className="relative">
-            <select
+      {/* Main Table Card: Motor de Aprobación y Asistencia */}
+      <Card
+        title="Aprobación de marcajes"
+        subtitle={`${filteredEntries.length} registros listados · revisión de supervisor si la desviación supera ${REVIEW_THRESHOLD_MIN} min`}
+        bodyClassName=""
+      >
+        {/* Controls Bar: Tabs + Search + Campaign Filter */}
+        <div className="flex flex-col justify-between gap-3 border-b border-[#242E3B] p-4 md:flex-row md:items-center">
+          <Tabs
+            value={activeTab}
+            onChange={setActiveTab}
+            options={[
+              { value: 'all', label: 'Todas', count: countAll },
+              { value: 'pending', label: 'Pendientes', count: countPending },
+              { value: 'approved', label: 'Aprobadas', count: countApproved },
+              { value: 'rejected', label: 'Rechazadas', count: countRejected },
+            ]}
+          />
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
+            <Select
+              aria-label="Filtrar por campaña"
               value={selectedCampaignId}
               onChange={(e) => setSelectedCampaignId(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="sm:w-48"
             >
-              <option value="all">Todas las Campañas</option>
+              <option value="all">Todas las campañas</option>
               {campaigns.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
               ))}
-            </select>
-            <Building2 className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-
-          {/* Search box */}
-          <div className="relative flex-1 sm:w-60">
-            <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar agente o código..."
-              className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Main Table Card: Motor de Aprobación y Asistencia */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-5 border-b border-[#242E3B] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#66FCF1]" />
-            <h2 className="text-base font-bold text-white tracking-wide">
-              Motor de Aprobación y Asistencia
-            </h2>
-            <span className="text-xs font-mono text-[#C5C6C7]/60">
-              ({filteredEntries.length} entradas listadas)
-            </span>
-          </div>
-
-          <div className="text-xs text-[#C5C6C7]/60 font-mono hidden md:block">
-            Umbral de revisión supervisor: &gt; {REVIEW_THRESHOLD_MIN} min
+            </Select>
+            <div className="relative flex-1 sm:w-60">
+              <Search className="pointer-events-none w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Input
+                type="search"
+                aria-label="Buscar registros"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar agente o código..."
+                className="pl-9"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Table content */}
+        {filteredEntries.length === 0 ? (
+          <EmptyState
+            icon={Inbox}
+            title="Sin registros"
+            description="No se encontraron marcajes para los filtros seleccionados."
+          />
+        ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[1080px] text-left border-collapse">
             <thead>
               <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
-                <th className="py-3 px-4">Agente</th>
-                <th className="py-3 px-4">Campaña</th>
-                <th className="py-3 px-4">Entrada</th>
-                <th className="py-3 px-4">Salida</th>
-                <th className="py-3 px-4">Horas</th>
-                <th className="py-3 px-4">Dif. Turno</th>
-                <th className="py-3 px-4">Puntualidad</th>
-                <th className="py-3 px-4">Estado</th>
-                <th className="py-3 px-4 text-right">Acciones</th>
+                <th scope="col" className="py-3 px-4">Agente</th>
+                <th scope="col" className="py-3 px-4">Campaña</th>
+                <th scope="col" className="py-3 px-4">Entrada</th>
+                <th scope="col" className="py-3 px-4">Salida</th>
+                <th scope="col" className="py-3 px-4">Horas</th>
+                <th scope="col" className="py-3 px-4">Dif. turno</th>
+                <th scope="col" className="py-3 px-4">Puntualidad</th>
+                <th scope="col" className="py-3 px-4">Estado</th>
+                <th scope="col" className="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#242E3B]/60 text-xs">
-              {filteredEntries.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-[#C5C6C7]/50 font-mono">
-                    No se encontraron registros de turnos para los filtros seleccionados.
-                  </td>
-                </tr>
-              ) : (
+              {(
                 filteredEntries.map((entry) => {
                   const agent = agentMap.get(entry.agentId);
                   const campaign = campaignMap.get(entry.campaignId);
@@ -751,24 +575,18 @@ export const TimeClockPage: React.FC = () => {
                   return (
                     <tr
                       key={entry.id}
-                      className="hover:bg-[#1A202C]/50 transition-colors group"
+                      className="hover:bg-[#1F2833]/40 transition-colors"
                     >
                       {/* Agente */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0">
-                            {agent ? agent.name.charAt(0) : '?'}
-                          </div>
+                          <Avatar name={agent?.name ?? '?'} size="sm" />
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="font-semibold text-white">
                                 {agent?.name ?? 'Desconocido'}
                               </span>
-                              {agent?.isVip && (
-                                <span className="px-1.5 py-0.2 rounded bg-[#F59E0B]/15 text-[#F59E0B] text-[10px] font-mono border border-[#F59E0B]/30">
-                                  VIP
-                                </span>
-                              )}
+                              {agent?.isVip && <Badge tone="warning">VIP</Badge>}
                             </div>
                             <div className="text-[11px] text-[#C5C6C7]/60 font-mono flex items-center gap-1.5 mt-0.5">
                               <span>{agent?.employeeCode}</span>
@@ -909,22 +727,22 @@ export const TimeClockPage: React.FC = () => {
                       {/* Estado */}
                       <td className="py-3.5 px-4">
                         {entry.status === 'pending' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/30 font-mono">
+                          <Badge tone="warning">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
                             Pendiente
-                          </span>
+                          </Badge>
                         )}
                         {entry.status === 'approved' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/30 font-mono">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                          <Badge tone="success">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                             Aprobada
-                          </span>
+                          </Badge>
                         )}
                         {entry.status === 'rejected' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/30 font-mono">
-                            <XCircle className="w-3.5 h-3.5 text-[#EF4444]" />
+                          <Badge tone="danger">
+                            <XCircle className="w-3.5 h-3.5" />
                             Rechazada
-                          </span>
+                          </Badge>
                         )}
 
                         {entry.note && (
@@ -981,26 +799,34 @@ export const TimeClockPage: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>
+        )}
+      </Card>
 
       {/* Modal de Confirmación de Supervisor */}
+      <Modal
+        open={pendingConfirmationEntry !== null}
+        onClose={() => setPendingConfirmationEntry(null)}
+        title="Confirmación de supervisor requerida"
+        description={`Este marcaje excede la tolerancia operativa de ±${REVIEW_THRESHOLD_MIN} minutos o tiene incidencias.`}
+        footer={
+          pendingConfirmationEntry && (
+            <>
+              <Button variant="ghost" onClick={() => setPendingConfirmationEntry(null)}>
+                Cancelar
+              </Button>
+              <Button
+                icon={ShieldAlert}
+                onClick={() => handleApprove(pendingConfirmationEntry.id, true)}
+                className="bg-[#F59E0B] font-bold text-[#0B0C10] border-[#F59E0B] hover:bg-[#F59E0B]/90 hover:border-[#F59E0B]"
+              >
+                Confirmar y aprobar
+              </Button>
+            </>
+          )
+        }
+      >
       {pendingConfirmationEntry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13171F] border border-[#F59E0B]/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 relative">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/15 border border-[#F59E0B]/30 flex items-center justify-center text-[#F59E0B] shrink-0">
-                <ShieldAlert className="w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold text-white">
-                  Confirmación de Supervisor Requerida
-                </h3>
-                <p className="text-xs text-[#C5C6C7]/70">
-                  Esta entrada excede la regla de tolerancia operativa de ±{REVIEW_THRESHOLD_MIN} minutos.
-                </p>
-              </div>
-            </div>
-
+          <div className="space-y-5">
             {/* Entry Audit Card */}
             <div className="bg-[#0B0C10] rounded-xl border border-[#242E3B] p-4 space-y-3 text-xs">
               <div className="flex items-center justify-between border-b border-[#242E3B] pb-2">
@@ -1105,57 +931,23 @@ export const TimeClockPage: React.FC = () => {
             <p className="text-xs text-[#C5C6C7]/80">
               ¿Deseas autorizar formalmente esta desviación y validar el cómputo de horas para nómina y rentabilidad del cliente?
             </p>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setPendingConfirmationEntry(null)}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-[#C5C6C7] hover:text-white bg-[#1F2833] hover:bg-[#253240] transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={() => handleApprove(pendingConfirmationEntry.id, true)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#0B0C10] bg-[#F59E0B] hover:bg-[#d98206] transition-all shadow-[0_0_12px_rgba(245,158,11,0.3)]"
-              >
-                Confirmar y Aprobar
-              </button>
-            </div>
           </div>
-        </div>
       )}
+      </Modal>
 
       {/* Modal / Panel de Control de Agentes (Clock In / Clock Out) */}
-      {isClockModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-[#242E3B] pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
-                  <UserCheck className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white">
-                    Control de Asistencia de Agentes
-                  </h3>
-                  <p className="text-xs text-[#C5C6C7]/70">
-                    Marca entradas y salidas en tiempo real sobre el store de Vooxline.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsClockModalOpen(false)}
-                className="p-1.5 rounded-lg text-[#C5C6C7] hover:text-white hover:bg-white/5"
-              >
-                ✕
-              </button>
-            </div>
-
+      <Modal
+        open={isClockModalOpen}
+        onClose={() => setIsClockModalOpen(false)}
+        title="Control de asistencia de agentes"
+        description="Marca entradas y salidas en tiempo real. El pin fija la ubicación autorizada de cada agente."
+        size="lg"
+        footer={
+          <Button onClick={() => setIsClockModalOpen(false)}>Cerrar panel</Button>
+        }
+      >
             {/* List of agents with their active clock-in/out status */}
-            <div className="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+            <div className="space-y-2.5">
               {agents.map((agent) => {
                 const openEntry = timeEntries.find(
                   (e) => e.agentId === agent.id && e.clockOut === null,
@@ -1170,12 +962,10 @@ export const TimeClockPage: React.FC = () => {
                 return (
                   <div
                     key={agent.id}
-                    className="flex items-center justify-between p-3.5 rounded-xl bg-[#0B0C10] border border-[#242E3B] hover:border-[#66FCF1]/30 transition-all"
+                    className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-[#0B0C10] border border-[#242E3B] hover:border-[#66FCF1]/30 transition-all"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-[#1F2833] flex items-center justify-center font-bold text-xs text-[#66FCF1] font-mono">
-                        {agent.name.charAt(0)}
-                      </div>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Avatar name={agent.name} />
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-semibold text-white text-xs">
@@ -1185,13 +975,11 @@ export const TimeClockPage: React.FC = () => {
                             {agent.employeeCode}
                           </span>
                           {todayShift ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
+                            <Badge tone="accent">
                               Hoy {todayShift.startTime}-{todayShift.endTime}
-                            </span>
+                            </Badge>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/30">
-                              Sin turno programado hoy
-                            </span>
+                            <Badge tone="warning">Sin turno programado hoy</Badge>
                           )}
                         </div>
                         <div className="text-[11px] text-[#C5C6C7]/70 mt-0.5">
@@ -1200,9 +988,10 @@ export const TimeClockPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 ml-auto">
                       <button
                         type="button"
+                        aria-label={`Fijar ubicación autorizada de ${agent.name} en la ubicación actual`}
                         onClick={() => handleSetAuthorizedLocation(agent.id)}
                         disabled={locatingAgentId !== null}
                         title={
@@ -1220,15 +1009,15 @@ export const TimeClockPage: React.FC = () => {
                       </button>
                       {isClockedIn ? (
                         <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-mono font-medium bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
+                          <Badge tone="success">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                            Turno Activo
-                          </span>
+                            Turno activo
+                          </Badge>
                           <button
                             type="button"
                             onClick={() => handleAgentClockOut(agent.id)}
                             disabled={locatingAgentId !== null}
-                            className="disabled:opacity-40inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EF4444]/15 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 text-xs font-semibold transition-all"
+                            className="disabled:opacity-40 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EF4444]/15 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 text-xs font-semibold transition-all"
                           >
                             <Square className="w-3.5 h-3.5" />
                             <span>{locatingAgentId === agent.id ? 'Ubicando…' : 'Marcar Salida'}</span>
@@ -1243,7 +1032,7 @@ export const TimeClockPage: React.FC = () => {
                             type="button"
                             onClick={() => handleAgentClockIn(agent.id)}
                             disabled={locatingAgentId !== null}
-                            className="disabled:opacity-40inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#66FCF1]/10 hover:bg-[#66FCF1] text-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(102,252,241,0.15)]"
+                            className="disabled:opacity-40 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#66FCF1]/10 hover:bg-[#66FCF1] text-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(102,252,241,0.15)]"
                           >
                             <Play className="w-3.5 h-3.5" />
                             <span>{locatingAgentId === agent.id ? 'Ubicando…' : 'Marcar Entrada'}</span>
@@ -1255,19 +1044,7 @@ export const TimeClockPage: React.FC = () => {
                 );
               })}
             </div>
-
-            <div className="pt-2 border-t border-[#242E3B] flex justify-end">
-              <button
-                type="button"
-                onClick={() => setIsClockModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-[#1F2833] hover:bg-[#253240] text-xs font-semibold text-white transition-colors"
-              >
-                Cerrar Panel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </Modal>
     </div>
   );
 };

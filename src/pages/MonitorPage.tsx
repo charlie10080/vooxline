@@ -28,9 +28,21 @@ import {
   Headphones,
   Sparkles,
   ArrowRight,
-  X,
   History,
 } from 'lucide-react';
+import { PageHeader, Button, Badge, Modal } from '@/components/ui';
+
+// Etiquetas visibles (solo presentación)
+const MODE_LABELS: Record<MonitorMode, string> = {
+  listen: 'Escucha',
+  whisper: 'Susurro',
+  intervene: 'Intervención',
+};
+const SENTIMENT_LABELS: Record<string, string> = {
+  positive: 'Positivo',
+  neutral: 'Neutral',
+  negative: 'Negativo',
+};
 
 export const MonitorPage: React.FC = () => {
   const { agents, campaigns } = useWorkforceStore();
@@ -192,7 +204,7 @@ export const MonitorPage: React.FC = () => {
     if (res.ok) {
       setActionAlert({
         type: 'success',
-        message: `Supervisión iniciada en modo "${mode === 'listen' ? 'Escuchar' : 'Whisper'}".`,
+        message: `Supervisión iniciada en modo "${MODE_LABELS[mode]}".`,
       });
     } else {
       handleError(res.reason);
@@ -211,7 +223,7 @@ export const MonitorPage: React.FC = () => {
     if (res.ok) {
       setActionAlert({
         type: 'success',
-        message: `Modo de supervisión cambiado a "${mode === 'listen' ? 'Escuchar' : 'Whisper'}".`,
+        message: `Modo de supervisión cambiado a "${MODE_LABELS[mode]}".`,
       });
     } else {
       handleError(res.reason);
@@ -265,88 +277,67 @@ export const MonitorPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 2. Banner Fijo "Modo simulado: sin audio real" */}
-      <div className="bg-[#1F2833]/70 border border-[#242E3B] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-[#66FCF1]/10 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30 shrink-0">
-            <Radio className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                Modo simulado: sin audio real
-              </span>
-              <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-            </div>
-            <p className="text-xs text-[#C5C6C7]/70">
-              Las llamadas, latencias SIP, análisis de sentimiento y puntajes QA son generados por el motor de simulación para pruebas operativas.
-            </p>
-          </div>
-        </div>
-
-        {/* 1. Interruptor Simulación ON/OFF */}
-        <div className="flex items-center gap-3 shrink-0">
-          <button
-            type="button"
-            onClick={() => setSimulationEnabled(!simulationEnabled)}
-            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all border ${
-              simulationEnabled
-                ? 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
-                : 'bg-[#1F2833] text-[#C5C6C7]/60 border-[#242E3B]'
-            }`}
-          >
-            <span
-              className={`w-2 h-2 rounded-full ${
-                simulationEnabled ? 'bg-[#10B981] animate-ping' : 'bg-[#C5C6C7]/40'
+      <PageHeader
+        icon={Headphones}
+        eyebrow="SUPERVISIÓN EN VIVO"
+        title="Monitor en vivo"
+        description="Seguimiento de agentes, canales de audio en tiempo real y herramientas de supervisión activa."
+        actions={
+          <>
+            <Badge className="px-3 py-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-[#66FCF1]" aria-hidden="true" />
+              Ciclo: cada {TICK_MS / 1000}s
+            </Badge>
+            {/* 1. Interruptor Simulación ON/OFF */}
+            <button
+              type="button"
+              onClick={() => setSimulationEnabled(!simulationEnabled)}
+              aria-pressed={simulationEnabled}
+              className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all border ${
+                simulationEnabled
+                  ? 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
+                  : 'bg-[#1F2833] text-[#C5C6C7]/60 border-[#242E3B]'
               }`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  simulationEnabled ? 'bg-[#10B981] animate-ping' : 'bg-[#C5C6C7]/40'
+                }`}
+              />
+              <span>{simulationEnabled ? 'Simulación activa' : 'Simulación en pausa'}</span>
+            </button>
+            <Button
+              icon={RotateCcw}
+              onClick={handleReset}
+              title="Reiniciar datos de simulación"
+              aria-label="Reiniciar datos de simulación"
             />
-            <span>{simulationEnabled ? 'Simulación ACTIVA' : 'Simulación PAUSADA'}</span>
-          </button>
+          </>
+        }
+      />
 
-          <button
-            type="button"
-            onClick={handleReset}
-            title="Reiniciar datos de simulación"
-            className="p-2 rounded-xl bg-[#1F2833] hover:bg-[#253240] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
+      {/* 2. Banner Fijo "Modo simulado: sin audio real" */}
+      <div className="bg-[#1F2833]/70 border border-[#242E3B] rounded-2xl p-4 flex items-start sm:items-center gap-3">
+        <div className="w-8 h-8 rounded-xl bg-[#66FCF1]/10 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30 shrink-0">
+          <Radio className="w-4 h-4" aria-hidden="true" />
         </div>
-      </div>
-
-      {/* Encabezado */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13151c] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
-
-        <div className="space-y-1 relative z-10">
+        <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              GENERAL
+            <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+              Modo simulado: sin audio real
             </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">
-              Consola de Monitoreo & Supervisión en Vivo
-            </span>
+            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Headphones className="w-7 h-7 text-[#66FCF1]" />
-            <span>Monitor en Vivo</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Seguimiento de agentes, canales de audio en tiempo real y herramientas de supervisión activa.
+          <p className="text-xs text-[#C5C6C7]/70">
+            Las llamadas, latencias SIP, análisis de sentimiento y puntajes de calidad son generados por el motor de simulación para pruebas operativas.
           </p>
-        </div>
-
-        <div className="flex items-center gap-3 relative z-10 text-xs font-mono text-[#C5C6C7]/70">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0B0C10] border border-[#242E3B]">
-            <Sparkles className="w-3.5 h-3.5 text-[#66FCF1]" />
-            <span>Ciclo: cada {TICK_MS / 1000}s</span>
-          </div>
         </div>
       </div>
 
       {/* Alerta de notificación / error */}
       {actionAlert && (
         <div
+          role="status"
           className={`flex items-center justify-between p-4 rounded-xl border text-sm animate-fadeIn ${
             actionAlert.type === 'success'
               ? 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
@@ -378,6 +369,7 @@ export const MonitorPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActionAlert(null)}
+            aria-label="Cerrar aviso"
             className="text-xs opacity-70 hover:opacity-100 uppercase tracking-wider font-mono ml-4"
           >
             ✕
@@ -394,7 +386,7 @@ export const MonitorPage: React.FC = () => {
                 {monitoring?.mode === 'intervene' ? (
                   <PhoneCall className="w-5 h-5 text-[#EF4444] animate-bounce" />
                 ) : monitoring?.mode === 'whisper' ? (
-                  <Mic className="w-5 h-5 text-[#38BDF8]" />
+                  <Mic className="w-5 h-5 text-[#A5B4FC]" />
                 ) : (
                   <Volume2 className="w-5 h-5 text-[#66FCF1]" />
                 )}
@@ -403,10 +395,10 @@ export const MonitorPage: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#66FCF1]">
-                    Supervisión en Curso
+                    Supervisión en curso
                   </span>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border bg-[#1F2833] text-white">
-                    Modo: {monitoring?.mode.toUpperCase()}
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border border-[#242E3B] bg-[#1F2833] text-white">
+                    Modo: {monitoring ? MODE_LABELS[monitoring.mode] : ''}
                   </span>
                 </div>
 
@@ -436,6 +428,7 @@ export const MonitorPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleChangeMonitorMode('listen')}
+                aria-pressed={monitoring?.mode === 'listen'}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
                   monitoring?.mode === 'listen'
                     ? 'bg-[#66FCF1] text-[#0B0C10] border-[#66FCF1] font-bold'
@@ -448,18 +441,20 @@ export const MonitorPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleChangeMonitorMode('whisper')}
+                aria-pressed={monitoring?.mode === 'whisper'}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
                   monitoring?.mode === 'whisper'
-                    ? 'bg-[#38BDF8] text-[#0B0C10] border-[#38BDF8] font-bold'
+                    ? 'bg-[#818CF8] text-[#0B0C10] border-[#818CF8] font-bold'
                     : 'bg-[#1F2833] text-[#C5C6C7] hover:text-white border-[#242E3B]'
                 }`}
               >
-                Whisper
+                Susurro
               </button>
 
               <button
                 type="button"
                 onClick={() => handleChangeMonitorMode('intervene')}
+                aria-pressed={monitoring?.mode === 'intervene'}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
                   monitoring?.mode === 'intervene'
                     ? 'bg-[#EF4444] text-white border-[#EF4444] font-bold animate-pulse'
@@ -487,7 +482,7 @@ export const MonitorPage: React.FC = () => {
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Llamadas Activas
+              Llamadas activas
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
               <PhoneCall className="w-4 h-4" />
@@ -514,9 +509,9 @@ export const MonitorPage: React.FC = () => {
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Duración Promedio
+              Duración promedio
             </span>
-            <div className="w-8 h-8 rounded-xl bg-[#38BDF8]/15 text-[#38BDF8] flex items-center justify-center border border-[#38BDF8]/30">
+            <div className="w-8 h-8 rounded-xl bg-[#818CF8]/15 text-[#A5B4FC] flex items-center justify-center border border-[#818CF8]/30">
               <Radio className="w-4 h-4" />
             </div>
           </div>
@@ -524,7 +519,7 @@ export const MonitorPage: React.FC = () => {
             <span className="text-3xl font-extrabold text-white font-mono">
               {formatTimer(summary.avgSeconds)}
             </span>
-            <span className="text-xs text-[#38BDF8] font-mono">MM:SS</span>
+            <span className="text-xs text-[#A5B4FC] font-mono">min:seg</span>
           </div>
           <p className="text-[11px] text-[#C5C6C7]/50 mt-3 pt-2.5 border-t border-[#242E3B]/60 font-mono">
             Calculado sobre llamadas activas
@@ -535,7 +530,7 @@ export const MonitorPage: React.FC = () => {
         <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#C5C6C7]/70 font-mono uppercase tracking-wider">
-              Estado de Agentes
+              Estado de agentes
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#10B981]/15 text-[#10B981] flex items-center justify-center border border-[#10B981]/30">
               <Sparkles className="w-4 h-4" />
@@ -544,12 +539,12 @@ export const MonitorPage: React.FC = () => {
           <div className="mt-2 grid grid-cols-2 gap-1 text-xs font-mono">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#66FCF1] animate-pulse" />
-              <span className="text-[#C5C6C7]/70">Llamada:</span>
+              <span className="text-[#C5C6C7]/70">En llamada:</span>
               <strong className="text-white">{summary.byStatus.on_call}</strong>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#10B981]" />
-              <span className="text-[#C5C6C7]/70">Libre:</span>
+              <span className="text-[#C5C6C7]/70">Disponible:</span>
               <strong className="text-white">{summary.byStatus.available}</strong>
             </div>
             <div className="flex items-center gap-1.5">
@@ -559,7 +554,7 @@ export const MonitorPage: React.FC = () => {
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[#C5C6C7]/40" />
-              <span className="text-[#C5C6C7]/70">Offline:</span>
+              <span className="text-[#C5C6C7]/70">Desconectado:</span>
               <strong className="text-white">{summary.byStatus.offline}</strong>
             </div>
           </div>
@@ -581,7 +576,7 @@ export const MonitorPage: React.FC = () => {
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-2xl font-bold font-mono text-white">
-                {monitoring ? monitoring.mode.toUpperCase() : 'INACTIVA'}
+                {monitoring ? MODE_LABELS[monitoring.mode] : 'Inactiva'}
               </span>
             </div>
           </div>
@@ -593,9 +588,9 @@ export const MonitorPage: React.FC = () => {
 
       {/* 4. Tabla de Agentes en Vivo */}
       <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-4 border-b border-[#242E3B] flex items-center justify-between">
+        <div className="p-4 border-b border-[#242E3B] flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-bold text-white">Matriz Operativa de Agentes</h2>
+            <h2 className="text-base font-bold text-white">Matriz operativa de agentes</h2>
             <p className="text-xs text-[#C5C6C7]/60 font-mono">
               Estados SIP, llamadas activas y controles de intervención en tiempo real.
             </p>
@@ -606,14 +601,14 @@ export const MonitorPage: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full min-w-[960px] text-left border-collapse text-xs">
             <thead>
               <tr className="border-b border-[#242E3B] bg-[#0B0C10]/80 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
                 <th className="py-3 px-4">Agente</th>
-                <th className="py-3 px-4">Campaña / Ext</th>
+                <th className="py-3 px-4">Campaña / Ext.</th>
                 <th className="py-3 px-4">Estado</th>
                 <th className="py-3 px-4">Tiempo</th>
-                <th className="py-3 px-4">Detalle de Llamada</th>
+                <th className="py-3 px-4">Detalle de llamada</th>
                 <th className="py-3 px-4 text-center">Supervisión</th>
                 <th className="py-3 px-4 text-right">Controles</th>
               </tr>
@@ -719,10 +714,10 @@ export const MonitorPage: React.FC = () => {
                                     : 'bg-[#C5C6C7]/10 text-[#C5C6C7] border-[#242E3B]'
                               }`}
                             >
-                              {currentCall.sentiment}
+                              {SENTIMENT_LABELS[currentCall.sentiment] ?? currentCall.sentiment}
                             </span>
                             <span className="text-[#C5C6C7]/60">
-                              QA: <strong className="text-white">{currentCall.qaScore}</strong>
+                              Calidad: <strong className="text-white">{currentCall.qaScore}</strong>
                             </span>
                           </div>
                         </div>
@@ -739,6 +734,7 @@ export const MonitorPage: React.FC = () => {
                             type="button"
                             onClick={() => handleStartMonitor(currentCall.id, 'listen')}
                             title="Escuchar silenciosamente"
+                            aria-label={`Escuchar llamada de ${agent.name}`}
                             className="p-1.5 rounded-lg bg-[#1F2833] hover:bg-[#66FCF1] hover:text-[#0B0C10] text-[#C5C6C7] border border-[#242E3B] transition-colors"
                           >
                             <Volume2 className="w-3.5 h-3.5" />
@@ -746,8 +742,9 @@ export const MonitorPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleStartMonitor(currentCall.id, 'whisper')}
-                            title="Hablar solo al agente (Whisper)"
-                            className="p-1.5 rounded-lg bg-[#1F2833] hover:bg-[#38BDF8] hover:text-[#0B0C10] text-[#C5C6C7] border border-[#242E3B] transition-colors"
+                            title="Hablar solo al agente (susurro)"
+                            aria-label={`Susurrar al agente ${agent.name}`}
+                            className="p-1.5 rounded-lg bg-[#1F2833] hover:bg-[#818CF8] hover:text-[#0B0C10] text-[#C5C6C7] border border-[#242E3B] transition-colors"
                           >
                             <Mic className="w-3.5 h-3.5" />
                           </button>
@@ -755,6 +752,7 @@ export const MonitorPage: React.FC = () => {
                             type="button"
                             onClick={() => handleStartMonitor(currentCall.id, 'intervene')}
                             title="Intervenir en vivo (tripartita)"
+                            aria-label={`Intervenir llamada de ${agent.name}`}
                             className="p-1.5 rounded-lg bg-[#EF4444]/15 hover:bg-[#EF4444] hover:text-white text-[#EF4444] border border-[#EF4444]/30 transition-colors"
                           >
                             <PhoneCall className="w-3.5 h-3.5" />
@@ -763,6 +761,7 @@ export const MonitorPage: React.FC = () => {
                             type="button"
                             onClick={() => handleEndCall(currentCall.id)}
                             title="Colgar / Terminar llamada"
+                            aria-label={`Terminar llamada de ${agent.name}`}
                             className="p-1.5 rounded-lg bg-[#1F2833] hover:bg-[#EF4444] hover:text-white text-[#C5C6C7] border border-[#242E3B] transition-colors ml-1"
                           >
                             <PhoneOff className="w-3.5 h-3.5" />
@@ -787,6 +786,7 @@ export const MonitorPage: React.FC = () => {
                                   : 'bg-[#1F2833] text-[#C5C6C7] hover:text-white border-[#242E3B]'
                               }`}
                               title={agent.status === 'break' ? 'Reanudar disponibilidad' : 'Poner en pausa / descanso'}
+                              aria-label={agent.status === 'break' ? `Reanudar disponibilidad de ${agent.name}` : `Poner en pausa a ${agent.name}`}
                             >
                               {agent.status === 'break' ? (
                                 <Play className="w-3.5 h-3.5" />
@@ -816,15 +816,15 @@ export const MonitorPage: React.FC = () => {
 
       {/* 9. Panel "Registro de supervisión" con las últimas 10 entradas */}
       <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-xl space-y-4">
-        <div className="flex items-center justify-between border-b border-[#242E3B] pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#242E3B] pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#66FCF1]/10 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
               <History className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Registro de Auditoría de Supervisión</h2>
+              <h2 className="text-base font-bold text-white">Registro de auditoría de supervisión</h2>
               <p className="text-xs text-[#C5C6C7]/60 font-mono">
-                Trazabilidad de sesiones de escucha, whisper e intervenciones en vivo.
+                Trazabilidad de sesiones de escucha, susurro e intervenciones en vivo.
               </p>
             </div>
           </div>
@@ -842,8 +842,8 @@ export const MonitorPage: React.FC = () => {
             {monitorLog.slice(0, 10).map((log) => {
               const agent = agentMap.get(log.agentId);
               return (
-                <div key={log.id} className="py-2.5 flex items-center justify-between text-xs font-mono">
-                  <div className="flex items-center gap-3">
+                <div key={log.id} className="py-2.5 flex items-center justify-between gap-3 text-xs font-mono">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
                     <span className="text-[#C5C6C7]/50 text-[11px]">
                       {new Date(log.at).toLocaleTimeString('es-MX', {
                         hour: '2-digit',
@@ -866,11 +866,11 @@ export const MonitorPage: React.FC = () => {
                       log.mode === 'intervene'
                         ? 'bg-[#EF4444]/20 text-[#EF4444] border-[#EF4444]/40'
                         : log.mode === 'whisper'
-                          ? 'bg-[#38BDF8]/20 text-[#38BDF8] border-[#38BDF8]/40'
+                          ? 'bg-[#818CF8]/20 text-[#A5B4FC] border-[#818CF8]/40'
                           : 'bg-[#66FCF1]/20 text-[#66FCF1] border-[#66FCF1]/40'
                     }`}
                   >
-                    {log.mode}
+                    {MODE_LABELS[log.mode]}
                   </span>
                 </div>
               );
@@ -881,27 +881,20 @@ export const MonitorPage: React.FC = () => {
 
       {/* 5. Modal de Confirmación para Intervenir */}
       {interveneTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13151c] border border-[#EF4444]/40 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#242E3B] pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#EF4444]/20 text-[#EF4444] flex items-center justify-center border border-[#EF4444]/40">
-                  <PhoneCall className="w-4 h-4 animate-bounce" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-white">Confirmar Intervención</h3>
-                  <p className="text-[11px] text-[#EF4444] font-mono">Acción sensible de control</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setInterveneTarget(null)}
-                className="p-1 rounded-lg text-[#C5C6C7] hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
+        <Modal
+          open
+          onClose={() => setInterveneTarget(null)}
+          title="Confirmar intervención"
+          description="Acción sensible de control."
+          footer={
+            <>
+              <Button onClick={() => setInterveneTarget(null)}>Cancelar</Button>
+              <Button variant="danger" icon={PhoneCall} onClick={handleConfirmIntervene}>
+                Sí, entrar a intervenir
+              </Button>
+            </>
+          }
+        >
             <div className="p-3.5 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/30 space-y-2 text-xs text-[#C5C6C7]">
               <p className="text-white font-semibold flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4 text-[#EF4444] shrink-0" />
@@ -914,25 +907,7 @@ export const MonitorPage: React.FC = () => {
                 Esta acción queda registrada de forma permanente en la bitácora de auditoría.
               </p>
             </div>
-
-            <div className="pt-2 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setInterveneTarget(null)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#C5C6C7] hover:text-white bg-[#1F2833] hover:bg-[#253240]"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirmIntervene}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#EF4444] hover:bg-[#dc2626] shadow-[0_0_15px_rgba(239,68,68,0.35)]"
-              >
-                Sí, entrar a intervenir
-              </button>
-            </div>
-          </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

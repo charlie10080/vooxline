@@ -3,6 +3,22 @@ import type { TimeOffType, TimeOffStatus, ActionResult } from '@/types';
 import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { resetApplicationState } from '@/lib/globalReset';
 import {
+  PageHeader,
+  Card,
+  Button,
+  Badge,
+  StatCard,
+  Avatar,
+  EmptyState,
+  Modal,
+  Field,
+  Input,
+  TextArea,
+  Select,
+  Tabs,
+  Notice,
+} from '@/components/ui';
+import {
   CalendarOff,
   Plus,
   CheckCircle2,
@@ -14,13 +30,32 @@ import {
   User,
   RotateCcw,
   Search,
-  Building2,
   Calendar,
   Clock,
-  Info,
+  Inbox,
+  ListChecks,
 } from 'lucide-react';
 
 type TabFilter = 'all' | TimeOffStatus;
+
+const TAB_LABELS: Record<TabFilter, string> = {
+  pending: 'Pendientes',
+  approved: 'Aprobadas',
+  rejected: 'Rechazadas',
+  all: 'Todas',
+};
+
+const NOTICE_TONE = {
+  success: 'success',
+  warning: 'warning',
+  error: 'danger',
+  info: 'info',
+} as const;
+
+const CREATE_ERRORS: Record<string, string> = {
+  invalid: 'Revisa los datos: fechas, horas o motivo no son válidos.',
+  not_found: 'El agente seleccionado ya no existe.',
+};
 
 export const TimeOffPage: React.FC = () => {
   const {
@@ -140,6 +175,11 @@ export const TimeOffPage: React.FC = () => {
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setFormError(null);
+  };
+
   // Manejador para enviar nueva solicitud
   const handleSubmitNewRequest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,7 +211,7 @@ export const TimeOffPage: React.FC = () => {
       return;
     }
 
-    createTimeOff({
+    const res: ActionResult = createTimeOff({
       agentId: formAgentId,
       type: formType,
       startDate: formStartDate,
@@ -180,6 +220,10 @@ export const TimeOffPage: React.FC = () => {
       reason: formReason.trim(),
       attachmentName: null,
     });
+    if (!res.ok) {
+      setFormError(CREATE_ERRORS[res.reason] ?? 'No se pudo registrar la solicitud. Inténtalo de nuevo.');
+      return;
+    }
 
     setIsModalOpen(false);
     setAlertNotice({
@@ -199,654 +243,387 @@ export const TimeOffPage: React.FC = () => {
     switch (type) {
       case 'vacation':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-            <Palmtree className="w-3.5 h-3.5" />
+          <Badge tone="accent">
+            <Palmtree className="h-3.5 w-3.5" />
             Vacaciones PTO
-          </span>
+          </Badge>
         );
       case 'medical':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#38BDF8]/10 text-[#38BDF8] border border-[#38BDF8]/30">
-            <Stethoscope className="w-3.5 h-3.5" />
-            Permiso Médico
-          </span>
+          <Badge tone="info">
+            <Stethoscope className="h-3.5 w-3.5" />
+            Permiso médico
+          </Badge>
         );
       case 'personal':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#A78BFA]/10 text-[#A78BFA] border border-[#A78BFA]/30">
-            <User className="w-3.5 h-3.5" />
+          <Badge tone="neutral">
+            <User className="h-3.5 w-3.5" />
             Personal
-          </span>
+          </Badge>
         );
     }
   };
 
+  const TYPE_OPTIONS: Array<{ value: TimeOffType; label: string }> = [
+    { value: 'vacation', label: 'Vacaciones PTO' },
+    { value: 'medical', label: 'Médico' },
+    { value: 'personal', label: 'Personal' },
+  ];
+
   return (
     <div className="space-y-6">
-      {/* Encabezado Principal */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13171F] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
+      <PageHeader
+        icon={CalendarOff}
+        eyebrow="RR. HH. · AUSENCIAS Y PTO"
+        title="Ausencias y solicitudes"
+        description="Aprobación de vacaciones, permisos médicos y control en tiempo real de los saldos de horas PTO."
+        actions={
+          <>
+            <Button variant="primary" icon={Plus} onClick={() => setIsModalOpen(true)}>
+              Nueva solicitud
+            </Button>
+            <Button
+              variant="ghost"
+              icon={RotateCcw}
+              aria-label="Reiniciar todos los datos de demostración"
+              title="Reiniciar todos los datos de demostración"
+              onClick={() => {
+                if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
+                  resetApplicationState();
+                }
+              }}
+            />
+          </>
+        }
+      />
 
-        <div className="space-y-1 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
-              HR & TALENTO
-            </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">Gestión de Ausencias & PTO</span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <CalendarOff className="w-7 h-7 text-[#66FCF1]" />
-            <span>Time Off & Solicitudes</span>
-          </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
-            Aprobación de vacaciones, permisos médicos y control reactivo de saldos de horas PTO.
-          </p>
-        </div>
-
-        {/* Acciones del encabezado */}
-        <div className="flex flex-wrap items-center gap-3 relative z-10">
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#66FCF1] hover:bg-[#52e0d6] text-[#0B0C10] text-xs font-bold transition-all shadow-[0_0_16px_rgba(102,252,241,0.25)] cursor-pointer"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Nueva Solicitud</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm('¿Reiniciar todos los datos de demostración? Se restablecerán asistencias, usuarios, turnos y llamadas a su estado inicial.')) {
-                resetApplicationState();
-              }
-            }}
-            title="Reiniciar todos los datos de prueba"
-            className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Alerta de notificación de acciones */}
       {alertNotice && (
-        <div
-          className={`flex items-center justify-between p-4 rounded-xl border text-sm animate-fadeIn ${
-            alertNotice.type === 'success'
-              ? 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
-              : alertNotice.type === 'warning'
-                ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30 text-[#F59E0B]'
-                : alertNotice.type === 'error'
-                  ? 'bg-[#EF4444]/10 border-[#EF4444]/30 text-[#EF4444]'
-                  : 'bg-[#66FCF1]/10 border-[#66FCF1]/30 text-[#66FCF1]'
-          }`}
-        >
-          <div className="flex items-center gap-2.5">
-            {alertNotice.type === 'success' && <CheckCircle2 className="w-5 h-5 shrink-0" />}
-            {alertNotice.type === 'warning' && <AlertTriangle className="w-5 h-5 shrink-0" />}
-            {alertNotice.type === 'error' && <XCircle className="w-5 h-5 shrink-0" />}
-            {alertNotice.type === 'info' && <Info className="w-5 h-5 shrink-0" />}
-            <span className="font-medium">{alertNotice.message}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setAlertNotice(null)}
-            className="text-xs opacity-70 hover:opacity-100 uppercase tracking-wider font-mono ml-4"
-          >
-            Cerrar
-          </button>
-        </div>
+        <Notice tone={NOTICE_TONE[alertNotice.type]} onClose={() => setAlertNotice(null)}>
+          {alertNotice.message}
+        </Notice>
       )}
 
-      {/* Panel "Saldos de PTO" (Arriba, con una fila por agente y ptoBalanceHours en horas) */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[#242E3B] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#66FCF1]" />
-            <h2 className="text-base font-bold text-white tracking-wide">
-              Saldos de PTO
-            </h2>
-            <span className="text-xs font-mono text-[#C5C6C7]/60">
-              ({agents.length} agentes registrados)
-            </span>
-          </div>
-          <span className="text-xs font-mono text-[#66FCF1]/80 hidden sm:inline">
-            Descuento automático al aprobar vacaciones
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
-                <th className="py-2.5 px-4">Agente</th>
-                <th className="py-2.5 px-4">Código</th>
-                <th className="py-2.5 px-4">Campaña</th>
-                <th className="py-2.5 px-4">Nivel</th>
-                <th className="py-2.5 px-4 text-right">Saldo PTO Disponible</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
-              {agents.map((agent) => {
-                const campaign = campaignMap.get(agent.campaignId);
-                return (
-                  <tr
-                    key={agent.id}
-                    className="hover:bg-[#1A202C]/40 transition-colors"
-                  >
-                    <td className="py-2.5 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0">
-                          {agent.name.charAt(0)}
-                        </div>
-                        <span className="font-semibold text-white">
-                          {agent.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-2.5 px-4 font-mono text-[#C5C6C7]">
-                      {agent.employeeCode}
-                    </td>
-                    <td className="py-2.5 px-4 text-[#C5C6C7]">
-                      {campaign?.name ?? 'Sin asignar'}
-                    </td>
-                    <td className="py-2.5 px-4 text-[#C5C6C7]/70">
-                      {agent.level}
-                    </td>
-                    <td className="py-2.5 px-4 text-right">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30 font-mono font-bold text-xs shadow-sm">
-                        <Clock className="w-3 h-3" />
-                        {agent.ptoBalanceHours} hrs
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:gap-4">
+        <StatCard label="Total solicitudes" value={countAll} icon={ListChecks} tone="accent" />
+        <StatCard label="Pendientes" value={countPending} icon={Clock} tone="warning" />
+        <StatCard label="Aprobadas" value={countApproved} icon={CheckCircle2} tone="success" />
+        <StatCard label="Rechazadas" value={countRejected} icon={XCircle} tone="danger" />
       </div>
 
-      {/* Barra de Filtros: Tabs + Campaña + Búsqueda */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Tabs con contadores reales (por defecto: 'Pendientes') */}
-        <div className="flex items-center gap-1.5 bg-[#0B0C10] p-1 rounded-xl border border-[#242E3B] overflow-x-auto">
-          <button
-            type="button"
-            onClick={() => setActiveTab('pending')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'pending'
-                ? 'bg-[#F59E0B] text-[#0B0C10] shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Pendientes</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'pending'
-                  ? 'bg-[#0B0C10]/20 text-[#0B0C10]'
-                  : 'bg-[#1F2833] text-[#F59E0B]'
-              }`}
-            >
-              {countPending}
-            </span>
-          </button>
+      {/* Saldos de PTO: una fila por agente */}
+      <Card
+        title="Saldos de PTO"
+        subtitle={`${agents.length} agentes registrados · se descuenta automáticamente al aprobar vacaciones`}
+        bodyClassName="overflow-x-auto"
+      >
+        <table className="w-full min-w-[560px] border-collapse text-left">
+          <thead>
+            <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 font-mono text-[11px] uppercase tracking-wider text-[#C5C6C7]/60">
+              <th scope="col" className="px-4 py-2.5">Agente</th>
+              <th scope="col" className="px-4 py-2.5">Código</th>
+              <th scope="col" className="px-4 py-2.5">Campaña</th>
+              <th scope="col" className="px-4 py-2.5">Nivel</th>
+              <th scope="col" className="px-4 py-2.5 text-right">Saldo PTO disponible</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+            {agents.map((agent) => {
+              const campaign = campaignMap.get(agent.campaignId);
+              return (
+                <tr key={agent.id} className="transition-colors hover:bg-[#1F2833]/40">
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <Avatar name={agent.name} size="sm" />
+                      <span className="font-semibold text-white">{agent.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-2.5 font-mono text-[#C5C6C7]">{agent.employeeCode}</td>
+                  <td className="px-4 py-2.5 text-[#C5C6C7]">{campaign?.name ?? 'Sin asignar'}</td>
+                  <td className="px-4 py-2.5 text-[#C5C6C7]/70">{agent.level}</td>
+                  <td className="px-4 py-2.5 text-right">
+                    <Badge tone="accent">
+                      <Clock className="h-3 w-3" />
+                      {agent.ptoBalanceHours} h
+                    </Badge>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Card>
 
-          <button
-            type="button"
-            onClick={() => setActiveTab('approved')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'approved'
-                ? 'bg-[#10B981] text-[#0B0C10] shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Aprobadas</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'approved'
-                  ? 'bg-[#0B0C10]/20 text-[#0B0C10]'
-                  : 'bg-[#1F2833] text-[#10B981]'
-              }`}
-            >
-              {countApproved}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('rejected')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'rejected'
-                ? 'bg-[#EF4444] text-white shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Rechazadas</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'rejected'
-                  ? 'bg-[#0B0C10]/20 text-white'
-                  : 'bg-[#1F2833] text-[#EF4444]'
-              }`}
-            >
-              {countRejected}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('all')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-              activeTab === 'all'
-                ? 'bg-[#66FCF1] text-[#0B0C10] shadow-sm'
-                : 'text-[#C5C6C7]/70 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <span>Todas</span>
-            <span
-              className={`px-1.5 py-0.2 rounded font-mono text-[11px] ${
-                activeTab === 'all'
-                  ? 'bg-[#0B0C10]/20 text-[#0B0C10]'
-                  : 'bg-[#1F2833] text-[#C5C6C7]'
-              }`}
-            >
-              {countAll}
-            </span>
-          </button>
-        </div>
-
-        {/* Filtros de Campaña y Búsqueda */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-          <div className="relative">
-            <select
+      {/* Solicitudes con filtros */}
+      <Card
+        title="Solicitudes de ausencia"
+        subtitle={`${filteredRequests.length} mostradas · ${TAB_LABELS[activeTab]}`}
+        bodyClassName=""
+      >
+        <div className="flex flex-col justify-between gap-3 border-b border-[#242E3B] p-4 md:flex-row md:items-center">
+          <Tabs
+            value={activeTab}
+            onChange={setActiveTab}
+            options={[
+              { value: 'pending', label: 'Pendientes', count: countPending },
+              { value: 'approved', label: 'Aprobadas', count: countApproved },
+              { value: 'rejected', label: 'Rechazadas', count: countRejected },
+              { value: 'all', label: 'Todas', count: countAll },
+            ]}
+          />
+          <div className="flex flex-wrap items-center gap-2.5 sm:flex-nowrap">
+            <Select
+              aria-label="Filtrar por campaña"
               value={selectedCampaignId}
               onChange={(e) => setSelectedCampaignId(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="sm:w-48"
             >
-              <option value="all">Todas las Campañas</option>
+              <option value="all">Todas las campañas</option>
               {campaigns.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
               ))}
-            </select>
-            <Building2 className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
-
-          <div className="relative flex-1 sm:w-60">
-            <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar agente, motivo..."
-              className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
-            />
+            </Select>
+            <div className="relative flex-1 sm:w-60">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#C5C6C7]/40" />
+              <Input
+                type="search"
+                aria-label="Buscar solicitudes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar agente, motivo..."
+                className="pl-9"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Lista / Tabla de Solicitudes */}
-      <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-5 border-b border-[#242E3B] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#66FCF1]" />
-            <h2 className="text-base font-bold text-white tracking-wide">
-              Solicitudes de Ausencia
-            </h2>
-            <span className="text-xs font-mono text-[#C5C6C7]/60">
-              ({filteredRequests.length} mostradas)
-            </span>
-          </div>
-
-          <span className="text-xs font-mono text-[#C5C6C7]/60">
-            Pestaña activa:{' '}
-            <strong className="text-white uppercase">{activeTab}</strong>
-          </span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
-                <th className="py-3 px-4">Agente</th>
-                <th className="py-3 px-4">Campaña</th>
-                <th className="py-3 px-4">Tipo</th>
-                <th className="py-3 px-4">Período</th>
-                <th className="py-3 px-4">Horas</th>
-                <th className="py-3 px-4">Motivo</th>
-                <th className="py-3 px-4">Adjunto</th>
-                <th className="py-3 px-4">Estado</th>
-                <th className="py-3 px-4 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
-              {filteredRequests.length === 0 ? (
-                <tr>
-                  <td colSpan={9} className="py-12 text-center text-[#C5C6C7]/50 font-mono">
-                    No hay solicitudes en la pestaña "{activeTab}".
-                  </td>
+        {filteredRequests.length === 0 ? (
+          <EmptyState
+            icon={Inbox}
+            title="Sin solicitudes"
+            description={`No hay solicitudes en "${TAB_LABELS[activeTab]}" para los filtros seleccionados.`}
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[960px] border-collapse text-left">
+              <thead>
+                <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 font-mono text-[11px] uppercase tracking-wider text-[#C5C6C7]/60">
+                  <th scope="col" className="px-4 py-3">Agente</th>
+                  <th scope="col" className="px-4 py-3">Campaña</th>
+                  <th scope="col" className="px-4 py-3">Tipo</th>
+                  <th scope="col" className="px-4 py-3">Período</th>
+                  <th scope="col" className="px-4 py-3">Horas</th>
+                  <th scope="col" className="px-4 py-3">Motivo</th>
+                  <th scope="col" className="px-4 py-3">Adjunto</th>
+                  <th scope="col" className="px-4 py-3">Estado</th>
+                  <th scope="col" className="px-4 py-3 text-right">Acciones</th>
                 </tr>
-              ) : (
-                filteredRequests.map((req) => {
+              </thead>
+              <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+                {filteredRequests.map((req) => {
                   const agent = agentMap.get(req.agentId);
                   const campaign = agent ? campaignMap.get(agent.campaignId) : null;
 
                   return (
-                    <tr
-                      key={req.id}
-                      className="hover:bg-[#1A202C]/50 transition-colors group"
-                    >
-                      {/* Agente */}
-                      <td className="py-3.5 px-4">
+                    <tr key={req.id} className="transition-colors hover:bg-[#1F2833]/40">
+                      <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0">
-                            {agent ? agent.name.charAt(0) : '?'}
-                          </div>
+                          <Avatar name={agent?.name ?? '?'} size="sm" />
                           <div>
-                            <div className="font-semibold text-white">
-                              {agent?.name ?? 'Desconocido'}
-                            </div>
-                            <div className="text-[11px] text-[#C5C6C7]/60 font-mono mt-0.5">
-                              {agent?.employeeCode}
-                            </div>
+                            <div className="font-semibold text-white">{agent?.name ?? 'Desconocido'}</div>
+                            <div className="mt-0.5 font-mono text-[11px] text-[#C5C6C7]/60">{agent?.employeeCode}</div>
                           </div>
                         </div>
                       </td>
-
-                      {/* Campaña */}
-                      <td className="py-3.5 px-4 text-white/90">
-                        {campaign?.name ?? 'Sin Asignar'}
-                      </td>
-
-                      {/* Tipo */}
-                      <td className="py-3.5 px-4">
-                        {renderTypeBadge(req.type)}
-                      </td>
-
-                      {/* Fechas */}
-                      <td className="py-3.5 px-4 font-mono">
-                        <div className="flex items-center gap-1.5 text-white">
-                          <Calendar className="w-3.5 h-3.5 text-[#66FCF1]/70" />
+                      <td className="px-4 py-3.5 text-white/90">{campaign?.name ?? 'Sin asignar'}</td>
+                      <td className="px-4 py-3.5">{renderTypeBadge(req.type)}</td>
+                      <td className="px-4 py-3.5 font-mono">
+                        <div className="flex items-center gap-1.5 whitespace-nowrap text-white">
+                          <Calendar className="h-3.5 w-3.5 text-[#66FCF1]/70" />
                           <span>{req.startDate}</span>
                           <span className="text-[#C5C6C7]/50">→</span>
                           <span>{req.endDate}</span>
                         </div>
                       </td>
-
-                      {/* Horas */}
-                      <td className="py-3.5 px-4 font-mono">
-                        <span className="text-white font-bold bg-[#1F2833] px-2 py-0.5 rounded">
-                          {req.hours} hrs
-                        </span>
+                      <td className="px-4 py-3.5">
+                        <Badge>{req.hours} h</Badge>
                       </td>
-
-                      {/* Motivo */}
-                      <td className="py-3.5 px-4 max-w-xs">
-                        <p className="text-xs text-[#C5C6C7] line-clamp-2" title={req.reason}>
+                      <td className="max-w-xs px-4 py-3.5">
+                        <p className="line-clamp-2 text-xs text-[#C5C6C7]" title={req.reason}>
                           {req.reason}
                         </p>
                       </td>
-
-                      {/* Adjunto */}
-                      <td className="py-3.5 px-4">
+                      <td className="px-4 py-3.5">
                         {req.attachmentName ? (
-                          <div
-                            className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#1F2833] border border-[#242E3B] text-[11px] text-[#66FCF1] font-mono"
-                            title={req.attachmentName}
-                          >
-                            <FileText className="w-3.5 h-3.5 shrink-0" />
-                            <span className="max-w-[120px] truncate">{req.attachmentName}</span>
-                          </div>
+                          <Badge tone="accent" className="max-w-[140px]">
+                            <FileText className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate" title={req.attachmentName}>{req.attachmentName}</span>
+                          </Badge>
                         ) : (
-                          <span className="text-[11px] text-[#C5C6C7]/40 font-mono">—</span>
+                          <span className="font-mono text-[11px] text-[#C5C6C7]/40">—</span>
                         )}
                       </td>
-
-                      {/* Estado */}
-                      <td className="py-3.5 px-4">
+                      <td className="px-4 py-3.5">
                         {req.status === 'pending' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#F59E0B]/10 text-[#F59E0B] border border-[#F59E0B]/30 font-mono">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+                          <Badge tone="warning">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
                             Pendiente
-                          </span>
+                          </Badge>
                         )}
                         {req.status === 'approved' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/30 font-mono">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                          <Badge tone="success">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
                             Aprobada
-                          </span>
+                          </Badge>
                         )}
                         {req.status === 'rejected' && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/30 font-mono">
-                            <XCircle className="w-3.5 h-3.5 text-[#EF4444]" />
+                          <Badge tone="danger">
+                            <XCircle className="h-3.5 w-3.5" />
                             Rechazada
-                          </span>
+                          </Badge>
                         )}
                       </td>
-
-                      {/* Acciones */}
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="px-4 py-3.5 text-right">
                         {req.status === 'pending' ? (
                           <div className="inline-flex items-center gap-1.5">
-                            <button
-                              type="button"
+                            <Button
+                              size="sm"
+                              variant="primary"
+                              icon={CheckCircle2}
                               onClick={() => handleApprove(req.id)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30 hover:bg-[#66FCF1] hover:text-[#0B0C10] transition-all shadow-[0_0_10px_rgba(102,252,241,0.15)]"
                             >
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Aprobar</span>
-                            </button>
-
-                            <button
-                              type="button"
+                              Aprobar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="danger"
+                              icon={XCircle}
                               onClick={() => handleReject(req.id)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#EF4444] bg-[#EF4444]/10 hover:bg-[#EF4444] hover:text-white border border-[#EF4444]/20 transition-all"
                             >
-                              <XCircle className="w-3.5 h-3.5" />
-                              <span>Rechazar</span>
-                            </button>
+                              Rechazar
+                            </Button>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-[#C5C6C7]/50 font-mono">
-                            Procesada
-                          </span>
+                          <span className="font-mono text-[11px] text-[#C5C6C7]/50">Procesada</span>
                         )}
                       </td>
                     </tr>
                   );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Modal Formulario "Nueva Solicitud" */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13171F] border border-[#242E3B] rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 relative">
-            <div className="flex items-center justify-between border-b border-[#242E3B] pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
-                  <CalendarOff className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white">
-                    Nueva Solicitud de Ausencia
-                  </h3>
-                  <p className="text-xs text-[#C5C6C7]/70">
-                    Registra solicitud para revisión y cómputo de saldo PTO.
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setFormError(null);
-                }}
-                className="p-1.5 rounded-lg text-[#C5C6C7] hover:text-white hover:bg-white/5"
-              >
-                ✕
-              </button>
-            </div>
-
-            {formError && (
-              <div className="p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#EF4444] text-xs flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 shrink-0" />
-                <span>{formError}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmitNewRequest} className="space-y-4 text-xs">
-              {/* Agente */}
-              <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1.5">
-                  Agente
-                </label>
-                <select
-                  value={formAgentId}
-                  onChange={(e) => setFormAgentId(e.target.value)}
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1]"
-                >
-                  {agents.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.name} ({a.employeeCode}) — Saldo PTO: {a.ptoBalanceHours} hrs
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Tipo */}
-              <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1.5">
-                  Tipo de Solicitud
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setFormType('vacation')}
-                    className={`py-2 px-3 rounded-xl border text-center transition-all ${
-                      formType === 'vacation'
-                        ? 'bg-[#66FCF1]/15 text-[#66FCF1] border-[#66FCF1]/40 font-semibold'
-                        : 'bg-[#0B0C10] text-[#C5C6C7]/70 border-[#242E3B] hover:text-white'
-                    }`}
-                  >
-                    Vacaciones PTO
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormType('medical')}
-                    className={`py-2 px-3 rounded-xl border text-center transition-all ${
-                      formType === 'medical'
-                        ? 'bg-[#38BDF8]/15 text-[#38BDF8] border-[#38BDF8]/40 font-semibold'
-                        : 'bg-[#0B0C10] text-[#C5C6C7]/70 border-[#242E3B] hover:text-white'
-                    }`}
-                  >
-                    Médico
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormType('personal')}
-                    className={`py-2 px-3 rounded-xl border text-center transition-all ${
-                      formType === 'personal'
-                        ? 'bg-[#A78BFA]/15 text-[#A78BFA] border-[#A78BFA]/40 font-semibold'
-                        : 'bg-[#0B0C10] text-[#C5C6C7]/70 border-[#242E3B] hover:text-white'
-                    }`}
-                  >
-                    Personal
-                  </button>
-                </div>
-              </div>
-
-              {/* Fechas */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1.5">
-                    Fecha Inicio
-                  </label>
-                  <input
-                    type="date"
-                    value={formStartDate}
-                    onChange={(e) => setFormStartDate(e.target.value)}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1] font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1.5">
-                    Fecha Fin
-                  </label>
-                  <input
-                    type="date"
-                    value={formEndDate}
-                    onChange={(e) => setFormEndDate(e.target.value)}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1] font-mono"
-                  />
-                </div>
-              </div>
-
-              {/* Horas */}
-              <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1.5">
-                  Horas Totales a Cargar
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={formHours}
-                  onChange={(e) => setFormHours(e.target.value)}
-                  placeholder="Ej: 8, 16, 24"
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1] font-mono"
-                />
-                {formType === 'vacation' && (
-                  <p className="text-[11px] text-[#C5C6C7]/50 mt-1">
-                    * Al ser vacaciones, estas horas se descontarán del saldo de PTO si la solicitud es aprobada.
-                  </p>
-                )}
-              </div>
-
-              {/* Motivo */}
-              <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1.5">
-                  Motivo / Justificación
-                </label>
-                <textarea
-                  rows={3}
-                  value={formReason}
-                  onChange={(e) => setFormReason(e.target.value)}
-                  placeholder="Describe la causa de la ausencia o detalles del viaje..."
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl p-3 focus:outline-none focus:border-[#66FCF1] resize-none"
-                />
-              </div>
-
-              {/* Botones de acción */}
-              <div className="pt-3 border-t border-[#242E3B] flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    setFormError(null);
-                  }}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#C5C6C7] hover:text-white bg-[#1F2833] hover:bg-[#253240] transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-[#0B0C10] bg-[#66FCF1] hover:bg-[#52e0d6] transition-all shadow-[0_0_12px_rgba(102,252,241,0.25)]"
-                >
-                  Crear Solicitud
-                </button>
-              </div>
-            </form>
+                })}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
+        )}
+      </Card>
+
+      {/* Modal "Nueva solicitud" */}
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        title="Nueva solicitud de ausencia"
+        description="Registra la solicitud para revisión y cómputo del saldo PTO."
+      >
+        <form onSubmit={handleSubmitNewRequest} className="space-y-4">
+          {formError && (
+            <div
+              role="alert"
+              className="flex items-center gap-2 rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/10 p-3 text-xs text-[#EF4444]"
+            >
+              <AlertTriangle className="h-4 w-4 shrink-0" />
+              <span>{formError}</span>
+            </div>
+          )}
+
+          <Field label="Agente">
+            <Select value={formAgentId} onChange={(e) => setFormAgentId(e.target.value)}>
+              {agents.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name} ({a.employeeCode}) — Saldo PTO: {a.ptoBalanceHours} h
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          <fieldset className="space-y-1.5">
+            <legend className="mb-1.5 text-xs font-medium text-[#C5C6C7]">Tipo de solicitud</legend>
+            <div className="grid grid-cols-3 gap-2">
+              {TYPE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  aria-pressed={formType === opt.value}
+                  onClick={() => setFormType(opt.value)}
+                  className={`rounded-xl border px-3 py-2 text-center text-xs transition-all ${
+                    formType === opt.value
+                      ? 'border-[#66FCF1]/40 bg-[#66FCF1]/15 font-semibold text-[#66FCF1]'
+                      : 'border-[#242E3B] bg-[#0B0C10] text-[#C5C6C7]/70 hover:text-white'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Field label="Fecha de inicio">
+              <Input
+                type="date"
+                value={formStartDate}
+                onChange={(e) => setFormStartDate(e.target.value)}
+                className="font-mono"
+              />
+            </Field>
+            <Field label="Fecha de fin">
+              <Input
+                type="date"
+                value={formEndDate}
+                onChange={(e) => setFormEndDate(e.target.value)}
+                className="font-mono"
+              />
+            </Field>
+          </div>
+
+          <Field
+            label="Horas totales a cargar"
+            hint={
+              formType === 'vacation'
+                ? 'Al ser vacaciones, estas horas se descontarán del saldo de PTO si la solicitud es aprobada.'
+                : undefined
+            }
+          >
+            <Input
+              type="number"
+              min="1"
+              step="1"
+              value={formHours}
+              onChange={(e) => setFormHours(e.target.value)}
+              placeholder="Ej: 8, 16, 24"
+              className="font-mono"
+            />
+          </Field>
+
+          <Field label="Motivo / justificación">
+            <TextArea
+              rows={3}
+              value={formReason}
+              onChange={(e) => setFormReason(e.target.value)}
+              placeholder="Describe la causa de la ausencia o los detalles del viaje..."
+            />
+          </Field>
+
+          <div className="flex items-center justify-end gap-2.5 border-t border-[#242E3B] pt-4">
+            <Button variant="ghost" onClick={closeModal}>
+              Cancelar
+            </Button>
+            <Button type="submit" variant="primary">
+              Crear solicitud
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

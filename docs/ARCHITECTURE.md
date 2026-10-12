@@ -1,65 +1,92 @@
 # Vooxline: mapa de arquitectura (estado actual)
 
-Frontend: React 19 + Vite + TypeScript + Tailwind 4 + zustand. **Todo el estado vive en el navegador (localStorage).** No hay backend, ni usuarios con sesión, ni permisos.
+Frontend: React 19 + Vite + TypeScript + Tailwind 4 + zustand. **Todo el estado vive en el navegador (localStorage).** No hay backend todavía: el código está ordenado para que cada store se cambie por llamadas a un API sin rehacer las pantallas (ver sección 6).
 
-## 1. Rutas
+## 1. Dos aplicaciones, un mismo código
 
-| Ruta | Página | Estado |
+| Área | Quién la usa | Layout |
 |---|---|---|
-| `/` | Overview | Funcional (local) |
-| `/time-clock` | Time Clock + Motor de Aprobación | Funcional (local) |
-| `/time-off` | Time Off | Funcional (local) |
-| `/payroll` | Rentabilidad y Nómina | Funcional (local, exporta CSV) |
-| `/users` | Users | Funcional (local) |
-| `/groups` | Smart Groups | Funcional (local) |
-| `/scheduling` | Job Scheduling | Funcional (local) |
-| `/monitor` | Monitor en Vivo | **Simulado** (sin audio ni telefonía) |
-| `/activity` | Activity | Funcional (local; no es auditoría real) |
-| `/automations`, `/chat`, `/updates`, `/director`, `/forms`, `/helpdesk`, `/celebrations` | Placeholder "En construcción" | Pendiente |
+| Consola (`/`, `/time-clock`, …) | Supervisores y administradores | `components/layout/AppLayout.tsx` (redirige a `/portal` si el usuario es agente) |
+| Portal del agente (`/portal/...`) | Agentes (y supervisores para su propio turno) | `components/layout/PortalLayout.tsx` |
 
-## 2. Stores (un dominio por store, cada uno con su clave en localStorage)
+El usuario actual sale de `useSessionStore` (`useCurrentUser()` devuelve agente, perfil, rol e `isManager`). El menú "Entrar como" permite probar con cualquier usuario. **No hay contraseñas**: con backend esto lo reemplaza el inicio de sesión real.
+
+## 2. Rutas
+
+| Ruta consola | Ruta portal | Página | Estado |
+|---|---|---|---|
+| `/` | | Resumen (Overview) | Funcional (local) |
+| `/activity` | | Actividad | Funcional (local; no es auditoría real) |
+| `/monitor` | | Monitor en vivo | **Simulado** (sin audio ni telefonía) |
+| `/users`, `/groups`, `/director` | | Usuarios, Grupos inteligentes, Directorio | Funcional (local) |
+| `/automations` | | Automatizaciones | Funcional (local) |
+| `/chat` | `/portal/chat` | Chat | Funcional (local, sin tiempo real) |
+| `/updates` | `/portal/avisos` | Avisos con confirmación de lectura | Funcional (local) |
+| `/forms` | `/portal/formularios` | Formularios | Funcional (local) |
+| `/helpdesk` | `/portal/soporte` | Help Desk | Funcional (local) |
+| `/time-clock` | `/portal` | Time Clock / Mi turno (GPS, descansos) | Funcional (local) |
+| `/scheduling` | `/portal/horario` | Horarios, turnos abiertos e intercambios | Funcional (local) |
+| | `/portal/horas` | Hoja de horas del agente | Funcional (local) |
+| `/time-off` | `/portal/permisos` | Vacaciones y permisos | Funcional (local) |
+| `/payroll` | | Rentabilidad y nómina | Funcional (local, exporta CSV) |
+| `/celebrations` | `/portal/reconocimientos` | Celebraciones, puntos y premios | Funcional (local) |
+
+Las páginas compartidas se adaptan al rol con `useCurrentUser()`: los supervisores gestionan y los agentes participan.
+
+## 3. Stores (un dominio por store, cada uno con su clave en localStorage, `version: 1`)
 
 | Store | Clave | Contiene | Depende de |
 |---|---|---|---|
-| `useWorkforceStore` | `vooxline-workforce` | agents, campaigns, timeEntries, timeOffRequests | (nadie) |
+| `useWorkforceStore` | `vooxline-workforce` | agents (con ubicación autorizada), campaigns, timeEntries (GPS, descansos), timeOffRequests | (nadie) |
 | `useDirectoryStore` | `vooxline-directory` | profiles (correo, rol, activo), groups | workforce |
-| `useScheduleStore` | `vooxline-schedule` | shifts | workforce, directory |
-| `useLiveStore` | `vooxline-live` | calls, monitoring, monitorLog, simulationEnabled | workforce |
-| `useActivityStore` | `vooxline-activity` | events (máx. 300) | (los alimenta `lib/activityTracker.ts`, que observa los otros 4) |
+| `useSessionStore` | `vooxline-session` | usuario actual | workforce, directory (solo lectura) |
+| `useScheduleStore` | `vooxline-schedule` | shifts, openShifts, claims, swaps | workforce, directory |
+| `useLiveStore` | `vooxline-live` | calls, monitoring, monitorLog | workforce |
+| `useChatStore` | `vooxline-chat` | conversaciones, mensajes, lecturas | sesión, directorio |
+| `useUpdatesStore` | `vooxline-updates` | avisos, lecturas, confirmaciones, comentarios | sesión, directorio |
+| `useFormsStore` | `vooxline-forms` | plantillas y respuestas | sesión, directorio |
+| `useHelpdeskStore` | `vooxline-helpdesk` | tickets, conversación, historial | sesión, directorio |
+| `useCelebrationsStore` | `vooxline-celebrations` | cumpleaños, reconocimientos, premios, canjes | sesión, directorio, workforce |
+| `useActivityStore` | `vooxline-activity` | events (máx. 300) | (los alimenta `lib/activityTracker.ts`) |
 
-Regla: **no hay dependencias circulares**. `useWorkforceStore` NO importa los demás; por eso `clockIn(agentId, scheduledMinutes?)` recibe los minutos del turno como parámetro.
+Regla: **no hay dependencias circulares**. `useWorkforceStore` NO importa a los demás.
 
-## 3. Reglas de negocio y dónde viven
+## 4. Reglas de negocio y dónde viven
 
 | Regla | Dónde |
 |---|---|
-| Desviación de horas > 15 min requiere confirmación del supervisor | `lib/metrics.ts` (`needsSupervisorReview`) + `approveEntry` |
-| Entradas con bandera de puntualidad también requieren revisión | `lib/punctuality.ts` (`entryNeedsReview`). Las páginas deben usar esta función |
-| No se aprueba una entrada con turno abierto | `approveEntry` |
-| Vacaciones descuentan PTO; permiso médico/personal no; PTO insuficiente se rechaza | `approveTimeOff` |
-| No se desactiva a un usuario con turno abierto | `useDirectoryStore.setUserActive` |
-| Un turno no puede traslaparse, caer en un permiso aprobado ni asignarse a un usuario inactivo | `useScheduleStore` (`validate`) |
-| Las llamadas solo entran a agentes con turno abierto y disponibles; si el agente se desconecta, la llamada termina | `useLiveStore` |
-| Tolerancia de puntualidad 15 min; olvido de marcaje a los 30 min del fin del turno; ausencias: hoy y ayer | `lib/punctuality.ts` |
+| Desviación de horas > 15 min requiere confirmación del supervisor | `lib/metrics.ts` + `approveEntry` |
+| Banderas de puntualidad y de ubicación también requieren revisión | `lib/punctuality.ts` (`entryNeedsReview`) |
+| Ubicación al marcar: dentro/fuera del radio, permiso negado o sin ubicación | `lib/geo.ts` + `clockIn`/`clockOut` |
+| Descansos: no se inicia dos veces; salir en descanso cierra el descanso | `startBreak`/`endBreak`/`clockOut` |
+| Vacaciones descuentan PTO; solicitudes se validan y el agente puede retirar las pendientes | `createTimeOff`, `approveTimeOff`, `cancelTimeOff` |
+| Turnos: sin traslapes, sin permisos aprobados, sin usuarios inactivos (también al tomar turnos abiertos e intercambiar) | `useScheduleStore` (`validate`) |
+| Chat: solo miembros leen y escriben; canales de anuncios solo para supervisores | `lib/chat.ts`, `useChatStore` |
+| Avisos: solo la audiencia los ve; confirmaciones y recordatorios | `lib/updates.ts`, `useUpdatesStore` |
+| Formularios: respuestas obligatorias, rangos, una por día, puntaje QA, CSV | `lib/forms.ts` |
+| Help Desk: SLA por prioridad, transiciones de estado, reapertura 72 h | `lib/helpdesk.ts` |
+| Puntos: reconocimiento de compañero 50, de supervisor 100; canje según saldo y stock | `lib/celebrations.ts` |
+| Tolerancia de puntualidad 15 min; olvido de marcaje a los 30 min | `lib/punctuality.ts` |
 
-## 3.1 Deuda técnica conocida
+## 5. Reinicio
 
-- **Aprobar Lote** aplica la regla de puntualidad dentro de la página Time Clock, no en el store (el `approveBatch` del store solo conoce la regla de horas). Mover a una función compartida cuando haya backend.
-- Los datos de ejemplo (turnos, entradas, llamadas) se generan **relativos a la fecha de carga**; después de unos días conviene el reinicio global.
+Solo `resetApplicationState()` (`lib/globalReset.ts`). Reinicia todos los stores de datos a la vez, sin generar eventos falsos, y deja UN evento de sistema en Actividad.
+
+## 6. Paso a backend
+
+Cada store es la frontera con los datos: las páginas solo llaman acciones que devuelven `{ ok } | { ok: false, reason }`. Para pasar a backend:
+
+1. Crear las tablas a partir de `src/types/*` (cada tipo es una tabla o documento).
+2. Cambiar cada acción del store por una llamada al API que devuelva el mismo resultado; las reglas de `src/lib/*` se ejecutan en el servidor (y se pueden seguir usando en el navegador para validar antes de enviar).
+3. Reemplazar `useSessionStore` por el inicio de sesión real y aplicar los permisos por rol en el servidor (hoy se revisan solo en el navegador).
+4. Chat, avisos y notificaciones necesitan tiempo real (WebSockets o similar).
+5. La ubicación y las alertas deben guardarse en el servidor para que el agente no pueda borrarlas.
+
+## 7. Deuda técnica conocida
+
+- **Aprobar lote** aplica la regla de puntualidad dentro de la página Time Clock, no en el store.
+- Los datos de ejemplo se generan **relativos a la fecha de carga**; después de unos días conviene el reinicio global.
 - Las claves de localStorage tienen `version: 1` y no hay migraciones: si cambias un tipo persistido, sube la versión o pide un reinicio.
-- El rol de cada usuario (agente/supervisor/admin) se guarda pero **no se hace cumplir**: cualquiera puede aprobar.
+- Los permisos por rol se revisan en los stores del navegador, que cualquiera puede manipular. Con backend deben vivir en el servidor.
 - Dos pestañas abiertas no se sincronizan entre sí.
-
-## 4. Reinicio
-
-Solo `resetApplicationState()` (`lib/globalReset.ts`). Reinicia los 4 stores de datos a la vez, sin generar eventos falsos, y deja UN evento de sistema en Activity. La interfaz no debe exponer los reinicios individuales de cada store.
-
-## 5. Qué es local y qué necesitaría backend
-
-| Módulo | Hoy | Con backend real |
-|---|---|---|
-| Time Clock, Time Off, Payroll, Scheduling, Users, Groups | Local | Tablas + autenticación + permisos por rol |
-| Monitor en Vivo | Simulado | Telefonía (Twilio/Telnyx) + WebSockets |
-| Activity | Local, borrable | Registro de auditoría en el servidor con el usuario real |
-| Chat, Help Desk, Forms, Updates, Director | No existen | **Necesitan backend**: son multiusuario |
-| Celebrations | No existe | Se puede derivar de fechas de ingreso (ya existen en los perfiles) |
+- Las páginas antiguas sin ruta (`LandingPage`, `LoginPage`, `ClientDashboardPage`, `AdminCommandCenterPage`, `AgentPortalPage` y `pages/admin/*`) no se usan; el portal nuevo reemplaza a `AgentPortalPage`.
