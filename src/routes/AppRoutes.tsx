@@ -24,7 +24,7 @@ import { PortalTimeOffPage } from '@/pages/portal/PortalTimeOffPage';
 import { PortalSchedulePage } from '@/pages/portal/PortalSchedulePage';
 import { LandingPage } from '@/pages/LandingPage';
 import { LoginPage } from '@/pages/Login/LoginPage';
-import { ClientDashboardPage } from '@/pages/Client/ClientDashboardPage';
+import { ClientPortalPage } from '@/pages/Client/ClientPortalPage';
 import { RequireRole } from '@/components/layout/RequireRole';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { AdminCommandCenterPage } from '@/pages/admin/AdminCommandCenterPage';
@@ -38,7 +38,7 @@ export const AppRoutes: React.FC = () => {
       {/* Web pública y portales de clientes/admin (conviven con el apartado de trabajadores) */}
       <Route path="/inicio" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/cliente" element={<RequireRole roles={['client']}><ClientDashboardPage /></RequireRole>} />
+      <Route path="/cliente" element={<RequireRole roles={['client']}><ClientPortalPage /></RequireRole>} />
       {/* Un solo portal de agente: el nuevo */}
       <Route path="/agente" element={<Navigate to="/portal" replace />} />
       <Route path="/admin" element={<RequireRole roles={['admin']}><AdminLayout /></RequireRole>}>
