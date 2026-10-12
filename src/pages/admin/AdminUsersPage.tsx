@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { Avatar } from '@/components/ui';
 import { useAdminContext } from '@/layouts/adminContext';
 
 interface UserItem {
   id: string;
   name: string;
   email: string;
-  avatar: string;
   level: string;
   campaign: string;
   campaignColor: string;
@@ -31,8 +31,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-9921',
       name: 'María López',
       email: 'm.lopez@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCvPHa2-jP_RD3Rw4IZarjza8VKRGTSWHQ2JAf6K4SLDQwrws4qpvLS_GJV43z2ZST7YJDUJ20BhPHgnfwiog9mxbXJ7a9zBe_fN01OFyA8TlFkX1dFseb0pf0I9Y7FWjY7oQp6vO0xs-p9qMPpO4KLEuzHu1kKdLtFSBtgfK55Qhe2BPzsDcP-qbttY-IJf8YX1_b9Rhe5GD-czukEgEx0zRbBaTs5_WEY44gof8TIId1lTndygSQ',
       level: 'Senior Specialist L2',
       campaign: 'National Assemblers Inc',
       campaignColor: 'text-primary border-primary/30 bg-primary/10',
@@ -46,8 +44,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-8812',
       name: 'Carlos Mendoza',
       email: 'c.mendoza@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCsLwy9wHR5oLLswlB1RHIMt_PodeMAGKE-NN4L4csUIFGFDe_yOrACn__rpwOi0jOSDq0w_ZMKZXy84e_gGaZGMUEd1bTxHeNC3vdXeCsWs2ZgnYRVhsBOGPA0iifoh9yjwiFtVlsxzqxAEusfsdA_FogodrpnrmpgkUtdGY7M0yYNzyEzUjuP8S7MrSUUdutGHIFsJqIA0Y6zvM78Z_EWZqCeSbCV0KLiNW5CqofS5i3iVp_1eKI',
       level: 'Support Rep L1',
       campaign: 'Fidelis Health Support',
       campaignColor: 'text-secondary border-secondary/30 bg-secondary/10',
@@ -61,8 +57,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-7734',
       name: 'Valeria Ríos',
       email: 'v.rios@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDonmzzHjPmHRBRorZPnhpKrar_ngyMMJHjOGi8b7gpKKlfhSx2O2nwepoY8dtIQwBHbDVMhUZgg-bWcqA6mr-NgHZk3oUPD_w2ULo4_3SWtsxNM7Ynw2lwrZsj0CqzhoBF5sifHYPbO3WzzkbTHyJ950nAg3p7HUpYm1V8khO0FxQoeuYZCnP43A3LldKABFz9Atmtj9-_HvPK5_pBMPXl_ANWwvkYgwdmJQGPkln7k10mPSap5tA',
       level: 'Lead Retención L3',
       campaign: 'NexPay Fintech VIP',
       campaignColor: 'text-amber-400 border-amber-400/30 bg-amber-400/10',
@@ -76,8 +70,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-4109',
       name: 'Alejandro Sterling',
       email: 'a.sterling@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDFHk7nFqPz41j5h0w0814Mv_s71A2t0Z8xK9wJ1b89-21q6sO4b7f8L5g4bK7fA3pB9qY9=s96-c',
       level: 'B2B Executive Ops',
       campaign: 'Enterprise Solutions',
       campaignColor: 'text-purple-400 border-purple-400/30 bg-purple-400/10',
@@ -91,8 +83,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-6520',
       name: 'David Morales',
       email: 'd.morales@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDonmzzHjPmHRBRorZPnhpKrar_ngyMMJHjOGi8b7gpKKlfhSx2O2nwepoY8dtIQwBHbDVMhUZgg-bWcqA6mr-NgHZk3oUPD_w2ULo4_3SWtsxNM7Ynw2lwrZsj0CqzhoBF5sifHYPbO3WzzkbTHyJ950nAg3p7HUpYm1V8khO0FxQoeuYZCnP43A3LldKABFz9Atmtj9-_HvPK5_pBMPXl_ANWwvkYgwdmJQGPkln7k10mPSap5tA',
       level: 'ACD Specialist L1',
       campaign: 'National Assemblers Inc',
       campaignColor: 'text-primary border-primary/30 bg-primary/10',
@@ -106,8 +96,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-5211',
       name: 'Sofía Navarro',
       email: 's.navarro@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCvPHa2-jP_RD3Rw4IZarjza8VKRGTSWHQ2JAf6K4SLDQwrws4qpvLS_GJV43z2ZST7YJDUJ20BhPHgnfwiog9mxbXJ7a9zBe_fN01OFyA8TlFkX1dFseb0pf0I9Y7FWjY7oQp6vO0xs-p9qMPpO4KLEuzHu1kKdLtFSBtgfK55Qhe2BPzsDcP-qbttY-IJf8YX1_b9Rhe5GD-czukEgEx0zRbBaTs5_WEY44gof8TIId1lTndygSQ',
       level: 'Bilingual Care L2',
       campaign: 'Fidelis Health Support',
       campaignColor: 'text-secondary border-secondary/30 bg-secondary/10',
@@ -121,8 +109,6 @@ export const AdminUsersPage: React.FC = () => {
       id: 'VX-3390',
       name: 'Alejandra Moreno',
       email: 'a.moreno@vooxline.com',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCsLwy9wHR5oLLswlB1RHIMt_PodeMAGKE-NN4L4csUIFGFDe_yOrACn__rpwOi0jOSDq0w_ZMKZXy84e_gGaZGMUEd1bTxHeNC3vdXeCsWs2ZgnYRVhsBOGPA0iifoh9yjwiFtVlsxzqxAEusfsdA_FogodrpnrmpgkUtdGY7M0yYNzyEzUjuP8S7MrSUUdutGHIFsJqIA0Y6zvM78Z_EWZqCeSbCV0KLiNW5CqofS5i3iVp_1eKI',
       level: 'Support Rep L1',
       campaign: 'Retail Express VIP',
       campaignColor: 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10',
@@ -165,8 +151,6 @@ export const AdminUsersPage: React.FC = () => {
       id: randomId,
       name: newUserData.name,
       email: newUserData.email,
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCsLwy9wHR5oLLswlB1RHIMt_PodeMAGKE-NN4L4csUIFGFDe_yOrACn__rpwOi0jOSDq0w_ZMKZXy84e_gGaZGMUEd1bTxHeNC3vdXeCsWs2ZgnYRVhsBOGPA0iifoh9yjwiFtVlsxzqxAEusfsdA_FogodrpnrmpgkUtdGY7M0yYNzyEzUjuP8S7MrSUUdutGHIFsJqIA0Y6zvM78Z_EWZqCeSbCV0KLiNW5CqofS5i3iVp_1eKI',
       level: newUserData.level,
       campaign: newUserData.campaign,
       campaignColor: 'text-primary border-primary/30 bg-primary/10',
@@ -333,11 +317,7 @@ export const AdminUsersPage: React.FC = () => {
                     {/* Agente & Nivel con Foto de Perfil */}
                     <td className="py-space-md px-space-sm">
                       <div className="flex items-center gap-space-sm">
-                        <img
-                          src={user.avatar}
-                          alt={user.name}
-                          className="w-11 h-11 rounded-full object-cover shadow-[0_0_12px_rgba(0,0,0,0.6)] border border-white/10"
-                        />
+                        <Avatar name={user.name} />
                         <div className="flex flex-col">
                           <span className="font-semibold text-on-surface group-hover:text-primary transition-colors text-sm">
                             {user.name}

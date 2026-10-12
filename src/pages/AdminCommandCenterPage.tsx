@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Avatar } from '@/components/ui';
 import { Link } from 'react-router-dom';
 import { useAdminContext } from '@/layouts/adminContext';
 
@@ -11,7 +12,6 @@ interface TimeOffItem {
   campaign: string;
   requestedAgoEs: string;
   requestedAgoEn: string;
-  avatar: string;
   hoursEs: string;
   hoursEn: string;
   datesEs: string;
@@ -85,8 +85,6 @@ export const AdminCommandCenterPage: React.FC = () => {
       campaign: 'Fidelis Manager',
       requestedAgoEs: 'Solicitado hace 3h',
       requestedAgoEn: 'Requested 3h ago',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCSLwy9wHR5oLLswlB1RHIMt_PodeMAGKE-NN4L4csUIFGFDe_yOrACn__rpwOi0jOSDq0w_ZMKZXy84e_gGaZGMUEd1bTxHeNC3vdXeCsWs2ZgnYRVhsBOGPA0iifoh9yjwiFtVlsxzqxAEusfsdA_FogodrpnrmpgkUtdGY7M0yYNzyEzUjuP8S7MrSUUdutGHIFsJqIA0Y6zvM78Z_EWZqCeSbCV0KLiNW5CqofS5i3iVp_1eKI',
       hoursEs: '24 Horas',
       hoursEn: '24 Hours',
       datesEs: '04 Octubre - 07 Octubre 2024',
@@ -106,8 +104,6 @@ export const AdminCommandCenterPage: React.FC = () => {
       campaign: 'National Assemblers',
       requestedAgoEs: 'Solicitado hace 1h',
       requestedAgoEn: 'Requested 1h ago',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDonmzzHjPmHRBRorZPnhpKrar_ngyMMJHjOGi8b7gpKKlfhSx2O2nwepoY8dtIQwBHbDVMhUZgg-bWcqA6mr-NgHZk3oUPD_w2ULo4_3SWtsxNM7Ynw2lwrZsj0CqzhoBF5sifHYPbO3WzzkbTHyJ950nAg3p7HUpYm1V8khO0FxQoeuYZCnP43A3LldKABFz9Atmtj9-_HvPK5_pBMPXl_ANWwvkYgwdmJQGPkln7k10mPSap5tA',
       hoursEs: '4 Horas',
       hoursEn: '4 Hours',
       datesEs: 'Mañana, 28 Sep (09:00 - 13:00)',
@@ -464,11 +460,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                     <tr className="hover:bg-surface-container-high/40 transition-colors group">
                       <td className="py-space-sm px-space-sm">
                         <div className="flex items-center gap-space-sm">
-                          <img
-                            className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvPHa2-jP_RD3Rw4IZarjza8VKRGTSWHQ2JAf6K4SLDQwrws4qpvLS_GJV43z2ZST7YJDUJ20BhPHgnfwiog9mxbXJ7a9zBe_fN01OFyA8TlFkX1dFseb0pf0I9Y7FWjY7oQp6vO0xs-p9qMPpO4KLEuzHu1kKdLtFSBtgfK55Qhe2BPzsDcP-qbttY-IJf8YX1_b9Rhe5GD-czukEgEx0zRbBaTs5_WEY44gof8TIId1lTndygSQ"
-                            alt="María López"
-                          />
+                          <Avatar name="María López" />
                           <div className="flex flex-col">
                             <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                               María López
@@ -540,11 +532,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                     <tr className="hover:bg-surface-container-high/40 transition-colors group">
                       <td className="py-space-sm px-space-sm">
                         <div className="flex items-center gap-space-sm">
-                          <img
-                            className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2ldRREhZv-AFDC2Nh4xCF_JXRRDhTefX5fg4gN9KOdwMJwpMk6tqBM3PsilE-_IB8qUheC49bRccKX8BXC3sEQUSXEvIdS9kT20dG6D5duy8IP01cziguDAXFRaRKrISusZUGJ7jouAY6qtpM6RO16uDNtGjvXU45pRhR80CQbocZEQGc-aZoxkrjKdwHhDMErBux2y7mq3zvv25zNg3byhgRZ85Jq-LOY5-gyVsrvOfN5Y5-VaM"
-                            alt="Carlos Mendoza"
-                          />
+                          <Avatar name="Carlos Mendoza" />
                           <div className="flex flex-col">
                             <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                               Carlos Mendoza
@@ -600,11 +588,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                     <tr className="hover:bg-surface-container-high/40 transition-colors group">
                       <td className="py-space-sm px-space-sm">
                         <div className="flex items-center gap-space-sm">
-                          <img
-                            className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdlFAXQMK5SNFENukgDoQxHAyj4a3Sx0iTQdCrJOt2cOZs7zR92HucqlmkcW_hEv3gefVeDR-HqeCSoM6MMavp_kr9uzeEoLK2D1jPXCipU8Ymc7W__o5AQqQzpSKBskAHs8ha5QMI_kVAXvH6PNiWXVjrlMYku72vHZMOsBqIx5MK5I4bsWWqgDivxAuf-gvP9epqdiJ-QIy5YAEoGnNdT7SRbKCbiM9mtR44TeAAL7d64ZkreuE"
-                            alt="Valeria Ríos"
-                          />
+                          <Avatar name="Valeria Ríos" />
                           <div className="flex flex-col">
                             <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                               Valeria Ríos
@@ -676,11 +660,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                     <tr className="hover:bg-surface-container-high/40 transition-colors group">
                       <td className="py-space-sm px-space-sm">
                         <div className="flex items-center gap-space-sm">
-                          <img
-                            className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG-AyqRNjmDl5fMEXPwAKIFTpf4zyFUVAtZHTAX8y8kt4_IF1lane1JxrNbVzjHLQelG3AODYV4t89_6WF_WKdD2_R9sNxTcPgfCx6lMGhDGpOtz1YuSUJBv36Zq6m1ikwTE6sPmjs4UgNo_8qXdQD0zZPaTow2cGlhckWIt6Va9XgmauaRlCVvZAX1rnPe_ATZqyONZKnxKwFlx5A3bvK_86D-M8vCKR885wU9JUVsKemciTIJrU"
-                            alt="Alejandro Torres"
-                          />
+                          <Avatar name="Alejandro Torres" />
                           <div className="flex flex-col">
                             <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                               Alejandro Torres
@@ -811,11 +791,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                         <tr className="hover:bg-surface-container-high/40 transition-colors group">
                           <td className="py-space-sm px-space-sm">
                             <div className="flex items-center gap-space-sm">
-                              <img
-                                className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvPHa2-jP_RD3Rw4IZarjza8VKRGTSWHQ2JAf6K4SLDQwrws4qpvLS_GJV43z2ZST7YJDUJ20BhPHgnfwiog9mxbXJ7a9zBe_fN01OFyA8TlFkX1dFseb0pf0I9Y7FWjY7oQp6vO0xs-p9qMPpO4KLEuzHu1kKdLtFSBtgfK55Qhe2BPzsDcP-qbttY-IJf8YX1_b9Rhe5GD-czukEgEx0zRbBaTs5_WEY44gof8TIId1lTndygSQ"
-                                alt="María López"
-                              />
+                              <Avatar name="María López" />
                               <div className="flex flex-col">
                                 <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                                   María López
@@ -872,11 +848,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                         <tr className="hover:bg-surface-container-high/40 transition-colors group bg-error-container/5">
                           <td className="py-space-sm px-space-sm">
                             <div className="flex items-center gap-space-sm">
-                              <img
-                                className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2ldRREhZv-AFDC2Nh4xCF_JXRRDhTefX5fg4gN9KOdwMJwpMk6tqBM3PsilE-_IB8qUheC49bRccKX8BXC3sEQUSXEvIdS9kT20dG6D5duy8IP01cziguDAXFRaRKrISusZUGJ7jouAY6qtpM6RO16uDNtGjvXU45pRhR80CQbocZEQGc-aZoxkrjKdwHhDMErBux2y7mq3zvv25zNg3byhgRZ85Jq-LOY5-gyVsrvOfN5Y5-VaM"
-                                alt="Carlos Mendoza"
-                              />
+                              <Avatar name="Carlos Mendoza" />
                               <div className="flex flex-col">
                                 <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                                   Carlos Mendoza
@@ -936,11 +908,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                         <tr className="hover:bg-surface-container-high/40 transition-colors group">
                           <td className="py-space-sm px-space-sm">
                             <div className="flex items-center gap-space-sm">
-                              <img
-                                className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdlFAXQMK5SNFENukgDoQxHAyj4a3Sx0iTQdCrJOt2cOZs7zR92HucqlmkcW_hEv3gefVeDR-HqeCSoM6MMavp_kr9uzeEoLK2D1jPXCipU8Ymc7W__o5AQqQzpSKBskAHs8ha5QMI_kVAXvH6PNiWXVjrlMYku72vHZMOsBqIx5MK5I4bsWWqgDivxAuf-gvP9epqdiJ-QIy5YAEoGnNdT7SRbKCbiM9mtR44TeAAL7d64ZkreuE"
-                                alt="Valeria Ríos"
-                              />
+                              <Avatar name="Valeria Ríos" />
                               <div className="flex flex-col">
                                 <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                                   Valeria Ríos
@@ -987,11 +955,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                         <tr className="hover:bg-surface-container-high/40 transition-colors group">
                           <td className="py-space-sm px-space-sm">
                             <div className="flex items-center gap-space-sm">
-                              <img
-                                className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG-AyqRNjmDl5fMEXPwAKIFTpf4zyFUVAtZHTAX8y8kt4_IF1lane1JxrNbVzjHLQelG3AODYV4t89_6WF_WKdD2_R9sNxTcPgfCx6lMGhDGpOtz1YuSUJBv36Zq6m1ikwTE6sPmjs4UgNo_8qXdQD0zZPaTow2cGlhckWIt6Va9XgmauaRlCVvZAX1rnPe_ATZqyONZKnxKwFlx5A3bvK_86D-M8vCKR885wU9JUVsKemciTIJrU"
-                                alt="Alejandro Torres"
-                              />
+                              <Avatar name="Alejandro Torres" />
                               <div className="flex flex-col">
                                 <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                                   Alejandro Torres
@@ -1048,11 +1012,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                         <tr className="hover:bg-surface-container-high/40 transition-colors group">
                           <td className="py-space-sm px-space-sm">
                             <div className="flex items-center gap-space-sm">
-                              <img
-                                className="w-9 h-9 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.5)]"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjUaBswwP4UJUZ4l_dKh-mcHXOseTxTFzRn6YzmENjH0mfHxkUrhZ26qNu71hB3WPA56OfYKeqYQlZjLvgeiCfrWxwfFl4Vi-_3MsHEjkRxGJf1qNepOZ1huu3N452xnSmzPGHwyaWCpZ4HR43trFAh_nXgt3HhGwSP8gQ9lPetWllC86GkFu6cGjIz8Ttwjx-pJBkjBne57rx9fC-BOnSCMwyrMaA-iUimPqgEdzq3qbATg_-eUg"
-                                alt="Sofía Navarro"
-                              />
+                              <Avatar name="Sofía Navarro" />
                               <div className="flex flex-col">
                                 <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                                   Sofía Navarro
@@ -1572,11 +1532,7 @@ export const AdminCommandCenterPage: React.FC = () => {
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-space-sm">
-                              <img
-                                className="w-10 h-10 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.4)]"
-                                src={item.avatar}
-                                alt={item.name}
-                              />
+                              <Avatar name={item.name} />
                               <div>
                                 <div className="flex items-center gap-space-xs">
                                   <span className="font-semibold text-on-surface">{item.name}</span>

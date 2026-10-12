@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { Avatar } from '@/components/ui';
 import { useAdminContext } from '@/layouts/adminContext';
 
 interface ActivityRecord {
   id: string;
   agentName: string;
   agentId: string;
-  avatar: string;
   campaign: string;
   campaignColor: string;
   sipTrunk: string;
@@ -43,8 +43,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9081',
       agentName: 'María López',
       agentId: 'VX-9921',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCvPHa2-jP_RD3Rw4IZarjza8VKRGTSWHQ2JAf6K4SLDQwrws4qpvLS_GJV43z2ZST7YJDUJ20BhPHgnfwiog9mxbXJ7a9zBe_fN01OFyA8TlFkX1dFseb0pf0I9Y7FWjY7oQp6vO0xs-p9qMPpO4KLEuzHu1kKdLtFSBtgfK55Qhe2BPzsDcP-qbttY-IJf8YX1_b9Rhe5GD-czukEgEx0zRbBaTs5_WEY44gof8TIId1lTndygSQ',
       campaign: 'National Assemblers Inc',
       campaignColor: 'text-primary border-primary/30 bg-primary/10',
       sipTrunk: 'SIP-MIA-04',
@@ -70,8 +68,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9082',
       agentName: 'Carlos Mendoza',
       agentId: 'VX-8812',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCsLwy9wHR5oLLswlB1RHIMt_PodeMAGKE-NN4L4csUIFGFDe_yOrACn__rpwOi0jOSDq0w_ZMKZXy84e_gGaZGMUEd1bTxHeNC3vdXeCsWs2ZgnYRVhsBOGPA0iifoh9yjwiFtVlsxzqxAEusfsdA_FogodrpnrmpgkUtdGY7M0yYNzyEzUjuP8S7MrSUUdutGHIFsJqIA0Y6zvM78Z_EWZqCeSbCV0KLiNW5CqofS5i3iVp_1eKI',
       campaign: 'Fidelis Health Support',
       campaignColor: 'text-secondary border-secondary/30 bg-secondary/10',
       sipTrunk: 'SIP-DAL-02',
@@ -97,8 +93,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9083',
       agentName: 'Valeria Ríos',
       agentId: 'VX-7734',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDonmzzHjPmHRBRorZPnhpKrar_ngyMMJHjOGi8b7gpKKlfhSx2O2nwepoY8dtIQwBHbDVMhUZgg-bWcqA6mr-NgHZk3oUPD_w2ULo4_3SWtsxNM7Ynw2lwrZsj0CqzhoBF5sifHYPbO3WzzkbTHyJ950nAg3p7HUpYm1V8khO0FxQoeuYZCnP43A3LldKABFz9Atmtj9-_HvPK5_pBMPXl_ANWwvkYgwdmJQGPkln7k10mPSap5tA',
       campaign: 'NexPay Fintech VIP',
       campaignColor: 'text-amber-400 border-amber-400/30 bg-amber-400/10',
       sipTrunk: 'SIP-QRO-01',
@@ -124,8 +118,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9084',
       agentName: 'Alejandro Sterling',
       agentId: 'VX-4109',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDFHk7nFqPz41j5h0w0814Mv_s71A2t0Z8xK9wJ1b89-21q6sO4b7f8L5g4bK7fA3pB9qY9=s96-c',
       campaign: 'Enterprise Solutions',
       campaignColor: 'text-purple-400 border-purple-400/30 bg-purple-400/10',
       sipTrunk: 'SIP-NYC-01',
@@ -151,8 +143,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9085',
       agentName: 'David Morales',
       agentId: 'VX-6520',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDonmzzHjPmHRBRorZPnhpKrar_ngyMMJHjOGi8b7gpKKlfhSx2O2nwepoY8dtIQwBHbDVMhUZgg-bWcqA6mr-NgHZk3oUPD_w2ULo4_3SWtsxNM7Ynw2lwrZsj0CqzhoBF5sifHYPbO3WzzkbTHyJ950nAg3p7HUpYm1V8khO0FxQoeuYZCnP43A3LldKABFz9Atmtj9-_HvPK5_pBMPXl_ANWwvkYgwdmJQGPkln7k10mPSap5tA',
       campaign: 'National Assemblers Inc',
       campaignColor: 'text-primary border-primary/30 bg-primary/10',
       sipTrunk: 'SIP-MIA-04',
@@ -178,8 +168,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9086',
       agentName: 'Sofía Navarro',
       agentId: 'VX-5211',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCvPHa2-jP_RD3Rw4IZarjza8VKRGTSWHQ2JAf6K4SLDQwrws4qpvLS_GJV43z2ZST7YJDUJ20BhPHgnfwiog9mxbXJ7a9zBe_fN01OFyA8TlFkX1dFseb0pf0I9Y7FWjY7oQp6vO0xs-p9qMPpO4KLEuzHu1kKdLtFSBtgfK55Qhe2BPzsDcP-qbttY-IJf8YX1_b9Rhe5GD-czukEgEx0zRbBaTs5_WEY44gof8TIId1lTndygSQ',
       campaign: 'Fidelis Health Support',
       campaignColor: 'text-secondary border-secondary/30 bg-secondary/10',
       sipTrunk: 'SIP-DAL-02',
@@ -205,8 +193,6 @@ export const AdminActivityPage: React.FC = () => {
       id: 'ACT-9087',
       agentName: 'Alejandra Moreno',
       agentId: 'VX-3390',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCsLwy9wHR5oLLswlB1RHIMt_PodeMAGKE-NN4L4csUIFGFDe_yOrACn__rpwOi0jOSDq0w_ZMKZXy84e_gGaZGMUEd1bTxHeNC3vdXeCsWs2ZgnYRVhsBOGPA0iifoh9yjwiFtVlsxzqxAEusfsdA_FogodrpnrmpgkUtdGY7M0yYNzyEzUjuP8S7MrSUUdutGHIFsJqIA0Y6zvM78Z_EWZqCeSbCV0KLiNW5CqofS5i3iVp_1eKI',
       campaign: 'Retail Express VIP',
       campaignColor: 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10',
       sipTrunk: 'SIP-ATL-03',
@@ -445,11 +431,7 @@ export const AdminActivityPage: React.FC = () => {
                     {/* Agente */}
                     <td className="py-space-md px-space-sm">
                       <div className="flex items-center gap-space-sm">
-                        <img
-                          src={act.avatar}
-                          alt={act.agentName}
-                          className="w-10 h-10 rounded-full object-cover shadow-[0_0_8px_rgba(0,0,0,0.6)] border border-white/10"
-                        />
+                        <Avatar name={act.agentName} />
                         <div className="flex flex-col">
                           <span className="font-semibold text-on-surface group-hover:text-primary transition-colors">
                             {act.agentName}

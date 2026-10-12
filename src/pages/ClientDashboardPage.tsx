@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Avatar } from '@/components/ui';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSessionStore } from '@/store/useSessionStore';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
@@ -165,11 +166,7 @@ export const ClientDashboardPage: React.FC = () => {
                     Monitoreo Activo
                   </span>
                 </div>
-                <img
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full object-cover ring-1 ring-secondary/40 shadow-sm"
-                  src="https://lh3.googleusercontent.com/aida/AEtjO1Vpdj4zBkcIbakoVSu1MlExRa4vGNX5HuQhjcpHmy_J2h6Js8npikvNJO92N66SMLoWJUzGUw12Ado7Wy8Knfj0EeisL1kWFOcunMIjv2N5rwu-kBDTXt3Dpt7_K31ApEFYoOsT_qGnFvTcNzf8rNM8mRjdD6kEDy8fx7MK_TcajzlJmqeLuaU_pq4MGx8o2apQxRxtg-keRwzNq7x6HT_9NrSi-suSPKxgGObcSxVjovmgle1gskIAfg47hERneZ3sqapYjQU"
-                />
+                <Avatar name="Cliente B2B" />
               </div>
             </div>
           </div>
