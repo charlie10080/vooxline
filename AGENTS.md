@@ -1,5 +1,7 @@
 # Vooxline
-App de gestión de fuerza laboral para contact center B2B (tipo ConnectTeams).
+Plataforma web completa para contact center B2B. Conviven dos mundos en el mismo proyecto:
+- Web pública y clientes: Landing (`/inicio`), Login, portal de Cliente y Admin. Son parte esencial del sitio; no se borran.
+- Apartado interno de trabajadores tipo Connecteam: consola (`/`, `/time-clock`, …) y portal del agente (`/portal/...`). No reemplaza al resto de la web.
 
 Stack: React 19, Vite, TypeScript, Tailwind 4, react-router-dom, zustand, lucide-react.
 
@@ -13,11 +15,13 @@ Reglas:
 - Tema oscuro, colores: fondo #0B0C10, acento #66FCF1.
 - Trabajar un módulo a la vez. No tocar módulos que no se pidieron.
 
-## Forma de trabajo (regla de Carlos, obligatoria también para ayudantes en paralelo)
-- Ponytail: el código más corto que funcione; revisar cambios con `/ponytail-review`.
-- Agent Skills: cada módulo nuevo sigue `/spec` → `/plan` → `/build` → `/test` → `/review` → `/ship`.
-- Claude Mem: consultar la memoria al empezar y guardar las decisiones importantes.
-- Avisar del costo en tokens antes de lanzar varios ayudantes en paralelo.
+## Forma de trabajo (regla de Carlos: ahorrar tokens)
+- Ponytail: el código más corto que funcione.
+- Agent Skills: cada módulo nuevo sigue `/spec` → `/plan` → `/build` → `/test`. No usar `/ship` ni `/ponytail-review`.
+- Revisión: `npm run build`, `npm run lint` y una mirada a mano solo a los puntos de riesgo.
+- Sin ayudantes en paralelo; trabajar en secuencia.
+- Memoria: la memoria local de Claude Code (no usar Claude Mem).
+- No abrir el navegador salvo que Carlos lo pida.
 
 ## Arquitectura y convenciones
 

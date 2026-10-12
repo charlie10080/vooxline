@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAdminContext } from '@/layouts/AdminLayout';
+import { useAdminContext } from '@/layouts/adminContext';
 
 interface LiveAgent {
   id: string;

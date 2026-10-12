@@ -1,1 +1,1 @@
-export { AgentPortalPage, default } from '../AgentPortalPage';
+export { AgentPortalPage } from '../AgentPortalPage';

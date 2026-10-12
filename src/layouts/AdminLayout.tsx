@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useLocation, Outlet, useOutletContext } from 'react-router-dom';
+import { Link, useLocation, Outlet } from 'react-router-dom';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
-
-export interface AdminContextType {
-  lang: 'es' | 'en';
-  setLang: React.Dispatch<React.SetStateAction<'es' | 'en'>>;
-}
-
-export const useAdminContext = () => useOutletContext<AdminContextType>();
 
 export const AdminLayout: React.FC = () => {
   const location = useLocation();

@@ -22,10 +22,32 @@ import { PortalHomePage } from '@/pages/portal/PortalHomePage';
 import { PortalTimesheetPage } from '@/pages/portal/PortalTimesheetPage';
 import { PortalTimeOffPage } from '@/pages/portal/PortalTimeOffPage';
 import { PortalSchedulePage } from '@/pages/portal/PortalSchedulePage';
+import { LandingPage } from '@/pages/LandingPage';
+import { LoginPage } from '@/pages/Login/LoginPage';
+import { ClientDashboardPage } from '@/pages/Client/ClientDashboardPage';
+import { AgentPortalPage } from '@/pages/Agent/AgentPortalPage';
+import { AdminLayout } from '@/layouts/AdminLayout';
+import { AdminCommandCenterPage } from '@/pages/admin/AdminCommandCenterPage';
+import { AdminActivityPage } from '@/pages/admin/AdminActivityPage';
+import { AdminMonitorPage } from '@/pages/admin/AdminMonitorPage';
+import { AdminUsersPage } from '@/pages/admin/AdminUsersPage';
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
+      {/* Web pública y portales de clientes/admin (conviven con el apartado de trabajadores) */}
+      <Route path="/inicio" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/cliente" element={<ClientDashboardPage />} />
+      <Route path="/agente" element={<AgentPortalPage />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminCommandCenterPage />} />
+        <Route path="activity" element={<AdminActivityPage />} />
+        <Route path="monitor" element={<AdminMonitorPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="*" element={<Navigate to="/admin" replace />} />
+      </Route>
+
       <Route element={<AppLayout />}>
         {/* GENERAL */}
         <Route path="/" element={<OverviewPage />} />

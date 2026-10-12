@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAdminContext } from '@/layouts/AdminLayout';
+import { useAdminContext } from '@/layouts/adminContext';
 
 interface TimeOffItem {
   id: string;

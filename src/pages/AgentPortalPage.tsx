@@ -19,7 +19,10 @@ export const AgentPortalPage: React.FC = () => {
   });
 
   // Fecha actual en español
-  const [currentDate, setCurrentDate] = useState<string>('Lunes, 28 de Septiembre');
+  const [currentDate] = useState<string>(() => {
+    const formatted = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+    return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+  });
 
   useEffect(() => {
     const updateClock = () => {
@@ -42,14 +45,6 @@ export const AgentPortalPage: React.FC = () => {
 
     updateClock();
     const interval = setInterval(updateClock, 1000);
-
-    try {
-      const options: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-      const formatted = new Intl.DateTimeFormat('es-ES', options).format(new Date());
-      setCurrentDate(formatted.charAt(0).toUpperCase() + formatted.slice(1));
-    } catch {
-      // Fallback
-    }
 
     return () => clearInterval(interval);
   }, []);

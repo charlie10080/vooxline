@@ -2,10 +2,15 @@
 
 Frontend: React 19 + Vite + TypeScript + Tailwind 4 + zustand. **Todo el estado vive en el navegador (localStorage).** No hay backend todavía: el código está ordenado para que cada store se cambie por llamadas a un API sin rehacer las pantallas (ver sección 6).
 
-## 1. Dos aplicaciones, un mismo código
+## 1. Una plataforma web completa, un mismo código
+
+Vooxline es una plataforma web completa. La web pública, el login y los portales de cliente y admin son parte esencial del sitio. El módulo tipo Connecteam (consola + portal de trabajadores) es solo el apartado interno para los trabajadores de la empresa y convive con el resto; no lo reemplaza.
 
 | Área | Quién la usa | Layout |
 |---|---|---|
+| Web pública (`/inicio`), login (`/login`) | Visitantes y clientes | Propio de cada página |
+| Portal de cliente (`/cliente`), panel del agente clásico (`/agente`) | Clientes / agentes | Propio de cada página |
+| Admin (`/admin`, `/admin/activity`, `/admin/monitor`, `/admin/users`) | Administradores | `layouts/AdminLayout.tsx` (contexto en `layouts/adminContext.ts`) |
 | Consola (`/`, `/time-clock`, …) | Supervisores y administradores | `components/layout/AppLayout.tsx` (redirige a `/portal` si el usuario es agente) |
 | Portal del agente (`/portal/...`) | Agentes (y supervisores para su propio turno) | `components/layout/PortalLayout.tsx` |
 

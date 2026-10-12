@@ -1,1 +1,1 @@
-export { ClientDashboardPage, default } from '../ClientDashboardPage';
+export { ClientDashboardPage } from '../ClientDashboardPage';
