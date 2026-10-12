@@ -10,7 +10,7 @@ Vooxline es una plataforma web completa. La web pública, el login y los portale
 |---|---|---|
 | Web pública (`/inicio`), login (`/login`) | Visitantes y clientes | Propio de cada página |
 | Portal de cliente (`/cliente`), panel del agente clásico (`/agente`) | Clientes / agentes | Propio de cada página |
-| Admin (`/admin`, `/admin/activity`, `/admin/monitor`, `/admin/users`) | Administradores | `layouts/AdminLayout.tsx` (contexto en `layouts/adminContext.ts`) |
+| `/admin` redirige a la consola `/` | Administradores | El admin usa la consola (un solo diseño, datos reales). `layouts/AdminLayout.tsx` y `pages/admin/` quedan sin ruta como referencia de diseño |
 | Consola (`/`, `/time-clock`, …) | Supervisores y administradores | `components/layout/AppLayout.tsx` (redirige a `/portal` si el usuario es agente) |
 | Portal del agente (`/portal/...`) | Agentes (y supervisores para su propio turno) | `components/layout/PortalLayout.tsx` |
 

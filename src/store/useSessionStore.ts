@@ -23,7 +23,6 @@ export const DEFAULT_USER_ID = 'a-carlos'
 
 /** Página de inicio de cada rol después de entrar */
 export function homePathFor(role: UserRole): string {
-  if (role === 'admin') return '/admin'
   if (role === 'client') return '/cliente'
   if (role === 'agent') return '/portal'
   return '/'
