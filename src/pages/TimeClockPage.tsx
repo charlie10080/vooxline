@@ -19,6 +19,7 @@ import {
   checkLocation,
   getEntryLocationFlags,
   describeGeoCheck,
+  geoCheckWarning,
   DEFAULT_RADIUS_M,
 } from '@/lib/geo';
 import type { GeoReading } from '@/lib/geo';
@@ -261,13 +262,8 @@ export const TimeClockPage: React.FC = () => {
   // Handler for Clock In / Clock Out per agent
   // Avisa al supervisor si la ubicación de la marca quedó como alerta
   const geoWarning = (reading: GeoReading, agentId: string): string => {
-    if (reading === 'denied') return ' Se negó el permiso de ubicación: queda como alerta.';
-    if (reading === 'unavailable') return ' No se pudo obtener la ubicación: queda como alerta.';
-    const authorized = agentMap.get(agentId)?.authorizedLocation;
-    if (authorized && checkLocation(reading, authorized).status === 'outside') {
-      return ' Marcó fuera de su ubicación autorizada: queda como alerta.';
-    }
-    return '';
+    const warning = geoCheckWarning(checkLocation(reading, agentMap.get(agentId)?.authorizedLocation));
+    return warning ? ` ${warning}` : '';
   };
 
   const handleAgentClockIn = async (agentId: string) => {

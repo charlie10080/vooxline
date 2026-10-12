@@ -1,6 +1,8 @@
 import React from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
+import { UserSwitcher } from '@/components/layout/UserSwitcher';
+import { useCurrentUser } from '@/store/useSessionStore';
 import {
   LayoutDashboard,
   Activity,
@@ -19,7 +21,6 @@ import {
   PartyPopper,
   CalendarOff,
   Terminal,
-  Shield,
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -80,6 +81,10 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
 
 export const AppLayout: React.FC = () => {
   const location = useLocation();
+  const { isManager } = useCurrentUser();
+
+  // La consola es solo para supervisores y administradores; un agente va a su portal
+  if (!isManager) return <Navigate to="/portal" replace />;
 
   // Find active item name for breadcrumbs
   const currentItem = SIDEBAR_SECTIONS.flatMap((s) => s.items).find((item) =>
@@ -195,14 +200,7 @@ export const AppLayout: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#13171F] border border-[#242E3B] text-xs font-mono">
-              <Shield className="w-3.5 h-3.5 text-[#66FCF1]" />
-              <span className="text-[#C5C6C7]">Supervisor Role</span>
-            </div>
-
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#66FCF1]/20 to-[#1F2833] border border-[#66FCF1]/30 flex items-center justify-center font-bold text-xs text-[#66FCF1] font-mono">
-              SV
-            </div>
+            <UserSwitcher />
           </div>
         </header>
 

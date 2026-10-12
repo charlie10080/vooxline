@@ -12,6 +12,8 @@ import { mockAgents, mockCampaigns, mockTimeEntries, mockTimeOffRequests } from 
 import { needsSupervisorReview } from '@/lib/metrics'
 import { checkLocation, DEFAULT_RADIUS_M } from '@/lib/geo'
 import type { GeoReading } from '@/lib/geo'
+import { minutesBetween } from '@/lib/time'
+import { isDateStr } from '@/lib/schedule'
 
 type NewTimeOffInput = Pick<
   TimeOffRequest,
@@ -29,6 +31,9 @@ interface WorkforceState {
   clockIn: (agentId: string, scheduledMinutes?: number, location?: GeoReading) => ActionResult
   clockOut: (agentId: string, location?: GeoReading) => ActionResult
   setAuthorizedLocation: (agentId: string, point: GeoPoint, radiusM?: number) => ActionResult
+  /** Descanso dentro de un turno abierto; los minutos se suman a breakMinutes al terminarlo */
+  startBreak: (agentId: string) => ActionResult
+  endBreak: (agentId: string) => ActionResult
 
   // Motor de aprobación
   approveEntry: (entryId: string, supervisorConfirmed?: boolean) => ActionResult
@@ -37,9 +42,11 @@ interface WorkforceState {
   approveBatch: () => { approved: number; blockedIds: string[] }
 
   // Time Off
-  createTimeOff: (input: NewTimeOffInput) => void
+  createTimeOff: (input: NewTimeOffInput) => ActionResult
   approveTimeOff: (requestId: string) => ActionResult
   rejectTimeOff: (requestId: string) => ActionResult
+  /** El propio agente retira una solicitud que sigue pendiente */
+  cancelTimeOff: (requestId: string, agentId: string) => ActionResult
 
   resetDemoData: () => void
 }
@@ -95,11 +102,42 @@ export const useWorkforceStore = create<WorkforceState>()(
         const now = new Date().toISOString()
         const authorized = agents.find((a) => a.id === agentId)?.authorizedLocation
         const geo = location ? { clockOutGeo: checkLocation(location, authorized) } : {}
+        // Si sale estando en descanso, el descanso se cierra a la hora de salida
+        const breakMinutes = open.breakMinutes + (open.breakStartedAt ? minutesBetween(open.breakStartedAt, now) : 0)
         set((s) => ({
-          timeEntries: s.timeEntries.map((e) => (e.id === open.id ? { ...e, clockOut: now, ...geo } : e)),
+          timeEntries: s.timeEntries.map((e) =>
+            e.id === open.id ? { ...e, clockOut: now, breakMinutes, breakStartedAt: null, ...geo } : e,
+          ),
           agents: s.agents.map((a) =>
             a.id === agentId ? { ...a, status: 'offline', statusSince: now } : a,
           ),
+        }))
+        return { ok: true }
+      },
+
+      startBreak: (agentId) => {
+        const open = get().timeEntries.find((e) => e.agentId === agentId && e.clockOut === null)
+        if (!open) return { ok: false, reason: 'not_clocked_in' }
+        if (open.breakStartedAt) return { ok: false, reason: 'on_break' }
+        const now = new Date().toISOString()
+        set((s) => ({
+          timeEntries: s.timeEntries.map((e) => (e.id === open.id ? { ...e, breakStartedAt: now } : e)),
+          agents: s.agents.map((a) => (a.id === agentId ? { ...a, status: 'break', statusSince: now } : a)),
+        }))
+        return { ok: true }
+      },
+
+      endBreak: (agentId) => {
+        const open = get().timeEntries.find((e) => e.agentId === agentId && e.clockOut === null)
+        if (!open) return { ok: false, reason: 'not_clocked_in' }
+        if (!open.breakStartedAt) return { ok: false, reason: 'not_on_break' }
+        const now = new Date().toISOString()
+        const breakMinutes = open.breakMinutes + minutesBetween(open.breakStartedAt, now)
+        set((s) => ({
+          timeEntries: s.timeEntries.map((e) =>
+            e.id === open.id ? { ...e, breakMinutes, breakStartedAt: null } : e,
+          ),
+          agents: s.agents.map((a) => (a.id === agentId ? { ...a, status: 'available', statusSince: now } : a)),
         }))
         return { ok: true }
       },
@@ -156,13 +194,30 @@ export const useWorkforceStore = create<WorkforceState>()(
       },
 
       createTimeOff: (input) => {
+        if (!get().agents.some((a) => a.id === input.agentId)) return { ok: false, reason: 'not_found' }
+        const validDates =
+          isDateStr(input.startDate) && isDateStr(input.endDate) && input.startDate <= input.endDate
+        if (!validDates || !Number.isFinite(input.hours) || input.hours <= 0 || !input.reason.trim()) {
+          return { ok: false, reason: 'invalid' }
+        }
         const request: TimeOffRequest = {
           ...input,
+          reason: input.reason.trim(),
           id: crypto.randomUUID(),
           status: 'pending',
           requestedAt: new Date().toISOString(),
         }
         set((s) => ({ timeOffRequests: [request, ...s.timeOffRequests] }))
+        return { ok: true }
+      },
+
+      cancelTimeOff: (requestId, agentId) => {
+        const req = get().timeOffRequests.find((r) => r.id === requestId)
+        if (!req) return { ok: false, reason: 'not_found' }
+        if (req.agentId !== agentId) return { ok: false, reason: 'forbidden' }
+        if (req.status !== 'pending') return { ok: false, reason: 'already_processed' }
+        set((s) => ({ timeOffRequests: s.timeOffRequests.filter((r) => r.id !== requestId) }))
+        return { ok: true }
       },
 
       approveTimeOff: (requestId) => {

@@ -114,6 +114,14 @@ export function findNoShows(args: {
   })
 }
 
+/** Minutos que acompañan a una bandera (para describeAlert) */
+export function flagMinutes(p: EntryPunctuality, flag: PunctualityFlag): number | null {
+  if (flag === 'late_arrival') return p.arrivalMinutes
+  if (flag === 'early_leave') return p.departureMinutes === null ? null : Math.abs(p.departureMinutes)
+  if (flag === 'late_leave') return p.departureMinutes
+  return p.openOverdueMinutes
+}
+
 /** Alertas accionables: entradas pendientes con banderas de puntualidad + ausencias sin marcaje */
 export function getAttendanceAlerts(args: {
   entries: TimeEntry[]

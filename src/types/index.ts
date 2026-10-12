@@ -71,6 +71,8 @@ export interface TimeEntry {
   /** Opcionales: las entradas anteriores al GPS no los tienen */
   clockInGeo?: GeoCheck
   clockOutGeo?: GeoCheck
+  /** ISO: inicio del descanso en curso; null/ausente = no está en descanso */
+  breakStartedAt?: string | null
 }
 
 export interface TimeOffRequest {
@@ -96,5 +98,9 @@ export type ActionError =
   | 'needs_confirmation'
   | 'already_processed'
   | 'insufficient_pto'
+  | 'on_break'
+  | 'not_on_break'
+  | 'invalid'
+  | 'forbidden'
 
 export type ActionResult = { ok: true } | { ok: false; reason: ActionError }

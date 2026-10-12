@@ -59,7 +59,21 @@ export function getEntryLocationFlags(entry: TimeEntry): LocationFlag[] {
   return flags
 }
 
-const fmtDistance = (m: number): string => (m < 1000 ? `${m} m` : `${(m / 1000).toFixed(1)} km`)
+/** Aviso para mostrar justo después de marcar, o null si la ubicación quedó bien */
+export function geoCheckWarning(check: GeoCheck): string | null {
+  switch (check.status) {
+    case 'denied':
+      return 'Se negó el permiso de ubicación: queda como alerta para el supervisor.'
+    case 'unavailable':
+      return 'No se pudo obtener la ubicación: queda como alerta para el supervisor.'
+    case 'outside':
+      return 'La marca quedó fuera de la ubicación autorizada: queda como alerta para el supervisor.'
+    default:
+      return null
+  }
+}
+
+const fmtDistance =(m: number): string => (m < 1000 ? `${m} m` : `${(m / 1000).toFixed(1)} km`)
 
 /** Texto corto para la tabla: "Dentro (40 m)", "Fuera (1.2 km)", "Permiso negado" */
 export function describeGeoCheck(check: GeoCheck): string {

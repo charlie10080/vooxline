@@ -6,7 +6,9 @@ export const REVIEW_THRESHOLD_MIN = 15
 
 export function getWorkedMinutes(entry: TimeEntry, now: Date = new Date()): number {
   const end = entry.clockOut ?? now.toISOString()
-  return Math.max(0, minutesBetween(entry.clockIn, end) - entry.breakMinutes)
+  // Un descanso en curso tampoco cuenta como tiempo trabajado
+  const ongoingBreak = entry.breakStartedAt ? minutesBetween(entry.breakStartedAt, end) : 0
+  return Math.max(0, minutesBetween(entry.clockIn, end) - entry.breakMinutes - ongoingBreak)
 }
 
 export const getDeviationMinutes = (entry: TimeEntry, now?: Date): number =>

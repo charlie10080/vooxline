@@ -60,6 +60,10 @@ export function diffWorkforce(prev: WorkforceSlice, next: WorkforceSlice): Activ
     const who = nameOf(agents, n.agentId)
     if (p.clockOut === null && n.clockOut !== null) {
       out.push({ category: 'attendance', agentId: n.agentId, message: `${who} marcó salida` })
+    } else if (!p.breakStartedAt && n.breakStartedAt) {
+      out.push({ category: 'attendance', agentId: n.agentId, message: `${who} inició un descanso` })
+    } else if (p.breakStartedAt && !n.breakStartedAt) {
+      out.push({ category: 'attendance', agentId: n.agentId, message: `${who} terminó su descanso` })
     }
     if (p.status !== n.status) {
       if (n.status === 'approved') out.push({ category: 'attendance', agentId: n.agentId, message: `Se aprobó el turno de ${who}` })
@@ -79,6 +83,9 @@ export function diffWorkforce(prev: WorkforceSlice, next: WorkforceSlice): Activ
     const who = nameOf(agents, n.agentId)
     if (n.status === 'approved') out.push({ category: 'time_off', agentId: n.agentId, message: `Se aprobó ${typeLabel[n.type]} de ${who} (${n.hours} h)` })
     if (n.status === 'rejected') out.push({ category: 'time_off', agentId: n.agentId, message: `Se rechazó ${typeLabel[n.type]} de ${who}` })
+  }
+  for (const r of requests.removed) {
+    out.push({ category: 'time_off', agentId: r.agentId, message: `${nameOf(agents, r.agentId)} retiró su solicitud de ${typeLabel[r.type]}` })
   }
   return out
 }

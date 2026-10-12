@@ -12,6 +12,10 @@ import { SchedulingPage } from '@/pages/SchedulingPage';
 import { MonitorPage } from '@/pages/MonitorPage';
 import { ActivityPage } from '@/pages/ActivityPage';
 import { DirectorPage } from '@/pages/DirectorPage';
+import { PortalLayout } from '@/components/layout/PortalLayout';
+import { PortalHomePage } from '@/pages/portal/PortalHomePage';
+import { PortalTimesheetPage } from '@/pages/portal/PortalTimesheetPage';
+import { PortalTimeOffPage } from '@/pages/portal/PortalTimeOffPage';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -99,6 +103,14 @@ export const AppRoutes: React.FC = () => {
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+
+      {/* Portal del agente */}
+      <Route path="/portal" element={<PortalLayout />}>
+        <Route index element={<PortalHomePage />} />
+        <Route path="horas" element={<PortalTimesheetPage />} />
+        <Route path="permisos" element={<PortalTimeOffPage />} />
+        <Route path="*" element={<Navigate to="/portal" replace />} />
       </Route>
     </Routes>
   );
