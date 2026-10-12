@@ -14,6 +14,7 @@ import { ActivityPage } from '@/pages/ActivityPage';
 import { DirectorPage } from '@/pages/DirectorPage';
 import { PortalLayout } from '@/components/layout/PortalLayout';
 import { HelpDeskPage } from '@/pages/HelpDeskPage';
+import { ChatPage } from '@/pages/ChatPage';
 import { PortalHomePage } from '@/pages/portal/PortalHomePage';
 import { PortalTimesheetPage } from '@/pages/portal/PortalTimesheetPage';
 import { PortalTimeOffPage } from '@/pages/portal/PortalTimeOffPage';
@@ -42,16 +43,7 @@ export const AppRoutes: React.FC = () => {
         />
 
         {/* COMMUNICATION */}
-        <Route
-          path="/chat"
-          element={
-            <PlaceholderPage
-              title="Chat"
-              section="COMMUNICATION"
-              description="Canales de mensajería interna entre supervisores y agentes por campaña."
-            />
-          }
-        />
+        <Route path="/chat" element={<ChatPage />} />
         <Route
           path="/updates"
           element={
@@ -103,6 +95,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="horas" element={<PortalTimesheetPage />} />
         <Route path="permisos" element={<PortalTimeOffPage />} />
         <Route path="soporte" element={<HelpDeskPage />} />
+        <Route path="chat" element={<ChatPage />} />
         <Route path="*" element={<Navigate to="/portal" replace />} />
       </Route>
     </Routes>
