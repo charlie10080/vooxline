@@ -107,7 +107,7 @@ export const PortalHomePage: React.FC = () => {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <p className="font-mono text-xs capitalize text-[#66FCF1]">{dateLabel}</p>
+        <p className="font-mono text-xs text-[#66FCF1] first-letter:uppercase">{dateLabel}</p>
         <h1 className="font-display text-2xl font-bold text-white lg:text-3xl">
           {greeting}, {agent.name.split(' ')[0]}
         </h1>

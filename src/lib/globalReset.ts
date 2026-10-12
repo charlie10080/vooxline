@@ -1,6 +1,7 @@
 import { runUntracked } from '@/lib/activityTracker'
 import { useActivityStore } from '@/store/useActivityStore'
 import { useDirectoryStore } from '@/store/useDirectoryStore'
+import { useHelpdeskStore } from '@/store/useHelpdeskStore'
 import { useLiveStore } from '@/store/useLiveStore'
 import { useScheduleStore } from '@/store/useScheduleStore'
 import { useWorkforceStore } from '@/store/useWorkforceStore'
@@ -18,6 +19,7 @@ export function resetApplicationState(): void {
     useDirectoryStore.getState().resetDirectoryDemo()
     useScheduleStore.getState().resetScheduleDemo()
     useLiveStore.getState().resetLiveDemo()
+    useHelpdeskStore.getState().resetHelpdeskDemo()
   })
   useActivityStore.getState().record([
     { category: 'system', agentId: null, message: 'Se reiniciaron todos los datos de demostración' },

@@ -13,6 +13,7 @@ import { MonitorPage } from '@/pages/MonitorPage';
 import { ActivityPage } from '@/pages/ActivityPage';
 import { DirectorPage } from '@/pages/DirectorPage';
 import { PortalLayout } from '@/components/layout/PortalLayout';
+import { HelpDeskPage } from '@/pages/HelpDeskPage';
 import { PortalHomePage } from '@/pages/portal/PortalHomePage';
 import { PortalTimesheetPage } from '@/pages/portal/PortalTimesheetPage';
 import { PortalTimeOffPage } from '@/pages/portal/PortalTimeOffPage';
@@ -72,16 +73,7 @@ export const AppRoutes: React.FC = () => {
             />
           }
         />
-        <Route
-          path="/helpdesk"
-          element={
-            <PlaceholderPage
-              title="Help Desk"
-              section="COMMUNICATION"
-              description="Gestión de tickets técnicos para soporte de estaciones de trabajo, diademas y telefonía SIP."
-            />
-          }
-        />
+        <Route path="/helpdesk" element={<HelpDeskPage />} />
 
         {/* OPERATIONS */}
         <Route path="/time-clock" element={<TimeClockPage />} />
@@ -110,6 +102,7 @@ export const AppRoutes: React.FC = () => {
         <Route index element={<PortalHomePage />} />
         <Route path="horas" element={<PortalTimesheetPage />} />
         <Route path="permisos" element={<PortalTimeOffPage />} />
+        <Route path="soporte" element={<HelpDeskPage />} />
         <Route path="*" element={<Navigate to="/portal" replace />} />
       </Route>
     </Routes>

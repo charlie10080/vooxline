@@ -14,7 +14,7 @@ import {
   Bell,
   BookUser,
   ClipboardList,
-  Headphones,
+  LifeBuoy,
   Clock,
   Calendar,
   DollarSign,
@@ -59,7 +59,7 @@ const SIDEBAR_SECTIONS: SidebarSection[] = [
       { name: 'Updates', path: '/updates', icon: Bell },
       { name: 'Director', path: '/director', icon: BookUser },
       { name: 'Forms', path: '/forms', icon: ClipboardList },
-      { name: 'Help Desk', path: '/helpdesk', icon: Headphones },
+      { name: 'Help Desk', path: '/helpdesk', icon: LifeBuoy },
     ],
   },
   {
