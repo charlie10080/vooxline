@@ -107,8 +107,8 @@ export const PortalHomePage: React.FC = () => {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <p className="font-mono text-xs text-[#66FCF1] first-letter:uppercase">{dateLabel}</p>
-        <h1 className="font-display text-2xl font-bold text-white lg:text-3xl">
+        <p className="tabular-nums text-[13px] text-vx-accent first-letter:uppercase">{dateLabel}</p>
+        <h1 className="font-display text-2xl font-bold text-vx-text lg:text-3xl">
           {greeting}, {agent.name.split(' ')[0]}
         </h1>
       </div>
@@ -121,10 +121,10 @@ export const PortalHomePage: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
         {/* Checador */}
-        <section className="relative overflow-hidden rounded-3xl border border-[#242E3B] bg-[#13151c] p-6 shadow-2xl lg:col-span-3 lg:p-8">
+        <section className="relative overflow-hidden rounded-3xl border border-vx-border bg-vx-surface p-6 shadow-2xl lg:col-span-3 lg:p-8">
           <div
             className={`pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full blur-3xl ${
-              openEntry ? (onBreak ? 'bg-[#F59E0B]/15' : 'bg-[#10B981]/15') : 'bg-[#66FCF1]/10'
+              openEntry ? (onBreak ? 'bg-vx-warning/15' : 'bg-vx-success/15') : 'bg-vx-accent/10'
             }`}
           />
           <div className="relative z-10 space-y-6">
@@ -136,37 +136,37 @@ export const PortalHomePage: React.FC = () => {
                   </Badge>
                 ) : (
                   <Badge tone="success">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#10B981]" /> En turno desde {formatClock(openEntry.clockIn)}
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-vx-success" /> En turno desde {formatClock(openEntry.clockIn)}
                   </Badge>
                 )
               ) : (
                 <Badge tone="neutral">Fuera de turno</Badge>
               )}
               {lastGeo && (
-                <span className="flex items-center gap-1 text-[11px] text-[#C5C6C7]/60">
+                <span className="flex items-center gap-1 text-xs text-vx-text-2/60">
                   <MapPin className="h-3 w-3" /> {describeGeoCheck(lastGeo)}
                 </span>
               )}
             </div>
 
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-widest text-[#C5C6C7]/50">
+              <div className="tabular-nums text-xs text-vx-text-2/50">
                 {openEntry ? 'Tiempo trabajado hoy' : 'Hora actual'}
               </div>
-              <div className="mt-1 font-mono text-5xl font-bold tracking-tight text-white tabular-nums lg:text-6xl">
+              <div className="mt-1 tabular-nums text-5xl font-bold tracking-tight text-vx-text tabular-nums lg:text-6xl">
                 {openEntry
                   ? formatTimer(workedSeconds)
                   : now.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
               </div>
               {openEntry && openEntry.scheduledMinutes > 0 && (
                 <div className="mt-4 space-y-1.5">
-                  <div className="h-2 overflow-hidden rounded-full bg-[#0B0C10]">
+                  <div className="h-2 overflow-hidden rounded-full bg-vx-bg">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#66FCF1] to-[#10B981] transition-all"
+                      className="h-full rounded-full bg-gradient-to-r from-vx-accent to-vx-success transition-all"
                       style={{ width: `${Math.min(100, (workedSeconds / 60 / openEntry.scheduledMinutes) * 100)}%` }}
                     />
                   </div>
-                  <div className="flex justify-between font-mono text-[11px] text-[#C5C6C7]/50">
+                  <div className="flex justify-between tabular-nums text-xs text-vx-text-2/50">
                     <span>Descansos: {openEntry.breakMinutes + Math.floor(breakSeconds / 60)} min</span>
                     <span>Meta: {formatDuration(openEntry.scheduledMinutes)}</span>
                   </div>
@@ -202,8 +202,8 @@ export const PortalHomePage: React.FC = () => {
               </div>
             )}
 
-            <p className="flex items-start gap-2 text-[11px] leading-relaxed text-[#C5C6C7]/50">
-              <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#66FCF1]/70" />
+            <p className="flex items-start gap-2 text-xs leading-relaxed text-vx-text-2/50">
+              <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-vx-accent/70" />
               Al marcar entrada o salida compartimos tu ubicación con tu supervisor solo en ese momento, para confirmar
               que trabajas desde tu lugar autorizado. Fuera de turno no se pide ubicación.
             </p>
@@ -212,17 +212,17 @@ export const PortalHomePage: React.FC = () => {
 
         {/* Hoy */}
         <div className="space-y-6 lg:col-span-2">
-          <Card title="Tu turno de hoy" actions={<CalendarDays className="h-4 w-4 text-[#66FCF1]" />}>
+          <Card title="Tu turno de hoy" actions={<CalendarDays className="h-4 w-4 text-vx-accent" />}>
             {todayShifts.length === 0 ? (
-              <p className="text-sm text-[#C5C6C7]/60">Hoy no tienes turno programado.</p>
+              <p className="text-sm text-vx-text-2/60">Hoy no tienes turno programado.</p>
             ) : (
               <ul className="space-y-2">
                 {todayShifts.map((s) => (
-                  <li key={s.id} className="flex items-center justify-between rounded-xl border border-[#242E3B] bg-[#0B0C10] px-3.5 py-3">
-                    <span className="font-mono text-lg font-bold text-white">
+                  <li key={s.id} className="flex items-center justify-between rounded-xl border border-vx-border bg-vx-bg px-3.5 py-3">
+                    <span className="tabular-nums text-lg font-bold text-vx-text">
                       {s.startTime} – {s.endTime}
                     </span>
-                    <span className="text-xs text-[#C5C6C7]/60">Descanso {s.breakMinutes} min</span>
+                    <span className="text-[13px] text-vx-text-2/60">Descanso {s.breakMinutes} min</span>
                   </li>
                 ))}
               </ul>
@@ -237,19 +237,19 @@ export const PortalHomePage: React.FC = () => {
           <Card
             title="Próximos turnos"
             actions={
-              <Link to="/portal/horario" className="flex items-center gap-1 text-xs font-semibold text-[#66FCF1] hover:underline">
+              <Link to="/portal/horario" className="flex items-center gap-1 text-[13px] font-semibold text-vx-accent hover:underline">
                 Ver horario <ChevronRight className="h-3.5 w-3.5" />
               </Link>
             }
           >
             {upcoming.length === 0 ? (
-              <p className="text-sm text-[#C5C6C7]/60">No tienes turnos próximos.</p>
+              <p className="text-sm text-vx-text-2/60">No tienes turnos próximos.</p>
             ) : (
-              <ul className="divide-y divide-[#242E3B]">
+              <ul className="divide-y divide-vx-border">
                 {upcoming.map((s) => (
                   <li key={s.id} className="flex items-center justify-between py-2.5 text-sm">
-                    <span className="capitalize text-white">{formatDayLabel(s.date)}</span>
-                    <span className="font-mono text-[#C5C6C7]">
+                    <span className="capitalize text-vx-text">{formatDayLabel(s.date)}</span>
+                    <span className="tabular-nums text-vx-text-2">
                       {s.startTime} – {s.endTime}
                     </span>
                   </li>
@@ -262,18 +262,18 @@ export const PortalHomePage: React.FC = () => {
 
       <Card title="Tus últimas marcas" subtitle="Entradas y salidas recientes">
         {myEntries.length === 0 ? (
-          <p className="text-sm text-[#C5C6C7]/60">Aún no tienes marcas registradas.</p>
+          <p className="text-sm text-vx-text-2/60">Aún no tienes marcas registradas.</p>
         ) : (
-          <ul className="divide-y divide-[#242E3B]">
+          <ul className="divide-y divide-vx-border">
             {myEntries.slice(0, 5).map((e) => (
               <li key={e.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
-                <span className="text-white">
+                <span className="text-vx-text">
                   {new Date(e.clockIn).toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' })}
                 </span>
-                <span className="font-mono text-[#C5C6C7]">
+                <span className="tabular-nums text-vx-text-2">
                   {formatClock(e.clockIn)} → {e.clockOut ? formatClock(e.clockOut) : 'en curso'}
                 </span>
-                <span className="font-mono text-xs text-[#C5C6C7]/60">
+                <span className="tabular-nums text-[13px] text-vx-text-2/60">
                   {formatDuration(getWorkedMinutes(e, now))}
                 </span>
               </li>

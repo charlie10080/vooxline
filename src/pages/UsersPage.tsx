@@ -288,7 +288,7 @@ export const UsersPage: React.FC = () => {
             {alertNotice.actionUrl && (
               <NavLink
                 to={alertNotice.actionUrl}
-                className="px-2.5 py-1 rounded-lg bg-[#F59E0B] text-[#0B0C10] font-bold text-xs hover:bg-[#d98206] transition-colors"
+                className="px-2.5 py-1 rounded-lg bg-vx-warning text-vx-bg font-bold text-[13px] hover:bg-vx-warning transition-colors"
               >
                 {alertNotice.actionLabel ?? 'Ir'}
               </NavLink>
@@ -298,17 +298,17 @@ export const UsersPage: React.FC = () => {
       )}
 
       {/* Barra de Filtros y Búsqueda */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Buscador */}
         <div className="relative flex-1 md:max-w-xs">
-          <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-vx-text-2/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             aria-label="Buscar usuarios"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, correo, código..."
-            className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
+            className="w-full bg-vx-bg border border-vx-border text-[13px] text-vx-text rounded-xl pl-9 pr-3 py-2 placeholder:text-vx-text-2/40 focus:outline-none focus:border-vx-accent"
           />
         </div>
 
@@ -320,7 +320,7 @@ export const UsersPage: React.FC = () => {
               value={selectedCampaignId}
               aria-label="Filtrar por campaña"
               onChange={(e) => setSelectedCampaignId(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
             >
               <option value="all">Todas las campañas</option>
               {campaigns.map((c) => (
@@ -329,7 +329,7 @@ export const UsersPage: React.FC = () => {
                 </option>
               ))}
             </select>
-            <Building2 className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Building2 className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Rol */}
@@ -338,14 +338,14 @@ export const UsersPage: React.FC = () => {
               value={selectedRole}
               aria-label="Filtrar por rol"
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
             >
               <option value="all">Todos los roles</option>
               <option value="agent">Agente</option>
               <option value="supervisor">Supervisor</option>
               <option value="admin">Administrador</option>
             </select>
-            <Shield className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Shield className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Activo / Inactivo */}
@@ -354,13 +354,13 @@ export const UsersPage: React.FC = () => {
               value={selectedStatus}
               aria-label="Filtrar por estado"
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
             >
               <option value="all">Todos los estados</option>
               <option value="active">Activos</option>
               <option value="inactive">Inactivos</option>
             </select>
-            <Power className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Power className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
       </div>
@@ -375,7 +375,7 @@ export const UsersPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
+              <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                 <th className="py-3 px-4">Usuario / Nombre</th>
                 <th className="py-3 px-4">Código</th>
                 <th className="py-3 px-4">Correo</th>
@@ -387,7 +387,7 @@ export const UsersPage: React.FC = () => {
                 <th className="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+            <tbody className="divide-y divide-vx-border/60 text-[13px]">
               {filteredAgents.length === 0 ? (
                 <tr>
                   <td colSpan={9}>
@@ -407,17 +407,17 @@ export const UsersPage: React.FC = () => {
                   return (
                     <tr
                       key={agent.id}
-                      className="hover:bg-[#1A202C]/50 transition-colors group"
+                      className="hover:bg-vx-raised/50 transition-colors group"
                     >
                       {/* Nombre */}
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <Avatar name={agent.name} size="sm" />
                           <div>
-                            <span className="font-semibold text-white block whitespace-nowrap">
+                            <span className="font-semibold text-vx-text block whitespace-nowrap">
                               {agent.name}
                             </span>
-                            <span className="text-[10px] text-[#C5C6C7]/50 font-mono">
+                            <span className="text-xs text-vx-text-2/50 tabular-nums">
                               Ext: {agent.sipExtension}
                             </span>
                           </div>
@@ -425,13 +425,13 @@ export const UsersPage: React.FC = () => {
                       </td>
 
                       {/* Código */}
-                      <td className="py-3 px-4 font-mono text-[#C5C6C7]">
+                      <td className="py-3 px-4 tabular-nums text-vx-text-2">
                         {agent.employeeCode}
                       </td>
 
                       {/* Correo */}
-                      <td className="py-3 px-4 text-[#C5C6C7] font-mono text-[11px]">
-                        {profile.email || <span className="text-[#C5C6C7]/40">—</span>}
+                      <td className="py-3 px-4 text-vx-text-2 tabular-nums text-xs">
+                        {profile.email || <span className="text-vx-text-2/40">—</span>}
                       </td>
 
                       {/* Rol */}
@@ -442,12 +442,12 @@ export const UsersPage: React.FC = () => {
                       </td>
 
                       {/* Campaña */}
-                      <td className="py-3 px-4 text-white/90">
+                      <td className="py-3 px-4 text-vx-text/90">
                         {campaign?.name ?? 'Sin Asignar'}
                       </td>
 
                       {/* Nivel */}
-                      <td className="py-3 px-4 text-[#C5C6C7]">
+                      <td className="py-3 px-4 text-vx-text-2">
                         {agent.level}
                       </td>
 
@@ -458,7 +458,7 @@ export const UsersPage: React.FC = () => {
                             {memberGroups.map((gName) => (
                               <span
                                 key={gName}
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#1F2833] text-[10px] text-[#66FCF1] font-mono border border-[#242E3B]"
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-vx-raised text-xs text-vx-accent tabular-nums border border-vx-border"
                               >
                                 <Layers className="w-2.5 h-2.5" />
                                 {gName}
@@ -466,7 +466,7 @@ export const UsersPage: React.FC = () => {
                             ))}
                           </div>
                         ) : (
-                          <span className="text-[#C5C6C7]/40 text-[11px] font-mono">—</span>
+                          <span className="text-vx-text-2/40 text-xs tabular-nums">—</span>
                         )}
                       </td>
 
@@ -474,12 +474,12 @@ export const UsersPage: React.FC = () => {
                       <td className="py-3 px-4">
                         {profile.active ? (
                           <Badge tone="success">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-vx-success" />
                             Activo
                           </Badge>
                         ) : (
                           <Badge tone="danger">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-vx-danger" />
                             Inactivo
                           </Badge>
                         )}
@@ -494,7 +494,7 @@ export const UsersPage: React.FC = () => {
                             onClick={() => handleOpenEdit(agent)}
                             title="Editar usuario"
                             aria-label={`Editar a ${agent.name}`}
-                            className="p-1.5 rounded-lg bg-[#1F2833] hover:bg-[#253240] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
+                            className="p-1.5 rounded-lg bg-vx-raised hover:bg-vx-raised text-vx-text-2 hover:text-vx-text border border-vx-border transition-colors"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
@@ -505,10 +505,10 @@ export const UsersPage: React.FC = () => {
                             onClick={() => handleToggleActive(agent.id, profile.active)}
                             title={profile.active ? 'Desactivar usuario' : 'Activar usuario'}
                             aria-label={`${profile.active ? 'Desactivar' : 'Activar'} a ${agent.name}`}
-                            className={`p-1.5 rounded-lg border text-xs transition-colors ${
+                            className={`p-1.5 rounded-lg border text-[13px] transition-colors ${
                               profile.active
-                                ? 'bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border-[#EF4444]/30'
-                                : 'bg-[#10B981]/10 hover:bg-[#10B981] text-[#10B981] hover:text-[#0B0C10] border-[#10B981]/30'
+                                ? 'bg-vx-danger/10 hover:bg-vx-danger text-vx-danger hover:text-vx-text border-vx-danger/30'
+                                : 'bg-vx-success/10 hover:bg-vx-success text-vx-success hover:text-vx-bg border-vx-success/30'
                             }`}
                           >
                             <Power className="w-3.5 h-3.5" />
@@ -565,7 +565,7 @@ export const UsersPage: React.FC = () => {
               value={newUserEmail}
               onChange={(e) => setNewUserEmail(e.target.value)}
               placeholder="ej: laura.sanchez@vooxline.com"
-              className="font-mono"
+              className="tabular-nums"
             />
           </Field>
 
@@ -635,7 +635,7 @@ export const UsersPage: React.FC = () => {
               required
               value={editEmail}
               onChange={(e) => setEditEmail(e.target.value)}
-              className="font-mono"
+              className="tabular-nums"
             />
           </Field>
 

@@ -154,9 +154,9 @@ export const PayrollPage: React.FC = () => {
         <StatCard
           label="Margen bruto promedio"
           value={
-            <span className="inline-flex items-baseline gap-2 text-[#10B981]">
+            <span className="inline-flex items-baseline gap-2 text-vx-success">
               {totals.avgMarginPct.toFixed(1)}%
-              <span className="inline-flex items-center gap-0.5 text-xs">
+              <span className="inline-flex items-center gap-0.5 text-[13px]">
                 <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                 Rentable
               </span>
@@ -169,19 +169,19 @@ export const PayrollPage: React.FC = () => {
       </div>
 
       {/* 2. Sección "Rentabilidad por Campaña" */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-5 border-b border-[#242E3B] flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl overflow-hidden">
+        <div className="p-5 border-b border-vx-border flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#66FCF1]" />
-            <h2 className="text-base font-bold text-white tracking-wide">
+            <div className="w-2.5 h-2.5 rounded-full bg-vx-accent" />
+            <h2 className="text-base font-bold text-vx-text">
               Rentabilidad por campaña
             </h2>
-            <span className="text-xs font-mono text-[#C5C6C7]/60">
+            <span className="text-[13px] tabular-nums text-vx-text-2/60">
               ({campaignStats.length} campañas activas)
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-[#66FCF1] font-mono">
+          <div className="flex items-center gap-1.5 text-[13px] text-vx-accent tabular-nums">
             <ShieldCheck className="w-4 h-4" aria-hidden="true" />
             <span>Cálculo automático</span>
           </div>
@@ -190,7 +190,7 @@ export const PayrollPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[820px] text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
+              <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                 <th className="py-3 px-4">Campaña</th>
                 <th className="py-3 px-4">Horas acumuladas</th>
                 <th className="py-3 px-4">Monto facturado</th>
@@ -199,25 +199,25 @@ export const PayrollPage: React.FC = () => {
                 <th className="py-3 px-4 min-w-[160px]">Rendimiento</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+            <tbody className="divide-y divide-vx-border/60 text-[13px]">
               {campaignStats.map((stat) => {
                 const marginWidth = Math.min(100, Math.max(0, stat.marginPct));
                 return (
                   <tr
                     key={stat.campaign.id}
-                    className="hover:bg-[#1A202C]/50 transition-colors"
+                    className="hover:bg-vx-raised/50 transition-colors"
                   >
                     {/* Nombre */}
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-vx-raised border border-vx-border flex items-center justify-center text-vx-accent tabular-nums font-bold text-[13px] shrink-0">
                           <Building2 className="w-4 h-4" aria-hidden="true" />
                         </div>
                         <div>
-                          <span className="font-semibold text-white block">
+                          <span className="font-semibold text-vx-text block">
                             {stat.campaign.name}
                           </span>
-                          <span className="text-[11px] text-[#C5C6C7]/60 font-mono">
+                          <span className="text-xs text-vx-text-2/60 tabular-nums">
                             Tarifa: {formatUSD(stat.campaign.billRate)}/h • Costo:{' '}
                             {formatUSD(stat.campaign.costRate)}/h
                           </span>
@@ -226,22 +226,22 @@ export const PayrollPage: React.FC = () => {
                     </td>
 
                     {/* Horas Acumuladas */}
-                    <td className="py-3.5 px-4 font-mono">
-                      <span className="text-white font-semibold">
+                    <td className="py-3.5 px-4 tabular-nums">
+                      <span className="text-vx-text font-semibold">
                         {stat.hours.toLocaleString('en-US', { maximumFractionDigits: 1 })}
                       </span>
-                      <span className="text-[10px] text-[#C5C6C7]/50 block">
+                      <span className="text-xs text-vx-text-2/50 block">
                         (base {stat.campaign.baselineHours}h)
                       </span>
                     </td>
 
                     {/* Monto Facturado */}
-                    <td className="py-3.5 px-4 font-mono font-medium text-white">
+                    <td className="py-3.5 px-4 tabular-nums font-medium text-vx-text">
                       {formatUSD(stat.billed)}
                     </td>
 
                     {/* Costo de Nómina */}
-                    <td className="py-3.5 px-4 font-mono text-[#F59E0B]">
+                    <td className="py-3.5 px-4 tabular-nums text-vx-warning">
                       {formatUSD(stat.cost)}
                     </td>
 
@@ -253,13 +253,13 @@ export const PayrollPage: React.FC = () => {
                     {/* Barra de Progreso Proporcional al Margen */}
                     <td className="py-3.5 px-4">
                       <div className="space-y-1">
-                        <div className="w-full bg-[#1F2833] h-2 rounded-full overflow-hidden border border-[#242E3B]">
+                        <div className="w-full bg-vx-raised h-2 rounded-full overflow-hidden border border-vx-border">
                           <div
-                            className="bg-gradient-to-r from-[#10B981] to-[#66FCF1] h-full rounded-full transition-all duration-500 shadow-[0_0_8px_rgba(102,252,241,0.4)]"
+                            className="bg-gradient-to-r from-vx-success to-vx-accent h-full rounded-full transition-all duration-500"
                             style={{ width: `${marginWidth}%` }}
                           />
                         </div>
-                        <div className="flex justify-between text-[10px] font-mono text-[#C5C6C7]/50">
+                        <div className="flex justify-between text-xs tabular-nums text-vx-text-2/50">
                           <span>0%</span>
                           <span>{marginWidth.toFixed(0)}%</span>
                           <span>100%</span>
@@ -275,14 +275,14 @@ export const PayrollPage: React.FC = () => {
       </div>
 
       {/* 3. Tabla "Horas Aprobadas" */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-5 border-b border-[#242E3B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl overflow-hidden">
+        <div className="p-5 border-b border-vx-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#10B981]" />
-            <h2 className="text-base font-bold text-white tracking-wide">
+            <div className="w-2.5 h-2.5 rounded-full bg-vx-success" />
+            <h2 className="text-base font-bold text-vx-text">
               Horas aprobadas
             </h2>
-            <span className="text-xs font-mono text-[#C5C6C7]/60">
+            <span className="text-[13px] tabular-nums text-vx-text-2/60">
               ({approvedEntries.length} turnos validados para nómina)
             </span>
           </div>
@@ -294,7 +294,7 @@ export const PayrollPage: React.FC = () => {
                 value={selectedCampaignId}
                 onChange={(e) => setSelectedCampaignId(e.target.value)}
                 aria-label="Filtrar por campaña"
-                className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+                className="w-full bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
               >
                 <option value="all">Todas las campañas</option>
                 {campaigns.map((c) => (
@@ -303,18 +303,18 @@ export const PayrollPage: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <Building2 className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Building2 className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
 
             <div className="relative w-full sm:w-56">
-              <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+              <Search className="w-3.5 h-3.5 text-vx-text-2/40 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Buscar agente o campaña"
                 placeholder="Buscar agente..."
-                className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
+                className="w-full bg-vx-bg border border-vx-border text-[13px] text-vx-text rounded-xl pl-9 pr-3 py-2 placeholder:text-vx-text-2/40 focus:outline-none focus:border-vx-accent"
               />
             </div>
           </div>
@@ -323,7 +323,7 @@ export const PayrollPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
+              <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                 <th className="py-3 px-4">Agente</th>
                 <th className="py-3 px-4">Campaña</th>
                 <th className="py-3 px-4">Fecha del turno</th>
@@ -332,7 +332,7 @@ export const PayrollPage: React.FC = () => {
                 <th className="py-3 px-4 text-right">Costo estimado</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+            <tbody className="divide-y divide-vx-border/60 text-[13px]">
               {approvedEntries.length === 0 ? (
                 <tr>
                   <td colSpan={6}>
@@ -355,19 +355,19 @@ export const PayrollPage: React.FC = () => {
                   return (
                     <tr
                       key={entry.id}
-                      className="hover:bg-[#1A202C]/50 transition-colors"
+                      className="hover:bg-vx-raised/50 transition-colors"
                     >
                       {/* Agente */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-lg bg-[#1F2833] border border-[#242E3B] flex items-center justify-center text-[#66FCF1] font-mono font-bold text-xs shrink-0">
+                          <div className="w-7 h-7 rounded-lg bg-vx-raised border border-vx-border flex items-center justify-center text-vx-accent tabular-nums font-bold text-[13px] shrink-0">
                             {agent ? agent.name.charAt(0) : '?'}
                           </div>
                           <div>
-                            <span className="font-semibold text-white">
+                            <span className="font-semibold text-vx-text">
                               {agent?.name ?? 'Desconocido'}
                             </span>
-                            <span className="text-[10px] text-[#C5C6C7]/50 font-mono block mt-0.5">
+                            <span className="text-xs text-vx-text-2/50 tabular-nums block mt-0.5">
                               {agent?.employeeCode}
                             </span>
                           </div>
@@ -375,13 +375,13 @@ export const PayrollPage: React.FC = () => {
                       </td>
 
                       {/* Campaña */}
-                      <td className="py-3.5 px-4 text-[#C5C6C7]">
+                      <td className="py-3.5 px-4 text-vx-text-2">
                         {campaign?.name ?? 'Sin asignar'}
                       </td>
 
                       {/* Fecha */}
-                      <td className="py-3.5 px-4 font-mono text-[#C5C6C7]">
-                        <span className="text-white">
+                      <td className="py-3.5 px-4 tabular-nums text-vx-text-2">
+                        <span className="text-vx-text">
                           {new Date(entry.clockIn).toLocaleDateString('es-MX', {
                             year: 'numeric',
                             month: 'short',
@@ -391,20 +391,20 @@ export const PayrollPage: React.FC = () => {
                       </td>
 
                       {/* Horas Trabajadas */}
-                      <td className="py-3.5 px-4 font-mono">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#1F2833] text-white font-semibold">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" aria-hidden="true" />
+                      <td className="py-3.5 px-4 tabular-nums">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-vx-raised text-vx-text font-semibold">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-vx-success" aria-hidden="true" />
                           {formatDuration(workedMinutes)}
                         </span>
                       </td>
 
                       {/* Desviación */}
-                      <td className="py-3.5 px-4 font-mono text-xs">
+                      <td className="py-3.5 px-4 tabular-nums text-[13px]">
                         <span
-                          className={`px-2 py-0.5 rounded font-mono font-semibold ${
+                          className={`px-2 py-0.5 rounded tabular-nums font-semibold ${
                             deviationMinutes === 0
-                              ? 'bg-[#1F2833] text-[#C5C6C7]'
-                              : 'bg-[#1F2833] text-[#66FCF1]'
+                              ? 'bg-vx-raised text-vx-text-2'
+                              : 'bg-vx-raised text-vx-accent'
                           }`}
                         >
                           {formatDeviation(deviationMinutes)}
@@ -412,7 +412,7 @@ export const PayrollPage: React.FC = () => {
                       </td>
 
                       {/* Costo Estimado */}
-                      <td className="py-3.5 px-4 text-right font-mono font-bold text-[#F59E0B]">
+                      <td className="py-3.5 px-4 text-right tabular-nums font-bold text-vx-warning">
                         {formatUSD(cost)}
                       </td>
                     </tr>

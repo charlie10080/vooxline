@@ -185,37 +185,37 @@ export const UpdatesPage: React.FC = () => {
                       type="button"
                       onClick={() => open(u)}
                       aria-current={active ? 'true' : undefined}
-                      className={`relative w-full rounded-2xl border p-4 text-left transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#66FCF1]/60 ${
+                      className={`relative w-full rounded-2xl border p-4 text-left transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-vx-accent/60 ${
                         active
-                          ? 'border-[#66FCF1]/50 bg-[#66FCF1]/[0.06]'
+                          ? 'border-vx-accent/50 bg-vx-accent/[0.06]'
                           : unread
-                            ? 'border-[#66FCF1]/25 bg-[#13151c] hover:border-[#66FCF1]/45'
-                            : 'border-[#242E3B] bg-[#13151c] hover:border-[#66FCF1]/30'
+                            ? 'border-vx-accent/25 bg-vx-surface hover:border-vx-accent/45'
+                            : 'border-vx-border bg-vx-surface hover:border-vx-accent/30'
                       }`}
                     >
-                      {unread && <span className="absolute inset-y-3 left-0 w-1 rounded-r-full bg-[#66FCF1]" aria-hidden="true" />}
+                      {unread && <span className="absolute inset-y-3 left-0 w-1 rounded-r-full bg-vx-accent" aria-hidden="true" />}
                       <div className="flex flex-wrap items-center gap-1.5">
-                        {u.pinned && <Pin className="h-3.5 w-3.5 text-[#66FCF1]" aria-label="Fijado" />}
+                        {u.pinned && <Pin className="h-3.5 w-3.5 text-vx-accent" aria-label="Fijado" />}
                         <Badge tone={CATEGORY_TONE[u.category]}>{CATEGORY_LABELS[u.category]}</Badge>
                         {isManager && state !== 'live' && <Badge tone={STATE_LABEL[state].tone}>{STATE_LABEL[state].label}</Badge>}
                         {unread && <Badge tone="accent">Nuevo</Badge>}
                         {pending && <Badge tone="warning">Por confirmar</Badge>}
                         {!isManager && u.requiresConfirmation && !pending && (
-                          <CheckCircle2 className="h-3.5 w-3.5 text-[#10B981]" aria-label="Confirmado" />
+                          <CheckCircle2 className="h-3.5 w-3.5 text-vx-success" aria-label="Confirmado" />
                         )}
-                        <span className="ml-auto font-mono text-[10px] text-[#C5C6C7]/50">{timeAgo(publishedAt(u), now)}</span>
+                        <span className="ml-auto tabular-nums text-xs text-vx-text-2/50">{timeAgo(publishedAt(u), now)}</span>
                       </div>
-                      <p className={`mt-2 text-sm ${unread ? 'font-bold text-white' : 'font-semibold text-white/90'}`}>{u.title}</p>
-                      <p className="mt-1 text-xs text-[#C5C6C7]/60">{excerpt(u.body)}</p>
+                      <p className={`mt-2 text-sm ${unread ? 'font-bold text-vx-text' : 'font-semibold text-vx-text/90'}`}>{u.title}</p>
+                      <p className="mt-1 text-[13px] text-vx-text-2/60">{excerpt(u.body)}</p>
                       {stats && (
                         <div className="mt-3 flex items-center gap-2.5">
-                          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#0B0C10]">
+                          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-vx-bg">
                             <div
-                              className={`h-full rounded-full ${stats.percent === 100 ? 'bg-[#10B981]' : 'bg-[#66FCF1]'}`}
+                              className={`h-full rounded-full ${stats.percent === 100 ? 'bg-vx-success' : 'bg-vx-accent'}`}
                               style={{ width: `${stats.percent}%` }}
                             />
                           </div>
-                          <span className="font-mono text-[10px] text-[#C5C6C7]/60">
+                          <span className="tabular-nums text-xs text-vx-text-2/60">
                             {stats.audience.length - stats.pending.length}/{stats.audience.length}{' '}
                             {u.requiresConfirmation ? 'confirmaron' : 'leyeron'}
                           </span>
@@ -287,8 +287,8 @@ export const UpdatesPage: React.FC = () => {
           </>
         }
       >
-        <p className="text-sm text-[#C5C6C7]">
-          ¿Seguro que quieres eliminar <span className="font-semibold text-white">{confirmDelete?.title}</span>?
+        <p className="text-sm text-vx-text-2">
+          ¿Seguro que quieres eliminar <span className="font-semibold text-vx-text">{confirmDelete?.title}</span>?
         </p>
       </Modal>
     </div>

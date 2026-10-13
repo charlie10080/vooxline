@@ -103,21 +103,21 @@ function draftFromForm(f: FormState): RuleDraft {
 
 /** Paso del constructor "Cuando / Si / Entonces" */
 const Step: React.FC<{ label: string; hint: string; children: React.ReactNode }> = ({ label, hint, children }) => (
-  <fieldset className="rounded-xl border border-[#242E3B] bg-[#0B0C10]/60 p-4">
+  <fieldset className="rounded-xl border border-vx-border bg-vx-bg/60 p-4">
     <legend className="px-1.5">
-      <span className="font-mono text-xs font-bold tracking-wider text-[#66FCF1]">{label}</span>
-      <span className="ml-2 text-[11px] text-[#C5C6C7]/55">{hint}</span>
+      <span className="tabular-nums text-[13px] font-bold text-vx-accent">{label}</span>
+      <span className="ml-2 text-xs text-vx-text-2/55">{hint}</span>
     </legend>
     <div className="space-y-3">{children}</div>
   </fieldset>
 );
 
 const Check: React.FC<{ checked: boolean; onChange: (v: boolean) => void; label: string; hint: string }> = ({ checked, onChange, label, hint }) => (
-  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-[#242E3B] bg-[#13151c] p-3 hover:border-[#66FCF1]/30">
-    <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[#66FCF1]" />
+  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-vx-border bg-vx-surface p-3 hover:border-vx-accent/30">
+    <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-0.5 h-4 w-4 accent-vx-accent" />
     <span>
-      <span className="block text-xs font-semibold text-white">{label}</span>
-      <span className="block text-[11px] text-[#C5C6C7]/60">{hint}</span>
+      <span className="block text-[13px] font-semibold text-vx-text">{label}</span>
+      <span className="block text-xs text-vx-text-2/60">{hint}</span>
     </span>
   </label>
 );
@@ -130,11 +130,11 @@ const Switch: React.FC<{ on: boolean; onToggle: () => void; label: string }> = (
     aria-label={label}
     onClick={onToggle}
     className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
-      on ? 'border-[#66FCF1]/50 bg-[#66FCF1]/25' : 'border-[#242E3B] bg-[#0B0C10]'
+      on ? 'border-vx-accent/50 bg-vx-accent/25' : 'border-vx-border bg-vx-bg'
     }`}
   >
     <span
-      className={`absolute top-0.5 h-4 w-4 rounded-full transition-all ${on ? 'left-6 bg-[#66FCF1]' : 'left-1 bg-[#C5C6C7]/50'}`}
+      className={`absolute top-0.5 h-4 w-4 rounded-full transition-all ${on ? 'left-6 bg-vx-accent' : 'left-1 bg-vx-text-2/50'}`}
     />
   </button>
 );
@@ -291,7 +291,7 @@ export const AutomationsPage: React.FC = () => {
                   <li
                     key={r.id}
                     className={`rounded-xl border p-4 transition-colors ${
-                      r.enabled ? 'border-[#242E3B] bg-[#0B0C10]/50 hover:border-[#66FCF1]/25' : 'border-[#242E3B]/70 bg-[#0B0C10]/30 opacity-70'
+                      r.enabled ? 'border-vx-border bg-vx-bg/50 hover:border-vx-accent/25' : 'border-vx-border/70 bg-vx-bg/30 opacity-70'
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -302,21 +302,21 @@ export const AutomationsPage: React.FC = () => {
                       />
                       <div className="min-w-0 flex-1 space-y-2">
                         <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-semibold text-white">{r.name}</p>
+                          <p className="text-sm font-semibold text-vx-text">{r.name}</p>
                           <Badge tone={r.enabled ? 'success' : 'neutral'}>{r.enabled ? 'Activa' : 'Pausada'}</Badge>
                         </div>
-                        <div className="grid gap-1 text-xs text-[#C5C6C7]/80">
+                        <div className="grid gap-1 text-[13px] text-vx-text-2/80">
                           <p>
-                            <span className="font-mono font-bold text-[#66FCF1]">CUANDO</span> {triggerSummary(r)}
+                            <span className="tabular-nums font-bold text-vx-accent">CUANDO</span> {triggerSummary(r)}
                           </p>
                           <p>
-                            <span className="font-mono font-bold text-[#66FCF1]">SI</span> {campaignName(r.campaignId)}
+                            <span className="tabular-nums font-bold text-vx-accent">SI</span> {campaignName(r.campaignId)}
                           </p>
                           <p>
-                            <span className="font-mono font-bold text-[#66FCF1]">ENTONCES</span> {actionSummary(r.actions)}
+                            <span className="tabular-nums font-bold text-vx-accent">ENTONCES</span> {actionSummary(r.actions)}
                           </p>
                         </div>
-                        <p className="font-mono text-[11px] text-[#C5C6C7]/50">
+                        <p className="tabular-nums text-xs text-vx-text-2/50">
                           {last ? `Última ejecución ${timeAgo(last.at, now)}` : 'Aún no se ha ejecutado'}
                         </p>
                       </div>
@@ -328,7 +328,7 @@ export const AutomationsPage: React.FC = () => {
                             setFormError(null);
                             setEditing({ id: r.id, form: formFromRule(r) });
                           }}
-                          className="rounded-lg p-2 text-[#C5C6C7]/70 hover:bg-white/5 hover:text-white"
+                          className="rounded-lg p-2 text-vx-text-2/70 hover:bg-white/5 hover:text-vx-text"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -336,7 +336,7 @@ export const AutomationsPage: React.FC = () => {
                           type="button"
                           aria-label={`Eliminar ${r.name}`}
                           onClick={() => setToDelete(r)}
-                          className="rounded-lg p-2 text-[#C5C6C7]/70 hover:bg-[#EF4444]/10 hover:text-[#EF4444]"
+                          className="rounded-lg p-2 text-vx-text-2/70 hover:bg-vx-danger/10 hover:text-vx-danger"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -349,22 +349,22 @@ export const AutomationsPage: React.FC = () => {
           )}
         </Card>
 
-        <Card title={<span className="flex items-center gap-2"><History className="h-4 w-4 text-[#66FCF1]" />Historial de ejecuciones</span>} subtitle="Últimas 25" bodyClassName="p-0">
+        <Card title={<span className="flex items-center gap-2"><History className="h-4 w-4 text-vx-accent" />Historial de ejecuciones</span>} subtitle="Últimas 25" bodyClassName="p-0">
           {runs.length === 0 ? (
             <EmptyState icon={History} title="Sin ejecuciones" description="Cuando una regla se dispare aparecerá aquí." />
           ) : (
-            <ul className="max-h-[640px] divide-y divide-[#242E3B] overflow-y-auto">
+            <ul className="max-h-[640px] divide-y divide-vx-border overflow-y-auto">
               {runs.slice(0, 25).map((run) => (
                 <li key={run.id} className="space-y-1 px-5 py-3">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-xs font-semibold text-white">{run.ruleName}</p>
-                    <span className="shrink-0 font-mono text-[10px] text-[#C5C6C7]/50">{timeAgo(run.at, now)}</span>
+                    <p className="truncate text-[13px] font-semibold text-vx-text">{run.ruleName}</p>
+                    <span className="shrink-0 tabular-nums text-xs text-vx-text-2/50">{timeAgo(run.at, now)}</span>
                   </div>
-                  <p className="text-xs text-[#C5C6C7]/75">
-                    {run.agentId && <span className="text-[#C5C6C7]">{nameOf(run.agentId)}: </span>}
+                  <p className="text-[13px] text-vx-text-2/75">
+                    {run.agentId && <span className="text-vx-text-2">{nameOf(run.agentId)}: </span>}
                     {run.detail}
                   </p>
-                  <p className="flex items-center gap-1 font-mono text-[10px] text-[#C5C6C7]/50">
+                  <p className="flex items-center gap-1 tabular-nums text-xs text-vx-text-2/50">
                     <Users className="h-3 w-3" />
                     {run.recipientIds.length === 0 ? 'Sin destinatarios' : run.recipientIds.map(nameOf).join(', ')}
                   </p>
@@ -477,7 +477,7 @@ export const AutomationsPage: React.FC = () => {
                     key={p}
                     type="button"
                     onClick={() => patch({ message: `${form.message}${form.message.endsWith(' ') || !form.message ? '' : ' '}${p}` })}
-                    className="rounded-md border border-[#66FCF1]/30 bg-[#66FCF1]/10 px-2 py-0.5 font-mono text-[11px] text-[#66FCF1] hover:bg-[#66FCF1]/20"
+                    className="rounded-md border border-vx-accent/30 bg-vx-accent/10 px-2 py-0.5 tabular-nums text-xs text-vx-accent hover:bg-vx-accent/20"
                   >
                     {p}
                   </button>
@@ -485,18 +485,18 @@ export const AutomationsPage: React.FC = () => {
               </div>
             </Step>
 
-            <div className="rounded-xl border border-[#66FCF1]/25 bg-[#66FCF1]/[0.05] p-4" aria-live="polite">
-              <p className="mb-2 font-mono text-[11px] font-bold tracking-wider text-[#66FCF1]">VISTA PREVIA</p>
-              <div className="flex items-start gap-3 rounded-lg border border-[#242E3B] bg-[#13151c] p-3">
-                <span className="rounded-lg border border-[#66FCF1]/30 bg-[#66FCF1]/10 p-1.5 text-[#66FCF1]">
+            <div className="rounded-xl border border-vx-accent/25 bg-vx-accent/[0.05] p-4" aria-live="polite">
+              <p className="mb-2 tabular-nums text-xs font-bold text-vx-accent">VISTA PREVIA</p>
+              <div className="flex items-start gap-3 rounded-lg border border-vx-border bg-vx-surface p-3">
+                <span className="rounded-lg border border-vx-accent/30 bg-vx-accent/10 p-1.5 text-vx-accent">
                   <Bell className="h-3.5 w-3.5" />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-white">{form.name.trim() || 'Nueva regla'}</p>
-                  <p className="mt-0.5 text-xs text-[#C5C6C7]/80">{preview || '—'}</p>
+                  <p className="text-[13px] font-semibold text-vx-text">{form.name.trim() || 'Nueva regla'}</p>
+                  <p className="mt-0.5 text-[13px] text-vx-text-2/80">{preview || '—'}</p>
                 </div>
               </div>
-              <p className="mt-2 text-[11px] text-[#C5C6C7]/60">
+              <p className="mt-2 text-xs text-vx-text-2/60">
                 {previewRecipients ? `Acción: ${previewRecipients}.` : 'Elige al menos una acción.'}
               </p>
             </div>
@@ -527,7 +527,7 @@ export const AutomationsPage: React.FC = () => {
           </>
         }
       >
-        <p className="text-sm text-[#C5C6C7]">La regla dejará de ejecutarse. El historial de ejecuciones se conserva.</p>
+        <p className="text-sm text-vx-text-2">La regla dejará de ejecutarse. El historial de ejecuciones se conserva.</p>
       </Modal>
     </div>
   );

@@ -57,23 +57,23 @@ export const UserSwitcher: React.FC = () => {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-2.5 rounded-xl border border-[#242E3B] bg-[#13151c] py-1.5 pl-1.5 pr-3 transition-colors hover:border-[#66FCF1]/40"
+        className="flex items-center gap-2.5 rounded-xl border border-vx-border bg-vx-surface py-1.5 pl-1.5 pr-3 transition-colors hover:border-vx-accent/40"
       >
         <Avatar name={agent?.name ?? '?'} size="sm" />
         <span className="hidden text-left sm:block">
-          <span className="block text-xs font-semibold leading-tight text-white">{agent?.name ?? profile.email}</span>
-          <span className="block font-mono text-[10px] leading-tight text-[#66FCF1]">{ROLE_LABELS[role]}</span>
+          <span className="block text-[13px] font-semibold leading-tight text-vx-text">{agent?.name ?? profile.email}</span>
+          <span className="block tabular-nums text-xs leading-tight text-vx-accent">{ROLE_LABELS[role]}</span>
         </span>
-        <ChevronDown className="h-3.5 w-3.5 text-[#C5C6C7]/60" />
+        <ChevronDown className="h-3.5 w-3.5 text-vx-text-2/60" />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-40 mt-2 w-72 overflow-hidden rounded-2xl border border-[#242E3B] bg-[#13151c] shadow-2xl"
+          className="absolute right-0 z-40 mt-2 w-72 overflow-hidden rounded-2xl border border-vx-border bg-vx-surface shadow-2xl"
         >
           {isManager && (
-            <div className="grid grid-cols-2 gap-1.5 border-b border-[#242E3B] p-2">
+            <div className="grid grid-cols-2 gap-1.5 border-b border-vx-border p-2">
               <button
                 type="button"
                 role="menuitem"
@@ -81,9 +81,9 @@ export const UserSwitcher: React.FC = () => {
                   setOpen(false);
                   navigate('/');
                 }}
-                className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#C5C6C7] hover:bg-white/5 hover:text-white"
+                className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] text-vx-text-2 hover:bg-white/5 hover:text-vx-text"
               >
-                <LayoutDashboard className="h-3.5 w-3.5 text-[#66FCF1]" />
+                <LayoutDashboard className="h-3.5 w-3.5 text-vx-accent" />
                 Consola
               </button>
               <button
@@ -93,9 +93,9 @@ export const UserSwitcher: React.FC = () => {
                   setOpen(false);
                   navigate('/portal');
                 }}
-                className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#C5C6C7] hover:bg-white/5 hover:text-white"
+                className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] text-vx-text-2 hover:bg-white/5 hover:text-vx-text"
               >
-                <UserCircle2 className="h-3.5 w-3.5 text-[#66FCF1]" />
+                <UserCircle2 className="h-3.5 w-3.5 text-vx-accent" />
                 Mi portal
               </button>
             </div>
@@ -103,7 +103,7 @@ export const UserSwitcher: React.FC = () => {
           {/* Cambiar de usuario sin contraseña: solo en modo local */}
           {!isRemote('identity') && (
           <>
-          <div className="px-3 pb-1 pt-3 font-mono text-[10px] font-bold uppercase tracking-wider text-[#C5C6C7]/40">
+          <div className="px-3 pb-1 pt-3 tabular-nums text-xs font-bold text-vx-text-2/40">
             Entrar como (demo)
           </div>
           <div className="max-h-80 overflow-y-auto p-1.5">
@@ -117,22 +117,22 @@ export const UserSwitcher: React.FC = () => {
                   role="menuitem"
                   onClick={() => switchTo(a.id)}
                   className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors ${
-                    current ? 'bg-[#66FCF1]/10' : 'hover:bg-white/5'
+                    current ? 'bg-vx-accent/10' : 'hover:bg-white/5'
                   }`}
                 >
                   <Avatar name={a.name} size="sm" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-xs font-medium text-white">{a.name}</span>
-                    <span className="block font-mono text-[10px] text-[#C5C6C7]/50">{ROLE_LABELS[r]}</span>
+                    <span className="block truncate text-[13px] font-medium text-vx-text">{a.name}</span>
+                    <span className="block tabular-nums text-xs text-vx-text-2/50">{ROLE_LABELS[r]}</span>
                   </span>
-                  {current && <Check className="h-3.5 w-3.5 text-[#66FCF1]" />}
+                  {current && <Check className="h-3.5 w-3.5 text-vx-accent" />}
                 </button>
               );
             })}
           </div>
           </>
           )}
-          <div className="border-t border-[#242E3B] p-1.5">
+          <div className="border-t border-vx-border p-1.5">
             <button
               type="button"
               role="menuitem"
@@ -140,7 +140,7 @@ export const UserSwitcher: React.FC = () => {
                 logout();
                 navigate('/inicio');
               }}
-              className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[#C5C6C7] hover:bg-white/5 hover:text-white"
+              className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] text-vx-text-2 hover:bg-white/5 hover:text-vx-text"
             >
               <LogOut className="h-3.5 w-3.5" />
               Cerrar sesión

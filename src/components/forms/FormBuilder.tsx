@@ -152,8 +152,8 @@ export const FormBuilder: React.FC<{
         </div>
 
         {draft.audience.kind === 'campaigns' && (
-          <fieldset className="rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
-            <legend className="px-1 text-xs font-medium text-[#C5C6C7]">Campañas</legend>
+          <fieldset className="rounded-xl border border-vx-border bg-vx-bg p-3">
+            <legend className="px-1 text-[13px] font-medium text-vx-text-2">Campañas</legend>
             <div className="flex flex-wrap gap-2">
               {campaigns.map((c) => {
                 const ids = draft.audience.kind === 'campaigns' ? draft.audience.campaignIds : [];
@@ -161,13 +161,13 @@ export const FormBuilder: React.FC<{
                 return (
                   <label
                     key={c.id}
-                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-1.5 text-xs ${
-                      checked ? 'border-[#66FCF1]/50 bg-[#66FCF1]/10 text-[#66FCF1]' : 'border-[#242E3B] text-[#C5C6C7]'
+                    className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-1.5 text-[13px] ${
+                      checked ? 'border-vx-accent/50 bg-vx-accent/10 text-vx-accent' : 'border-vx-border text-vx-text-2'
                     }`}
                   >
                     <input
                       type="checkbox"
-                      className="accent-[#66FCF1]"
+                      className="accent-vx-accent"
                       checked={checked}
                       onChange={() =>
                         patch({
@@ -188,17 +188,17 @@ export const FormBuilder: React.FC<{
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-white">Preguntas ({draft.questions.length})</h4>
+            <h4 className="text-sm font-bold text-vx-text">Preguntas ({draft.questions.length})</h4>
           </div>
           {draft.questions.map((q, i) => (
             <div
               key={q.id}
-              className={`space-y-3 rounded-xl border bg-[#0B0C10] p-4 ${
-                error?.questionId === q.id ? 'border-[#EF4444]/60' : 'border-[#242E3B]'
+              className={`space-y-3 rounded-xl border bg-vx-bg p-4 ${
+                error?.questionId === q.id ? 'border-vx-danger/60' : 'border-vx-border'
               }`}
             >
               <div className="flex items-start gap-3">
-                <span className="mt-2 font-mono text-xs text-[#66FCF1]">{String(i + 1).padStart(2, '0')}</span>
+                <span className="mt-2 tabular-nums text-[13px] text-vx-accent">{String(i + 1).padStart(2, '0')}</span>
                 <div className="grid flex-1 gap-3 sm:grid-cols-[1fr_180px]">
                   <Field label="Pregunta">
                     <Input value={q.label} onChange={(e) => patchQuestion(q.id, { label: e.target.value })} placeholder="Escribe la pregunta" />
@@ -261,14 +261,14 @@ export const FormBuilder: React.FC<{
                 </div>
               )}
 
-              <label className="flex w-fit cursor-pointer items-center gap-2 pl-7 text-xs text-[#C5C6C7]">
-                <input type="checkbox" className="accent-[#66FCF1]" checked={q.required} onChange={(e) => patchQuestion(q.id, { required: e.target.checked })} />
+              <label className="flex w-fit cursor-pointer items-center gap-2 pl-7 text-[13px] text-vx-text-2">
+                <input type="checkbox" className="accent-vx-accent" checked={q.required} onChange={(e) => patchQuestion(q.id, { required: e.target.checked })} />
                 Obligatoria
               </label>
             </div>
           ))}
 
-          <div className="flex flex-wrap items-end gap-2 rounded-xl border border-dashed border-[#242E3B] p-3">
+          <div className="flex flex-wrap items-end gap-2 rounded-xl border border-dashed border-vx-border p-3">
             <div className="min-w-[200px] flex-1">
               <Field label="Tipo de la nueva pregunta">
                 <Select value={newType} onChange={(e) => setNewType(e.target.value as QuestionType)}>
@@ -303,8 +303,8 @@ const IconBtn: React.FC<{ label: string; onClick: () => void; disabled?: boolean
     title={label}
     disabled={disabled}
     onClick={onClick}
-    className={`rounded-lg border border-[#242E3B] p-1.5 transition-colors disabled:cursor-not-allowed disabled:opacity-30 ${
-      danger ? 'text-[#EF4444] hover:bg-[#EF4444]/10' : 'text-[#C5C6C7] hover:border-[#66FCF1]/40 hover:text-[#66FCF1]'
+    className={`rounded-lg border border-vx-border p-1.5 transition-colors disabled:cursor-not-allowed disabled:opacity-30 ${
+      danger ? 'text-vx-danger hover:bg-vx-danger/10' : 'text-vx-text-2 hover:border-vx-accent/40 hover:text-vx-accent'
     }`}
   >
     {children}

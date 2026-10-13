@@ -170,8 +170,8 @@ export const HelpDeskPage: React.FC = () => {
               onChange={setAssignee}
               options={{ unassigned: 'Sin asignar', ...Object.fromEntries(managers.map((m) => [m.id, m.name])) }}
             />
-            <label className="flex h-[34px] items-center gap-2 rounded-xl border border-[#242E3B] bg-[#0B0C10] px-3 text-xs text-[#C5C6C7]">
-              <input type="checkbox" checked={overdueOnly} onChange={(e) => setOverdueOnly(e.target.checked)} className="accent-[#EF4444]" />
+            <label className="flex h-[34px] items-center gap-2 rounded-xl border border-vx-border bg-vx-bg px-3 text-[13px] text-vx-text-2">
+              <input type="checkbox" checked={overdueOnly} onChange={(e) => setOverdueOnly(e.target.checked)} className="accent-vx-danger" />
               Solo vencidos
             </label>
           </>
@@ -196,22 +196,22 @@ export const HelpDeskPage: React.FC = () => {
                       type="button"
                       onClick={() => setSelectedId(t.id)}
                       aria-current={active ? 'true' : undefined}
-                      className={`w-full rounded-xl border p-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#66FCF1] ${
-                        active ? 'border-[#66FCF1]/40 bg-[#66FCF1]/[0.06]' : 'border-transparent hover:bg-white/[0.03]'
+                      className={`w-full rounded-xl border p-3 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-vx-accent ${
+                        active ? 'border-vx-accent/40 bg-vx-accent/[0.06]' : 'border-transparent hover:bg-white/[0.03]'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-[11px] text-[#66FCF1]">{t.code}</span>
-                        <span className="text-[11px] text-[#C5C6C7]/50">{CATEGORY_LABELS[t.category]}</span>
+                        <span className="tabular-nums text-xs text-vx-accent">{t.code}</span>
+                        <span className="text-xs text-vx-text-2/50">{CATEGORY_LABELS[t.category]}</span>
                       </div>
-                      <div className="mt-1 truncate text-sm font-semibold text-white">{t.title}</div>
+                      <div className="mt-1 truncate text-sm font-semibold text-vx-text">{t.title}</div>
                       <div className="mt-2 flex flex-wrap items-center gap-1.5">
                         <StatusBadge status={t.status} />
                         <PriorityBadge priority={t.priority} />
                         <SlaBadge ticket={t} now={now} />
                       </div>
                       {isManager && (
-                        <div className="mt-2 flex items-center gap-2 text-[11px] text-[#C5C6C7]/60">
+                        <div className="mt-2 flex items-center gap-2 text-xs text-vx-text-2/60">
                           <Avatar name={nameOf(t.requesterId)} size="sm" />
                           <span className="truncate">{nameOf(t.requesterId)}</span>
                           <span className="ml-auto truncate">→ {t.assigneeId ? nameOf(t.assigneeId) : 'Sin asignar'}</span>
@@ -327,7 +327,7 @@ const FilterSelect: React.FC<{
   options: Record<string, string>;
 }> = ({ label, value, onChange, options }) => (
   <label className="space-y-1">
-    <span className="block text-[11px] font-medium text-[#C5C6C7]/60">{label}</span>
+    <span className="block text-xs font-medium text-vx-text-2/60">{label}</span>
     <Select value={value} onChange={(e) => onChange(e.target.value)} className="min-w-[150px]">
       <option value="all">Todos</option>
       {Object.entries(options).map(([v, l]) => (

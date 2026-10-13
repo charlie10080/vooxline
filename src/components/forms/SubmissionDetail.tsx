@@ -63,25 +63,25 @@ export const SubmissionDetail: React.FC<{
           {evaluated && <Badge tone="accent">Evaluado: {nameOf(evaluated)}</Badge>}
         </div>
 
-        <dl className="divide-y divide-[#242E3B] rounded-xl border border-[#242E3B] bg-[#0B0C10]">
+        <dl className="divide-y divide-vx-border rounded-xl border border-vx-border bg-vx-bg">
           {template.questions.map((q) => {
             const text = formatAnswer(q, submission.answers[q.id], nameOf);
             return (
               <div key={q.id} className="grid gap-1 px-4 py-3 sm:grid-cols-[1fr_1.2fr] sm:gap-4">
-                <dt className="text-xs text-[#C5C6C7]/70">{q.label}</dt>
-                <dd className={`whitespace-pre-wrap text-sm ${text ? 'text-white' : 'italic text-[#C5C6C7]/40'}`}>{text || 'Sin respuesta'}</dd>
+                <dt className="text-[13px] text-vx-text-2/70">{q.label}</dt>
+                <dd className={`whitespace-pre-wrap text-sm ${text ? 'text-vx-text' : 'italic text-vx-text-2/40'}`}>{text || 'Sin respuesta'}</dd>
               </div>
             );
           })}
         </dl>
 
         {submission.status === 'reviewed' && (
-          <div className="rounded-xl border border-[#10B981]/30 bg-[#10B981]/5 p-4 text-sm">
-            <p className="text-xs text-[#10B981]">
+          <div className="rounded-xl border border-vx-success/30 bg-vx-success/5 p-4 text-sm">
+            <p className="text-[13px] text-vx-success">
               Revisado por {nameOf(submission.reviewedBy ?? '')}
               {submission.reviewedAt && ` · ${formatDateTime(submission.reviewedAt)}`}
             </p>
-            <p className="mt-1 text-white">{submission.reviewComment ?? 'Sin comentario.'}</p>
+            <p className="mt-1 text-vx-text">{submission.reviewComment ?? 'Sin comentario.'}</p>
           </div>
         )}
 

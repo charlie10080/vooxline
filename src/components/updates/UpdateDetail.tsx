@@ -77,11 +77,11 @@ export const UpdateDetail: React.FC<{
         </div>
 
         <div>
-          <h2 className="font-display text-xl font-bold tracking-tight text-white">{update.title}</h2>
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#C5C6C7]/60">
+          <h2 className="font-display text-xl font-bold tracking-tight text-vx-text">{update.title}</h2>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-vx-text-2/60">
             <span className="flex items-center gap-2">
               <Avatar name={nameOf(update.authorId)} size="sm" />
-              <span className="font-semibold text-[#C5C6C7]">{nameOf(update.authorId)}</span>
+              <span className="font-semibold text-vx-text-2">{nameOf(update.authorId)}</span>
             </span>
             <span>{formatDateTime(publishedAt(update))}</span>
             <span>Para: {audienceLabel}</span>
@@ -94,16 +94,16 @@ export const UpdateDetail: React.FC<{
         {participates && update.requiresConfirmation && (
           <div
             className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4 ${
-              confirmedAt ? 'border-[#10B981]/30 bg-[#10B981]/5' : 'border-[#F59E0B]/30 bg-[#F59E0B]/5'
+              confirmedAt ? 'border-vx-success/30 bg-vx-success/5' : 'border-vx-warning/30 bg-vx-warning/5'
             }`}
           >
             {confirmedAt ? (
-              <span className="flex items-center gap-2 text-sm font-semibold text-[#10B981]">
+              <span className="flex items-center gap-2 text-sm font-semibold text-vx-success">
                 <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> Confirmaste la lectura {timeAgo(confirmedAt, now)}
               </span>
             ) : (
               <>
-                <span className="text-sm text-[#F59E0B]">Este aviso requiere que confirmes que lo leíste.</span>
+                <span className="text-sm text-vx-warning">Este aviso requiere que confirmes que lo leíste.</span>
                 <Button
                   variant="primary"
                   icon={CheckCircle2}
@@ -116,7 +116,7 @@ export const UpdateDetail: React.FC<{
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-2 border-t border-[#242E3B] pt-4">
+        <div className="flex flex-wrap items-center gap-2 border-t border-vx-border pt-4">
           <Button
             size="sm"
             variant={liked ? 'primary' : 'secondary'}
@@ -127,7 +127,7 @@ export const UpdateDetail: React.FC<{
           >
             Me gusta · {update.likes.length}
           </Button>
-          <span className="inline-flex items-center gap-1.5 px-2 font-mono text-xs text-[#C5C6C7]/60">
+          <span className="inline-flex items-center gap-1.5 px-2 tabular-nums text-[13px] text-vx-text-2/60">
             <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" /> {update.comments.length}
           </span>
         </div>
@@ -155,19 +155,19 @@ export const UpdateDetail: React.FC<{
               { label: 'Leyeron', value: stats.read.length },
               { label: 'Confirmaron', value: update.requiresConfirmation ? stats.confirmed.length : '—' },
             ].map((s) => (
-              <div key={s.label} className="rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
-                <div className="font-mono text-xl font-bold text-white">{s.value}</div>
-                <div className="text-[11px] text-[#C5C6C7]/60">{s.label}</div>
+              <div key={s.label} className="rounded-xl border border-vx-border bg-vx-bg p-3">
+                <div className="tabular-nums text-xl font-bold text-vx-text">{s.value}</div>
+                <div className="text-xs text-vx-text-2/60">{s.label}</div>
               </div>
             ))}
           </div>
           <div>
-            <div className="mb-1.5 flex justify-between font-mono text-[11px] text-[#C5C6C7]/70">
+            <div className="mb-1.5 flex justify-between tabular-nums text-xs text-vx-text-2/70">
               <span>{update.requiresConfirmation ? 'Confirmación' : 'Lectura'}</span>
-              <span className="text-[#66FCF1]">{stats.percent}%</span>
+              <span className="text-vx-accent">{stats.percent}%</span>
             </div>
             <div
-              className="h-2 overflow-hidden rounded-full bg-[#0B0C10]"
+              className="h-2 overflow-hidden rounded-full bg-vx-bg"
               role="progressbar"
               aria-valuenow={stats.percent}
               aria-valuemin={0}
@@ -175,7 +175,7 @@ export const UpdateDetail: React.FC<{
               aria-label="Porcentaje completado"
             >
               <div
-                className={`h-full rounded-full ${stats.percent === 100 ? 'bg-[#10B981]' : 'bg-[#66FCF1]'}`}
+                className={`h-full rounded-full ${stats.percent === 100 ? 'bg-vx-success' : 'bg-vx-accent'}`}
                 style={{ width: `${stats.percent}%` }}
               />
             </div>
@@ -192,16 +192,16 @@ export const UpdateDetail: React.FC<{
             ]}
           />
           {people.length === 0 ? (
-            <p className="py-2 text-center text-xs text-[#C5C6C7]/50">Nadie en esta lista.</p>
+            <p className="py-2 text-center text-[13px] text-vx-text-2/50">Nadie en esta lista.</p>
           ) : (
             <ul className="grid gap-2 sm:grid-cols-2">
               {people.map((id) => {
                 const at = peopleTab === 'confirmed' ? update.confirmations[id] : update.reads[id];
                 return (
-                  <li key={id} className="flex items-center gap-2.5 rounded-xl border border-[#242E3B] bg-[#0B0C10] px-3 py-2">
+                  <li key={id} className="flex items-center gap-2.5 rounded-xl border border-vx-border bg-vx-bg px-3 py-2">
                     <Avatar name={nameOf(id)} size="sm" />
-                    <span className="min-w-0 flex-1 truncate text-xs font-semibold text-white">{nameOf(id)}</span>
-                    <span className="font-mono text-[10px] text-[#C5C6C7]/50">
+                    <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-vx-text">{nameOf(id)}</span>
+                    <span className="tabular-nums text-xs text-vx-text-2/50">
                       {at ? timeAgo(at, now) : update.reads[id] ? 'Leído, sin confirmar' : 'Sin leer'}
                     </span>
                   </li>
@@ -210,7 +210,7 @@ export const UpdateDetail: React.FC<{
             </ul>
           )}
 
-          <div className="flex flex-wrap gap-2 border-t border-[#242E3B] pt-4">
+          <div className="flex flex-wrap gap-2 border-t border-vx-border pt-4">
             <Button size="sm" icon={Edit3} onClick={onEdit}>
               Editar
             </Button>
@@ -246,24 +246,24 @@ export const UpdateDetail: React.FC<{
 
       <Card title={`Comentarios (${update.comments.length})`} bodyClassName="p-5 space-y-4">
         {update.comments.length === 0 && (
-          <p className="text-center text-xs text-[#C5C6C7]/50">Todavía no hay comentarios.</p>
+          <p className="text-center text-[13px] text-vx-text-2/50">Todavía no hay comentarios.</p>
         )}
         <ul className="space-y-3">
           {update.comments.map((c) => (
             <li key={c.id} className="flex gap-3">
               <Avatar name={nameOf(c.authorId)} size="sm" />
-              <div className="min-w-0 flex-1 rounded-xl border border-[#242E3B] bg-[#0B0C10] px-3.5 py-2.5">
+              <div className="min-w-0 flex-1 rounded-xl border border-vx-border bg-vx-bg px-3.5 py-2.5">
                 <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-xs font-semibold text-white">{nameOf(c.authorId)}</span>
-                  <span className="font-mono text-[10px] text-[#C5C6C7]/50">{timeAgo(c.createdAt, now)}</span>
+                  <span className="text-[13px] font-semibold text-vx-text">{nameOf(c.authorId)}</span>
+                  <span className="tabular-nums text-xs text-vx-text-2/50">{timeAgo(c.createdAt, now)}</span>
                 </div>
-                <p className="mt-1 whitespace-pre-wrap break-words text-sm text-[#C5C6C7]">{c.body}</p>
+                <p className="mt-1 whitespace-pre-wrap break-words text-sm text-vx-text-2">{c.body}</p>
               </div>
             </li>
           ))}
         </ul>
         {!update.commentsEnabled ? (
-          <p className="flex items-center justify-center gap-2 text-xs text-[#C5C6C7]/50">
+          <p className="flex items-center justify-center gap-2 text-[13px] text-vx-text-2/50">
             <MessageSquareOff className="h-3.5 w-3.5" aria-hidden="true" /> Los comentarios están desactivados en este aviso.
           </p>
         ) : (
@@ -290,17 +290,17 @@ export const UpdateDetail: React.FC<{
 
       {me.isManager && (
         <Card title="Historial" bodyClassName="p-5">
-          <ol className="space-y-3 border-l border-[#242E3B] pl-4">
+          <ol className="space-y-3 border-l border-vx-border pl-4">
             {[...update.history].reverse().map((ev) => (
               <li key={ev.id} className="relative">
-                <span className="absolute -left-[21px] top-1 flex h-2.5 w-2.5 rounded-full border border-[#66FCF1]/50 bg-[#13151c]" />
-                <div className="flex flex-wrap items-baseline gap-x-2 text-xs">
-                  {ev.kind === 'reminder' && <BellRing className="h-3 w-3 text-[#F59E0B]" aria-hidden="true" />}
-                  <span className="font-semibold text-white">{nameOf(ev.actorId)}</span>
-                  <span className="text-[#C5C6C7]/80">{EVENT_LABEL[ev.kind]}</span>
-                  {ev.note && <span className="text-[#C5C6C7]/60">· {ev.note}</span>}
+                <span className="absolute -left-[21px] top-1 flex h-2.5 w-2.5 rounded-full border border-vx-accent/50 bg-vx-surface" />
+                <div className="flex flex-wrap items-baseline gap-x-2 text-[13px]">
+                  {ev.kind === 'reminder' && <BellRing className="h-3 w-3 text-vx-warning" aria-hidden="true" />}
+                  <span className="font-semibold text-vx-text">{nameOf(ev.actorId)}</span>
+                  <span className="text-vx-text-2/80">{EVENT_LABEL[ev.kind]}</span>
+                  {ev.note && <span className="text-vx-text-2/60">· {ev.note}</span>}
                 </div>
-                <div className="font-mono text-[10px] text-[#C5C6C7]/50">{formatDateTime(ev.at)}</div>
+                <div className="tabular-nums text-xs text-vx-text-2/50">{formatDateTime(ev.at)}</div>
               </li>
             ))}
           </ol>

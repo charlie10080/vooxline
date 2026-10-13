@@ -37,28 +37,28 @@ const CATEGORIES: CategoryConfig[] = [
     key: 'attendance',
     label: 'Asistencia',
     icon: Clock,
-    badgeBg: 'bg-[#10B981]/10',
-    badgeText: 'text-[#10B981]',
-    badgeBorder: 'border-[#10B981]/30',
-    dotColor: 'bg-[#10B981]',
+    badgeBg: 'bg-vx-success/10',
+    badgeText: 'text-vx-success',
+    badgeBorder: 'border-vx-success/30',
+    dotColor: 'bg-vx-success',
   },
   {
     key: 'time_off',
     label: 'Permisos',
     icon: CalendarOff,
-    badgeBg: 'bg-[#F59E0B]/10',
-    badgeText: 'text-[#F59E0B]',
-    badgeBorder: 'border-[#F59E0B]/30',
-    dotColor: 'bg-[#F59E0B]',
+    badgeBg: 'bg-vx-warning/10',
+    badgeText: 'text-vx-warning',
+    badgeBorder: 'border-vx-warning/30',
+    dotColor: 'bg-vx-warning',
   },
   {
     key: 'users',
     label: 'Usuarios',
     icon: Users,
-    badgeBg: 'bg-[#818CF8]/10',
-    badgeText: 'text-[#A5B4FC]',
-    badgeBorder: 'border-[#818CF8]/30',
-    dotColor: 'bg-[#818CF8]',
+    badgeBg: 'bg-vx-info/10',
+    badgeText: 'text-vx-info',
+    badgeBorder: 'border-vx-info/30',
+    dotColor: 'bg-vx-info',
   },
   {
     key: 'schedule',
@@ -73,28 +73,28 @@ const CATEGORIES: CategoryConfig[] = [
     key: 'calls',
     label: 'Llamadas',
     icon: PhoneCall,
-    badgeBg: 'bg-[#66FCF1]/10',
-    badgeText: 'text-[#66FCF1]',
-    badgeBorder: 'border-[#66FCF1]/30',
-    dotColor: 'bg-[#66FCF1]',
+    badgeBg: 'bg-vx-accent/10',
+    badgeText: 'text-vx-accent',
+    badgeBorder: 'border-vx-accent/30',
+    dotColor: 'bg-vx-accent',
   },
   {
     key: 'supervision',
     label: 'Supervisión',
     icon: Headphones,
-    badgeBg: 'bg-[#EF4444]/10',
-    badgeText: 'text-[#EF4444]',
-    badgeBorder: 'border-[#EF4444]/30',
-    dotColor: 'bg-[#EF4444]',
+    badgeBg: 'bg-vx-danger/10',
+    badgeText: 'text-vx-danger',
+    badgeBorder: 'border-vx-danger/30',
+    dotColor: 'bg-vx-danger',
   },
   {
     key: 'system',
     label: 'Sistema',
     icon: Cpu,
-    badgeBg: 'bg-[#1F2833]',
-    badgeText: 'text-[#C5C6C7]',
-    badgeBorder: 'border-[#242E3B]',
-    dotColor: 'bg-[#C5C6C7]',
+    badgeBg: 'bg-vx-raised',
+    badgeText: 'text-vx-text-2',
+    badgeBorder: 'border-vx-border',
+    dotColor: 'bg-vx-text-2',
   },
 ];
 
@@ -255,7 +255,7 @@ export const ActivityPage: React.FC = () => {
         actions={
           <>
             <Badge className="px-3 py-1.5">
-              Eventos guardados: <strong className="text-white">{events.length}</strong> / 300
+              Eventos guardados: <strong className="text-vx-text">{events.length}</strong> / 300
             </Badge>
             {events.length > 0 && (
               <Button variant="danger" icon={Trash2} onClick={() => setConfirmClearOpen(true)}>
@@ -267,26 +267,26 @@ export const ActivityPage: React.FC = () => {
       />
 
       {/* Barra de Filtros */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-5 shadow-xl space-y-4">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl p-5 space-y-4">
         {/* Fila 1: Búsqueda de texto y selector de agente */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Buscador */}
           <div className="md:col-span-2 relative">
-            <Search className="w-4 h-4 text-[#C5C6C7]/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-vx-text-2/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="Buscar eventos"
               placeholder="Buscar en la descripción de los eventos (ej. Sofía, vacaciones, turno)..."
-              className="w-full pl-10 pr-9 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs text-white placeholder-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]/50 font-mono transition-colors"
+              className="w-full pl-10 pr-9 py-2 rounded-xl bg-vx-bg border border-vx-border text-[13px] text-vx-text placeholder-vx-text-2/40 focus:outline-none focus:border-vx-accent/50 tabular-nums transition-colors"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
                 aria-label="Limpiar búsqueda"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C5C6C7]/50 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-vx-text-2/50 hover:text-vx-text"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -295,12 +295,12 @@ export const ActivityPage: React.FC = () => {
 
           {/* Selector de agente */}
           <div className="relative">
-            <User className="w-4 h-4 text-[#C5C6C7]/50 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <User className="w-4 h-4 text-vx-text-2/50 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <select
               value={selectedAgentId}
               onChange={(e) => setSelectedAgentId(e.target.value)}
               aria-label="Filtrar por agente"
-              className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs text-white focus:outline-none focus:border-[#66FCF1]/50 font-mono appearance-none transition-colors cursor-pointer"
+              className="w-full pl-9 pr-8 py-2 rounded-xl bg-vx-bg border border-vx-border text-[13px] text-vx-text focus:outline-none focus:border-vx-accent/50 tabular-nums appearance-none transition-colors cursor-pointer"
             >
               <option value="all">Todos los agentes ({agents.length})</option>
               {agents.map((a) => (
@@ -313,26 +313,26 @@ export const ActivityPage: React.FC = () => {
         </div>
 
         {/* Fila 2: Chips de categorías */}
-        <div className="pt-2 border-t border-[#242E3B]/60 space-y-2">
+        <div className="pt-2 border-t border-vx-border/60 space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 text-xs font-mono text-[#C5C6C7]/70">
-              <Filter className="w-3.5 h-3.5 text-[#66FCF1]" />
+            <div className="flex items-center gap-1.5 text-[13px] tabular-nums text-vx-text-2/70">
+              <Filter className="w-3.5 h-3.5 text-vx-accent" />
               <span>Filtrar por categoría ({activeCategoryCount} activas):</span>
             </div>
 
-            <div className="flex items-center gap-2 text-[11px] font-mono">
+            <div className="flex items-center gap-2 text-xs tabular-nums">
               <button
                 type="button"
                 onClick={() => handleSelectAllCategories(true)}
-                className="text-[#66FCF1] hover:underline"
+                className="text-vx-accent hover:underline"
               >
                 Activar todas
               </button>
-              <span className="text-[#C5C6C7]/30">•</span>
+              <span className="text-vx-text-2/30">•</span>
               <button
                 type="button"
                 onClick={() => handleSelectAllCategories(false)}
-                className="text-[#C5C6C7]/60 hover:text-white"
+                className="text-vx-text-2/60 hover:text-vx-text"
               >
                 Desactivar todas
               </button>
@@ -350,13 +350,13 @@ export const ActivityPage: React.FC = () => {
                   type="button"
                   onClick={() => toggleCategory(cat.key)}
                   aria-pressed={isActive}
-                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all border ${
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-[13px] tabular-nums font-medium transition-all border ${
                     isActive
                       ? `${cat.badgeBg} ${cat.badgeText} ${cat.badgeBorder} shadow-[0_0_10px_rgba(0,0,0,0.2)]`
-                      : 'bg-[#0B0C10]/60 text-[#C5C6C7]/40 border-[#242E3B] hover:text-[#C5C6C7] hover:border-[#242E3B]/80'
+                      : 'bg-vx-bg/60 text-vx-text-2/40 border-vx-border hover:text-vx-text-2 hover:border-vx-border/80'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? cat.badgeText : 'text-[#C5C6C7]/40'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? cat.badgeText : 'text-vx-text-2/40'}`} />
                   <span>{cat.label}</span>
                   {isActive && <Check className="w-3 h-3 ml-0.5 opacity-80" />}
                 </button>
@@ -365,23 +365,23 @@ export const ActivityPage: React.FC = () => {
           </div>
 
           {!isCallsActive && (
-            <p className="text-[11px] text-[#C5C6C7]/50 font-mono italic pt-1">
+            <p className="text-xs text-vx-text-2/50 tabular-nums italic pt-1">
               Nota: el filtro de <strong>Llamadas</strong> está desactivado por defecto para evitar saturación por eventos del simulador en vivo. Actívalo para inspeccionar el flujo telefónico.
             </p>
           )}
         </div>
 
         {/* Resumen de conteo */}
-        <div className="pt-2 border-t border-[#242E3B]/60 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-[#C5C6C7]/60">
+        <div className="pt-2 border-t border-vx-border/60 flex flex-wrap items-center justify-between gap-2 text-[13px] tabular-nums text-vx-text-2/60">
           <span>
-            Mostrando <strong className="text-white">{filteredEvents.length}</strong> de{' '}
-            <strong className="text-white">{events.length}</strong> eventos registrados
+            Mostrando <strong className="text-vx-text">{filteredEvents.length}</strong> de{' '}
+            <strong className="text-vx-text">{events.length}</strong> eventos registrados
           </span>
           {(searchQuery || selectedAgentId !== 'all' || !isCallsActive) && (
             <button
               type="button"
               onClick={handleResetFilters}
-              className="inline-flex items-center gap-1 text-[11px] text-[#66FCF1] hover:underline"
+              className="inline-flex items-center gap-1 text-xs text-vx-accent hover:underline"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Restablecer filtros</span>
@@ -429,17 +429,17 @@ export const ActivityPage: React.FC = () => {
             <div key={group.dayLabel} className="space-y-3">
               {/* Encabezado del día */}
               <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-lg bg-[#1F2833] text-xs font-bold font-mono text-white border border-[#242E3B] uppercase tracking-wider">
+                <span className="px-3 py-1 rounded-lg bg-vx-raised text-[13px] font-bold tabular-nums text-vx-text border border-vx-border">
                   {group.dayLabel}
                 </span>
-                <div className="h-px bg-gradient-to-r from-[#242E3B] to-transparent flex-1" />
-                <span className="text-[11px] font-mono text-[#C5C6C7]/50">
+                <div className="h-px bg-gradient-to-r from-vx-border to-transparent flex-1" />
+                <span className="text-xs tabular-nums text-vx-text-2/50">
                   {group.items.length} {group.items.length === 1 ? 'evento' : 'eventos'}
                 </span>
               </div>
 
               {/* Tarjetas de eventos */}
-              <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl divide-y divide-[#242E3B]/60 shadow-xl overflow-hidden">
+              <div className="bg-vx-surface border border-vx-border rounded-2xl divide-y divide-vx-border/60 overflow-hidden">
                 {group.items.map((ev) => {
                   const cfg = CATEGORY_MAP.get(ev.category) ?? CATEGORIES[0];
                   const Icon = cfg.icon;
@@ -447,7 +447,7 @@ export const ActivityPage: React.FC = () => {
                   return (
                     <div
                       key={ev.id}
-                      className="p-4 flex items-start sm:items-center justify-between gap-3 hover:bg-[#1A202C]/40 transition-colors"
+                      className="p-4 flex items-start sm:items-center justify-between gap-3 hover:bg-vx-raised/40 transition-colors"
                     >
                       <div className="flex min-w-0 items-start sm:items-center gap-3.5">
                         {/* Ícono de categoría */}
@@ -459,13 +459,13 @@ export const ActivityPage: React.FC = () => {
 
                         {/* Mensaje & detalles */}
                         <div className="min-w-0 space-y-0.5">
-                          <div className="text-sm font-medium text-white break-words flex flex-wrap items-center gap-2">
+                          <div className="text-sm font-medium text-vx-text break-words flex flex-wrap items-center gap-2">
                             <span>{ev.message}</span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-xs font-mono text-[#C5C6C7]/50">
+                          <div className="flex items-center gap-2 text-[13px] tabular-nums text-vx-text-2/50">
                             <span
-                              className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${cfg.badgeBg} ${cfg.badgeText} ${cfg.badgeBorder}`}
+                              className={`px-2 py-0.5 rounded text-xs font-bold border ${cfg.badgeBg} ${cfg.badgeText} ${cfg.badgeBorder}`}
                             >
                               {cfg.label}
                             </span>
@@ -477,7 +477,7 @@ export const ActivityPage: React.FC = () => {
 
                       {/* Hora a la derecha para pantallas medianas/grandes */}
                       <div className="hidden sm:block text-right shrink-0">
-                        <span className="text-xs font-mono text-[#C5C6C7]/60">
+                        <span className="text-[13px] tabular-nums text-vx-text-2/60">
                           {formatTime(ev.at)}
                         </span>
                       </div>
@@ -512,15 +512,15 @@ export const ActivityPage: React.FC = () => {
           </>
         }
       >
-            <div className="p-3.5 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/30 space-y-2 text-xs text-[#C5C6C7]">
-              <p className="text-white font-semibold flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4 text-[#EF4444] shrink-0" />
+            <div className="p-3.5 rounded-xl bg-vx-danger/10 border border-vx-danger/30 space-y-2 text-[13px] text-vx-text-2">
+              <p className="text-vx-text font-semibold flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-vx-danger shrink-0" />
                 <span>¿Estás seguro de vaciar la bitácora de actividad?</span>
               </p>
               <p>
                 Se eliminarán permanentemente los <strong>{events.length}</strong> eventos registrados en la memoria local del navegador.
               </p>
-              <p className="text-[11px] text-[#C5C6C7]/60 italic font-mono pt-1 border-t border-[#EF4444]/20">
+              <p className="text-xs text-vx-text-2/60 italic tabular-nums pt-1 border-t border-vx-danger/20">
                 El observador continuará activo y registrará los nuevos eventos a partir de este momento.
               </p>
             </div>

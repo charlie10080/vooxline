@@ -91,7 +91,7 @@ export const SubmissionsPanel: React.FC<{
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-[#242E3B] font-mono text-[11px] uppercase tracking-wider text-[#C5C6C7]/50">
+              <thead className="border-b border-vx-border tabular-nums text-xs text-vx-text-2/50">
                 <tr>
                   <th className="px-5 py-3 font-semibold">Enviado por</th>
                   <th className="px-5 py-3 font-semibold">Fecha</th>
@@ -101,7 +101,7 @@ export const SubmissionsPanel: React.FC<{
                   <th className="px-5 py-3 text-right font-semibold">Acción</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#242E3B]">
+              <tbody className="divide-y divide-vx-border">
                 {rows.map((s) => {
                   const score = scoreSubmission(template, s.answers);
                   const evaluated = evaluatedAgentId(template, s.answers);
@@ -110,11 +110,11 @@ export const SubmissionsPanel: React.FC<{
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2.5">
                           <Avatar name={nameOf(s.submittedBy)} size="sm" />
-                          <span className="font-medium text-white">{nameOf(s.submittedBy)}</span>
+                          <span className="font-medium text-vx-text">{nameOf(s.submittedBy)}</span>
                         </div>
                       </td>
-                      <td className="px-5 py-3 font-mono text-xs text-[#C5C6C7]">{formatDateTime(s.submittedAt)}</td>
-                      {scored && <td className="px-5 py-3 text-[#C5C6C7]">{evaluated ? nameOf(evaluated) : '—'}</td>}
+                      <td className="px-5 py-3 tabular-nums text-[13px] text-vx-text-2">{formatDateTime(s.submittedAt)}</td>
+                      {scored && <td className="px-5 py-3 text-vx-text-2">{evaluated ? nameOf(evaluated) : '—'}</td>}
                       {scored && <td className="px-5 py-3">{score !== null ? <Badge tone={scoreTone(score)}>{score}%</Badge> : '—'}</td>}
                       <td className="px-5 py-3">
                         <Badge tone={s.status === 'reviewed' ? 'success' : 'warning'}>{s.status === 'reviewed' ? 'Revisado' : 'Pendiente'}</Badge>
@@ -133,19 +133,19 @@ export const SubmissionsPanel: React.FC<{
         )}
       </Card>
 
-      <Card title={<span className="flex items-center gap-2"><BarChart3 className="h-4 w-4 text-[#66FCF1]" />Resumen por pregunta</span>} subtitle="Calculado sobre las respuestas filtradas">
+      <Card title={<span className="flex items-center gap-2"><BarChart3 className="h-4 w-4 text-vx-accent" />Resumen por pregunta</span>} subtitle="Calculado sobre las respuestas filtradas">
         <div className="grid gap-4 md:grid-cols-2">
           {template.questions.map((q) => {
             const sum = summarizeQuestion(q, rows, nameOf);
             return (
-              <div key={q.id} className="rounded-xl border border-[#242E3B] bg-[#0B0C10] p-4">
-                <p className="text-sm font-semibold text-white">{q.label}</p>
-                <p className="mt-0.5 font-mono text-[11px] text-[#C5C6C7]/50">{sum.answered} respuestas</p>
+              <div key={q.id} className="rounded-xl border border-vx-border bg-vx-bg p-4">
+                <p className="text-sm font-semibold text-vx-text">{q.label}</p>
+                <p className="mt-0.5 tabular-nums text-xs text-vx-text-2/50">{sum.answered} respuestas</p>
                 {sum.kind === 'average' && (
-                  <p className="mt-3 font-mono text-2xl font-bold text-[#66FCF1]">
+                  <p className="mt-3 tabular-nums text-2xl font-bold text-vx-accent">
                     {sum.average ?? '—'}
-                    {q.type === 'rating' && sum.average !== null && <span className="text-sm text-[#C5C6C7]/60"> / 5</span>}
-                    <span className="ml-2 text-xs font-normal text-[#C5C6C7]/60">promedio</span>
+                    {q.type === 'rating' && sum.average !== null && <span className="text-sm text-vx-text-2/60"> / 5</span>}
+                    <span className="ml-2 text-[13px] font-normal text-vx-text-2/60">promedio</span>
                   </p>
                 )}
                 {sum.kind === 'counts' && (
@@ -153,15 +153,15 @@ export const SubmissionsPanel: React.FC<{
                     {sum.counts.map((c) => {
                       const pct = sum.answered ? Math.round((c.count / sum.answered) * 100) : 0;
                       return (
-                        <li key={c.label} className="text-xs">
-                          <div className="flex justify-between text-[#C5C6C7]">
+                        <li key={c.label} className="text-[13px]">
+                          <div className="flex justify-between text-vx-text-2">
                             <span>{c.label}</span>
-                            <span className="font-mono">
+                            <span className="tabular-nums">
                               {c.count} · {pct}%
                             </span>
                           </div>
-                          <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-[#1F2833]">
-                            <div className="h-full rounded-full bg-[#66FCF1]" style={{ width: `${pct}%` }} />
+                          <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-vx-raised">
+                            <div className="h-full rounded-full bg-vx-accent" style={{ width: `${pct}%` }} />
                           </div>
                         </li>
                       );

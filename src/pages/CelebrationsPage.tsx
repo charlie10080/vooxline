@@ -182,7 +182,7 @@ export const CelebrationsPage: React.FC = () => {
             </Select>
           </Field>
           <fieldset>
-            <legend className="mb-1.5 text-xs font-medium text-[#C5C6C7]">Insignia</legend>
+            <legend className="mb-1.5 text-[13px] font-medium text-vx-text-2">Insignia</legend>
             <div className="grid grid-cols-2 gap-2">
               {(Object.keys(BADGES) as BadgeType[]).map((b) => (
                 <button
@@ -190,10 +190,10 @@ export const CelebrationsPage: React.FC = () => {
                   type="button"
                   aria-pressed={badge === b}
                   onClick={() => setBadge(b)}
-                  className={`rounded-xl border px-3 py-2 text-left text-xs font-semibold transition-colors ${
+                  className={`rounded-xl border px-3 py-2 text-left text-[13px] font-semibold transition-colors ${
                     badge === b
-                      ? 'border-[#66FCF1] bg-[#66FCF1]/10 text-[#66FCF1]'
-                      : 'border-[#242E3B] bg-[#0B0C10] text-[#C5C6C7] hover:border-[#66FCF1]/30'
+                      ? 'border-vx-accent bg-vx-accent/10 text-vx-accent'
+                      : 'border-vx-border bg-vx-bg text-vx-text-2 hover:border-vx-accent/30'
                   }`}
                 >
                   {BADGES[b]}

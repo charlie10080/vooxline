@@ -175,14 +175,14 @@ export const DirectorPage: React.FC = () => {
       case 'on_call':
         return (
           <Badge tone="accent">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#66FCF1] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-vx-accent animate-pulse" />
             En llamada
           </Badge>
         );
       case 'available':
         return (
           <Badge tone="success">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-vx-success" />
             Disponible
           </Badge>
         );
@@ -196,7 +196,7 @@ export const DirectorPage: React.FC = () => {
       case 'offline':
         return (
           <Badge tone="neutral">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C5C6C7]/40" />
+            <span className="w-1.5 h-1.5 rounded-full bg-vx-text-2/40" />
             Desconectado
           </Badge>
         );
@@ -244,8 +244,8 @@ export const DirectorPage: React.FC = () => {
             setSelectedAgentId(agent.id);
           }
         }}
-        className={`group bg-[#13151c] border rounded-2xl p-5 shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between hover:border-[#66FCF1]/50 hover:shadow-[0_0_20px_rgba(102,252,241,0.12)] relative ${
-          !profile.active ? 'border-[#EF4444]/30 bg-[#13151c]/80' : 'border-[#242E3B]'
+        className={`group bg-vx-surface border rounded-2xl p-5 transition-all duration-200 cursor-pointer flex flex-col justify-between hover:border-vx-accent/50 relative ${
+          !profile.active ? 'border-vx-danger/30 bg-vx-surface/80' : 'border-vx-border'
         }`}
       >
         <div className="space-y-4">
@@ -254,11 +254,11 @@ export const DirectorPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <Avatar name={agent.name} />
               <div>
-                <h3 className="text-sm font-bold text-white group-hover:text-[#66FCF1] transition-colors leading-tight">
+                <h3 className="text-sm font-bold text-vx-text group-hover:text-vx-accent transition-colors leading-tight">
                   {agent.name}
                 </h3>
                 <div className="flex flex-wrap items-center gap-2 mt-1">
-                  <span className="text-[11px] font-mono text-[#C5C6C7]/60">
+                  <span className="text-xs tabular-nums text-vx-text-2/60">
                     {agent.employeeCode}
                   </span>
                   {renderRoleBadge(profile.role)}
@@ -272,35 +272,35 @@ export const DirectorPage: React.FC = () => {
           </div>
 
           {/* Información operativa y contacto */}
-          <div className="space-y-2 pt-2 border-t border-[#242E3B]/60 text-xs">
+          <div className="space-y-2 pt-2 border-t border-vx-border/60 text-[13px]">
             {/* Campaña y Nivel */}
-            <div className="flex items-center justify-between text-white/90">
+            <div className="flex items-center justify-between text-vx-text/90">
               <div className="flex items-center gap-1.5 min-w-0">
-                <Building2 className="w-3.5 h-3.5 text-[#66FCF1] shrink-0" />
+                <Building2 className="w-3.5 h-3.5 text-vx-accent shrink-0" />
                 <span className="truncate font-medium">{campaign?.name ?? 'Sin Campaña'}</span>
               </div>
-              <span className="text-[11px] text-[#C5C6C7]/60 font-mono shrink-0 pl-2">
+              <span className="text-xs text-vx-text-2/60 tabular-nums shrink-0 pl-2">
                 {agent.level}
               </span>
             </div>
 
             {/* Correo */}
-            <div className="flex items-center gap-1.5 text-[#C5C6C7]/80">
-              <Mail className="w-3.5 h-3.5 text-[#C5C6C7]/40 shrink-0" />
-              <span className="truncate font-mono text-[11px]">
-                {profile.email || <span className="text-[#C5C6C7]/40">—</span>}
+            <div className="flex items-center gap-1.5 text-vx-text-2/80">
+              <Mail className="w-3.5 h-3.5 text-vx-text-2/40 shrink-0" />
+              <span className="truncate tabular-nums text-xs">
+                {profile.email || <span className="text-vx-text-2/40">—</span>}
               </span>
             </div>
 
             {/* Extensión SIP */}
-            <div className="flex items-center justify-between text-[#C5C6C7]/80">
+            <div className="flex items-center justify-between text-vx-text-2/80">
               <div className="flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-[#C5C6C7]/40 shrink-0" />
-                <span className="font-mono text-[11px]">
-                  Extensión: <strong className="text-white">{agent.sipExtension}</strong>
+                <Phone className="w-3.5 h-3.5 text-vx-text-2/40 shrink-0" />
+                <span className="tabular-nums text-xs">
+                  Extensión: <strong className="text-vx-text">{agent.sipExtension}</strong>
                 </span>
               </div>
-              <span className="text-[10px] text-[#C5C6C7]/50 font-mono">
+              <span className="text-xs text-vx-text-2/50 tabular-nums">
                 {agent.sipTrunk}
               </span>
             </div>
@@ -308,14 +308,14 @@ export const DirectorPage: React.FC = () => {
         </div>
 
         {/* Fila inferior: Antigüedad y acción */}
-        <div className="mt-4 pt-3 border-t border-[#242E3B]/60 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 text-[#C5C6C7]/70 font-mono text-[11px]">
-            <Calendar className="w-3.5 h-3.5 text-[#66FCF1]/70" />
+        <div className="mt-4 pt-3 border-t border-vx-border/60 flex items-center justify-between text-[13px]">
+          <div className="flex items-center gap-1.5 text-vx-text-2/70 tabular-nums text-xs">
+            <Calendar className="w-3.5 h-3.5 text-vx-accent/70" />
             <span>Antigüedad:</span>
-            <strong className="text-white">{tenureStr}</strong>
+            <strong className="text-vx-text">{tenureStr}</strong>
           </div>
 
-          <span className="text-[11px] font-semibold text-[#66FCF1] flex items-center gap-0.5 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
+          <span className="text-xs font-semibold text-vx-accent flex items-center gap-0.5 opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
             <span>Ficha</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </span>
@@ -335,10 +335,10 @@ export const DirectorPage: React.FC = () => {
         actions={
           <>
             {/* Contador de personas */}
-            <div className="px-3.5 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs font-mono text-[#C5C6C7]">
+            <div className="px-3.5 py-2 rounded-xl bg-vx-bg border border-vx-border text-[13px] tabular-nums text-vx-text-2">
               Mostrando{' '}
-              <strong className="text-[#66FCF1] font-bold">{filteredAgents.length}</strong> de{' '}
-              <strong className="text-white">{agents.length}</strong> personas
+              <strong className="text-vx-accent font-bold">{filteredAgents.length}</strong> de{' '}
+              <strong className="text-vx-text">{agents.length}</strong> personas
             </div>
 
             {/* Toggle Tarjetas / Tabla */}
@@ -355,17 +355,17 @@ export const DirectorPage: React.FC = () => {
       />
 
       {/* 2. Barra de Filtros y Búsqueda */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         {/* Buscador */}
         <div className="relative flex-1 md:max-w-md">
-          <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-vx-text-2/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             aria-label="Buscar personas"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, correo, código o extensión..."
-            className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
+            className="w-full bg-vx-bg border border-vx-border text-[13px] text-vx-text rounded-xl pl-9 pr-3 py-2 placeholder:text-vx-text-2/40 focus:outline-none focus:border-vx-accent"
           />
         </div>
 
@@ -377,7 +377,7 @@ export const DirectorPage: React.FC = () => {
               value={selectedCampaignId}
               aria-label="Filtrar por campaña"
               onChange={(e) => setSelectedCampaignId(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
             >
               <option value="all">Todas las campañas</option>
               {campaigns.map((c) => (
@@ -386,7 +386,7 @@ export const DirectorPage: React.FC = () => {
                 </option>
               ))}
             </select>
-            <Building2 className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Building2 className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Rol */}
@@ -395,14 +395,14 @@ export const DirectorPage: React.FC = () => {
               value={selectedRole}
               aria-label="Filtrar por rol"
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
             >
               <option value="all">Todos los roles</option>
               <option value="agent">Agente</option>
               <option value="supervisor">Supervisor</option>
               <option value="admin">Administrador</option>
             </select>
-            <Shield className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Shield className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Estado en vivo */}
@@ -411,7 +411,7 @@ export const DirectorPage: React.FC = () => {
               value={selectedStatus}
               aria-label="Filtrar por estado"
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-[#66FCF1] appearance-none"
+              className="bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-vx-accent appearance-none"
             >
               <option value="all">Todos los estados</option>
               <option value="on_call">En llamada</option>
@@ -419,27 +419,27 @@ export const DirectorPage: React.FC = () => {
               <option value="break">En pausa</option>
               <option value="offline">Desconectado</option>
             </select>
-            <Filter className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Filter className="w-3.5 h-3.5 text-vx-text-2/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           {/* Toggle: Mostrar Inactivos */}
-          <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] cursor-pointer hover:border-[#66FCF1]/40 transition-colors select-none">
+          <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 cursor-pointer hover:border-vx-accent/40 transition-colors select-none">
             <input
               type="checkbox"
               checked={showInactive}
               onChange={(e) => setShowInactive(e.target.checked)}
-              className="w-3.5 h-3.5 rounded bg-[#13151c] border-[#242E3B] text-[#66FCF1] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#66FCF1]"
+              className="w-3.5 h-3.5 rounded bg-vx-surface border-vx-border text-vx-accent focus:ring-0 focus:ring-offset-0 cursor-pointer accent-vx-accent"
             />
             <span>Mostrar inactivos</span>
           </label>
 
           {/* Toggle: Agrupar por Campaña */}
-          <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0B0C10] border border-[#242E3B] text-xs text-[#C5C6C7] cursor-pointer hover:border-[#66FCF1]/40 transition-colors select-none">
+          <label className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-vx-bg border border-vx-border text-[13px] text-vx-text-2 cursor-pointer hover:border-vx-accent/40 transition-colors select-none">
             <input
               type="checkbox"
               checked={groupByCampaign}
               onChange={(e) => setGroupByCampaign(e.target.checked)}
-              className="w-3.5 h-3.5 rounded bg-[#13151c] border-[#242E3B] text-[#66FCF1] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#66FCF1]"
+              className="w-3.5 h-3.5 rounded bg-vx-surface border-vx-border text-vx-accent focus:ring-0 focus:ring-offset-0 cursor-pointer accent-vx-accent"
             />
             <span>Agrupar por campaña</span>
           </label>
@@ -467,13 +467,13 @@ export const DirectorPage: React.FC = () => {
           {groupedAgents.map((group) => (
             <div key={group.campaignId} className="space-y-3">
               {/* Encabezado del Grupo de Campaña */}
-              <div className="flex items-center justify-between pb-2 border-b border-[#242E3B]">
+              <div className="flex items-center justify-between pb-2 border-b border-vx-border">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#66FCF1]" />
-                  <h2 className="text-base font-bold text-white tracking-wide">
+                  <div className="w-2.5 h-2.5 rounded-full bg-vx-accent" />
+                  <h2 className="text-base font-bold text-vx-text">
                     {group.campaignName}
                   </h2>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-[#1F2833] text-[#66FCF1] border border-[#242E3B]">
+                  <span className="text-[13px] tabular-nums px-2 py-0.5 rounded-md bg-vx-raised text-vx-accent border border-vx-border">
                     {group.agents.length} {group.agents.length === 1 ? 'persona' : 'personas'}
                   </span>
                 </div>
@@ -485,11 +485,11 @@ export const DirectorPage: React.FC = () => {
                   {group.agents.map(renderPersonCard)}
                 </div>
               ) : (
-                <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
+                <div className="bg-vx-surface border border-vx-border rounded-2xl overflow-hidden">
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse text-xs">
+                    <table className="w-full text-left border-collapse text-[13px]">
                       <thead>
-                        <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
+                        <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                           <th className="py-3 px-4">Persona</th>
                           <th className="py-3 px-4">Código</th>
                           <th className="py-3 px-4">Rol & Nivel</th>
@@ -500,7 +500,7 @@ export const DirectorPage: React.FC = () => {
                           <th className="py-3 px-4 text-right">Ficha</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-[#242E3B]/60">
+                      <tbody className="divide-y divide-vx-border/60">
                         {group.agents.map((agent) => {
                           const profile = getProfile(profiles, agent.id);
                           const tenure = profile.hireDate
@@ -511,17 +511,17 @@ export const DirectorPage: React.FC = () => {
                             <tr
                               key={agent.id}
                               onClick={() => setSelectedAgentId(agent.id)}
-                              className="hover:bg-[#1A202C]/50 transition-colors cursor-pointer group"
+                              className="hover:bg-vx-raised/50 transition-colors cursor-pointer group"
                             >
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-3">
                                   <Avatar name={agent.name} size="sm" />
                                   <div>
-                                    <span className="font-semibold text-white group-hover:text-[#66FCF1] transition-colors block whitespace-nowrap">
+                                    <span className="font-semibold text-vx-text group-hover:text-vx-accent transition-colors block whitespace-nowrap">
                                       {agent.name}
                                     </span>
                                     {!profile.active && (
-                                      <span className="text-[10px] text-[#EF4444] font-mono">
+                                      <span className="text-xs text-vx-danger tabular-nums">
                                         (Inactivo)
                                       </span>
                                     )}
@@ -529,32 +529,32 @@ export const DirectorPage: React.FC = () => {
                                 </div>
                               </td>
 
-                              <td className="py-3 px-4 font-mono text-[#C5C6C7]">
+                              <td className="py-3 px-4 tabular-nums text-vx-text-2">
                                 {agent.employeeCode}
                               </td>
 
                               <td className="py-3 px-4">
                                 <div className="flex items-center gap-2">
                                   {renderRoleBadge(profile.role)}
-                                  <span className="text-[#C5C6C7] font-mono text-[11px]">
+                                  <span className="text-vx-text-2 tabular-nums text-xs">
                                     {agent.level}
                                   </span>
                                 </div>
                               </td>
 
-                              <td className="py-3 px-4 text-[#C5C6C7] font-mono text-[11px]">
-                                {profile.email || <span className="text-[#C5C6C7]/40">—</span>}
+                              <td className="py-3 px-4 text-vx-text-2 tabular-nums text-xs">
+                                {profile.email || <span className="text-vx-text-2/40">—</span>}
                               </td>
 
-                              <td className="py-3 px-4 font-mono">
-                                <span className="text-white font-medium">
+                              <td className="py-3 px-4 tabular-nums">
+                                <span className="text-vx-text font-medium">
                                   {agent.sipExtension}
                                 </span>
                               </td>
 
                               <td className="py-3 px-4">{renderStatusBadge(agent.status)}</td>
 
-                              <td className="py-3 px-4 font-mono text-white/90">
+                              <td className="py-3 px-4 tabular-nums text-vx-text/90">
                                 {formatTenure(tenure)}
                               </td>
 
@@ -562,7 +562,7 @@ export const DirectorPage: React.FC = () => {
                                 <button
                                   type="button"
                                   aria-label={`Ver ficha de ${agent.name}`}
-                                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66FCF1] group-hover:underline"
+                                  className="inline-flex items-center gap-1 text-xs font-semibold text-vx-accent group-hover:underline"
                                 >
                                   <span>Ver</span>
                                   <ChevronRight className="w-3.5 h-3.5" />
@@ -586,11 +586,11 @@ export const DirectorPage: React.FC = () => {
         </div>
       ) : (
         /* Vista de Tabla estándar */
-        <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-vx-surface border border-vx-border rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-[13px]">
               <thead>
-                <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
+                <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                   <th className="py-3 px-4">Persona</th>
                   <th className="py-3 px-4">Código</th>
                   <th className="py-3 px-4">Campaña</th>
@@ -602,7 +602,7 @@ export const DirectorPage: React.FC = () => {
                   <th className="py-3 px-4 text-right">Ficha</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#242E3B]/60">
+              <tbody className="divide-y divide-vx-border/60">
                 {filteredAgents.map((agent) => {
                   const profile = getProfile(profiles, agent.id);
                   const campaign = campaignMap.get(agent.campaignId);
@@ -612,17 +612,17 @@ export const DirectorPage: React.FC = () => {
                     <tr
                       key={agent.id}
                       onClick={() => setSelectedAgentId(agent.id)}
-                      className="hover:bg-[#1A202C]/50 transition-colors cursor-pointer group"
+                      className="hover:bg-vx-raised/50 transition-colors cursor-pointer group"
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <Avatar name={agent.name} size="sm" />
                           <div>
-                            <span className="font-semibold text-white group-hover:text-[#66FCF1] transition-colors block whitespace-nowrap">
+                            <span className="font-semibold text-vx-text group-hover:text-vx-accent transition-colors block whitespace-nowrap">
                               {agent.name}
                             </span>
                             {!profile.active && (
-                              <span className="text-[10px] text-[#EF4444] font-mono">
+                              <span className="text-xs text-vx-danger tabular-nums">
                                 (Inactivo)
                               </span>
                             )}
@@ -630,34 +630,34 @@ export const DirectorPage: React.FC = () => {
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 font-mono text-[#C5C6C7]">
+                      <td className="py-3 px-4 tabular-nums text-vx-text-2">
                         {agent.employeeCode}
                       </td>
 
-                      <td className="py-3 px-4 text-white/90">
+                      <td className="py-3 px-4 text-vx-text/90">
                         {campaign?.name ?? 'Sin Campaña'}
                       </td>
 
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           {renderRoleBadge(profile.role)}
-                          <span className="text-[#C5C6C7] font-mono text-[11px]">
+                          <span className="text-vx-text-2 tabular-nums text-xs">
                             {agent.level}
                           </span>
                         </div>
                       </td>
 
-                      <td className="py-3 px-4 text-[#C5C6C7] font-mono text-[11px]">
-                        {profile.email || <span className="text-[#C5C6C7]/40">—</span>}
+                      <td className="py-3 px-4 text-vx-text-2 tabular-nums text-xs">
+                        {profile.email || <span className="text-vx-text-2/40">—</span>}
                       </td>
 
-                      <td className="py-3 px-4 font-mono">
-                        <span className="text-white font-medium">{agent.sipExtension}</span>
+                      <td className="py-3 px-4 tabular-nums">
+                        <span className="text-vx-text font-medium">{agent.sipExtension}</span>
                       </td>
 
                       <td className="py-3 px-4">{renderStatusBadge(agent.status)}</td>
 
-                      <td className="py-3 px-4 font-mono text-white/90">
+                      <td className="py-3 px-4 tabular-nums text-vx-text/90">
                         {formatTenure(tenure)}
                       </td>
 
@@ -665,7 +665,7 @@ export const DirectorPage: React.FC = () => {
                         <button
                           type="button"
                           aria-label={`Ver ficha de ${agent.name}`}
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#66FCF1] group-hover:underline"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-vx-accent group-hover:underline"
                         >
                           <span>Ver</span>
                           <ChevronRight className="w-3.5 h-3.5" />
@@ -712,12 +712,12 @@ export const DirectorPage: React.FC = () => {
               <div className="flex flex-wrap items-center gap-2">
                 {selectedProfile.active ? (
                   <Badge tone="success">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-vx-success" />
                     Activo
                   </Badge>
                 ) : (
                   <Badge tone="danger">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-vx-danger" />
                     Inactivo
                   </Badge>
                 )}
@@ -727,35 +727,35 @@ export const DirectorPage: React.FC = () => {
             </div>
 
             {/* Sección: Datos de Contacto y Operación */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[13px]">
               {/* Bloque Contacto */}
-              <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3">
-                <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
+              <div className="bg-vx-bg border border-vx-border rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-1.5 text-vx-accent tabular-nums font-semibold text-xs">
                   <Phone className="w-3.5 h-3.5" />
                   <span>Datos de Contacto</span>
                 </div>
                 <div className="space-y-2">
                   <div>
-                    <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums block">
                       Correo Corporativo
                     </span>
-                    <span className="text-white font-mono break-all">
+                    <span className="text-vx-text tabular-nums break-all">
                       {selectedProfile.email || '—'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums block">
                       Extensión SIP
                     </span>
-                    <span className="text-white font-mono font-bold">
+                    <span className="text-vx-text tabular-nums font-bold">
                       {selectedAgent.sipExtension}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums block">
                       Troncal / Latencia
                     </span>
-                    <span className="text-[#C5C6C7] font-mono">
+                    <span className="text-vx-text-2 tabular-nums">
                       {selectedAgent.sipTrunk} • {selectedAgent.latencyMs} ms
                     </span>
                   </div>
@@ -763,33 +763,33 @@ export const DirectorPage: React.FC = () => {
               </div>
 
               {/* Bloque Posición */}
-              <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3">
-                <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
+              <div className="bg-vx-bg border border-vx-border rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-1.5 text-vx-accent tabular-nums font-semibold text-xs">
                   <Building2 className="w-3.5 h-3.5" />
                   <span>Posición Operativa</span>
                 </div>
                 <div className="space-y-2">
                   <div>
-                    <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums block">
                       Campaña
                     </span>
-                    <span className="text-white font-medium">
+                    <span className="text-vx-text font-medium">
                       {campaignMap.get(selectedAgent.campaignId)?.name ?? 'Sin Campaña'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums block">
                       Nivel / Especialidad
                     </span>
-                    <span className="text-[#C5C6C7] font-mono">
+                    <span className="text-vx-text-2 tabular-nums">
                       {selectedAgent.level}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums block">
                       Rol asignado
                     </span>
-                    <span className="text-white">
+                    <span className="text-vx-text">
                       {selectedProfile.role === 'admin'
                         ? 'Administrador'
                         : selectedProfile.role === 'supervisor'
@@ -802,25 +802,25 @@ export const DirectorPage: React.FC = () => {
             </div>
 
             {/* Sección: Antigüedad y Trayectoria */}
-            <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3 text-xs">
-              <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
+            <div className="bg-vx-bg border border-vx-border rounded-xl p-4 space-y-3 text-[13px]">
+              <div className="flex items-center gap-1.5 text-vx-accent tabular-nums font-semibold text-xs">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Antigüedad y trayectoria</span>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                  <span className="text-xs text-vx-text-2/50 tabular-nums block">
                     Fecha de Ingreso
                   </span>
-                  <span className="text-white font-mono">
+                  <span className="text-vx-text tabular-nums">
                     {selectedProfile.hireDate || '—'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-[#C5C6C7]/50 uppercase font-mono block">
+                  <span className="text-xs text-vx-text-2/50 tabular-nums block">
                     Tiempo en la Empresa
                   </span>
-                  <span className="text-[#66FCF1] font-mono font-bold">
+                  <span className="text-vx-accent tabular-nums font-bold">
                     {selectedTenureFormatted}
                   </span>
                 </div>
@@ -828,9 +828,9 @@ export const DirectorPage: React.FC = () => {
             </div>
 
             {/* Sección: Turno de HOY */}
-            <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3 text-xs">
+            <div className="bg-vx-bg border border-vx-border rounded-xl p-4 space-y-3 text-[13px]">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
+                <div className="flex items-center gap-1.5 text-vx-accent tabular-nums font-semibold text-xs">
                   <Clock className="w-3.5 h-3.5" />
                   <span>Turno de hoy ({today})</span>
                 </div>
@@ -842,29 +842,29 @@ export const DirectorPage: React.FC = () => {
               {selectedTodayShift ? (
                 <div className="space-y-1 pt-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold font-mono text-white">
+                    <span className="text-sm font-bold tabular-nums text-vx-text">
                       {selectedTodayShift.startTime} — {selectedTodayShift.endTime}
                     </span>
-                    <span className="text-[#C5C6C7]/50 font-mono text-[11px]">
+                    <span className="text-vx-text-2/50 tabular-nums text-xs">
                       (Descanso: {selectedTodayShift.breakMinutes} min)
                     </span>
                   </div>
                   {selectedTodayShift.note && (
-                    <p className="text-[11px] text-[#C5C6C7]/70 italic">
+                    <p className="text-xs text-vx-text-2/70 italic">
                       Nota: {selectedTodayShift.note}
                     </p>
                   )}
                 </div>
               ) : (
-                <div className="py-2 text-[#C5C6C7]/50 font-mono text-xs">
+                <div className="py-2 text-vx-text-2/50 tabular-nums text-[13px]">
                   Sin turno programado hoy
                 </div>
               )}
             </div>
 
             {/* Sección: Grupos a los que pertenece */}
-            <div className="bg-[#0B0C10] border border-[#242E3B] rounded-xl p-4 space-y-3 text-xs">
-              <div className="flex items-center gap-1.5 text-[#66FCF1] font-mono font-semibold uppercase text-[11px] tracking-wider">
+            <div className="bg-vx-bg border border-vx-border rounded-xl p-4 space-y-3 text-[13px]">
+              <div className="flex items-center gap-1.5 text-vx-accent tabular-nums font-semibold text-xs">
                 <Layers className="w-3.5 h-3.5" />
                 <span>Grupos asignados ({selectedAgentGroups.length})</span>
               </div>
@@ -874,18 +874,18 @@ export const DirectorPage: React.FC = () => {
                   {selectedAgentGroups.map((group) => (
                     <div
                       key={group.id}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1F2833] text-white border border-[#242E3B] text-xs font-mono"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-vx-raised text-vx-text border border-vx-border text-[13px] tabular-nums"
                     >
-                      <Sparkles className="w-3 h-3 text-[#66FCF1]" />
+                      <Sparkles className="w-3 h-3 text-vx-accent" />
                       <span>{group.name}</span>
-                      <span className="text-[10px] text-[#C5C6C7]/50 font-sans uppercase">
+                      <span className="text-xs text-vx-text-2/50 font-sans">
                         ({group.kind === 'smart' ? 'inteligente' : 'manual'})
                       </span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-[#C5C6C7]/50 font-mono text-xs py-1">
+                <p className="text-vx-text-2/50 tabular-nums text-[13px] py-1">
                   Sin grupos asignados actualmente.
                 </p>
               )}

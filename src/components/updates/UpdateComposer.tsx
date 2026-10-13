@@ -15,16 +15,16 @@ const Check: React.FC<{ label: string; hint: string; checked: boolean; onChange:
   checked,
   onChange,
 }) => (
-  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3 hover:border-[#66FCF1]/30">
+  <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-vx-border bg-vx-bg p-3 hover:border-vx-accent/30">
     <input
       type="checkbox"
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      className="mt-0.5 h-4 w-4 accent-[#66FCF1]"
+      className="mt-0.5 h-4 w-4 accent-vx-accent"
     />
     <span>
-      <span className="block text-xs font-semibold text-white">{label}</span>
-      <span className="block text-[11px] text-[#C5C6C7]/60">{hint}</span>
+      <span className="block text-[13px] font-semibold text-vx-text">{label}</span>
+      <span className="block text-xs text-vx-text-2/60">{hint}</span>
     </span>
   </label>
 );
@@ -132,10 +132,10 @@ export const UpdateComposer: React.FC<{
           <TextArea value={body} rows={7} maxLength={5000} onChange={(e) => setBody(e.target.value)} />
         </Field>
 
-        <div className="space-y-3 rounded-xl border border-[#242E3B] p-4">
+        <div className="space-y-3 rounded-xl border border-vx-border p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-xs font-semibold text-white">Audiencia</span>
-            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#66FCF1]">
+            <span className="text-[13px] font-semibold text-vx-text">Audiencia</span>
+            <span className="inline-flex items-center gap-1.5 tabular-nums text-xs text-vx-accent">
               <Users className="h-3.5 w-3.5" aria-hidden="true" /> Llega a {reach} {reach === 1 ? 'persona' : 'personas'}
             </span>
           </div>
@@ -157,10 +157,10 @@ export const UpdateComposer: React.FC<{
                     type="button"
                     aria-pressed={on}
                     onClick={() => toggleCampaign(c.id)}
-                    className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    className={`rounded-lg border px-3 py-1.5 text-[13px] font-semibold transition-colors ${
                       on
-                        ? 'border-[#66FCF1]/50 bg-[#66FCF1]/10 text-[#66FCF1]'
-                        : 'border-[#242E3B] bg-[#0B0C10] text-[#C5C6C7]/70 hover:text-white'
+                        ? 'border-vx-accent/50 bg-vx-accent/10 text-vx-accent'
+                        : 'border-vx-border bg-vx-bg text-vx-text-2/70 hover:text-vx-text'
                     }`}
                   >
                     {c.name}

@@ -100,21 +100,21 @@ export const PortalTimeOffPage: React.FC = () => {
         {mine.length === 0 ? (
           <EmptyState icon={CalendarOff} title="Aún no tienes solicitudes" description="Pide vacaciones o un permiso con el botón de arriba." />
         ) : (
-          <ul className="divide-y divide-[#242E3B]">
+          <ul className="divide-y divide-vx-border">
             {mine.map((r) => {
               const Icon = TYPE_ICONS[r.type];
               const st = STATUS[r.status];
               return (
                 <li key={r.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
-                  <span className="rounded-xl border border-[#242E3B] bg-[#0B0C10] p-2.5 text-[#66FCF1]">
+                  <span className="rounded-xl border border-vx-border bg-vx-bg p-2.5 text-vx-accent">
                     <Icon className="h-4 w-4" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-white">{TYPE_LABELS[r.type]} · {r.hours} h</p>
-                    <p className="font-mono text-xs text-[#C5C6C7]/60">
+                    <p className="text-sm font-semibold text-vx-text">{TYPE_LABELS[r.type]} · {r.hours} h</p>
+                    <p className="tabular-nums text-[13px] text-vx-text-2/60">
                       {r.startDate === r.endDate ? r.startDate : `${r.startDate} → ${r.endDate}`}
                     </p>
-                    <p className="mt-1 truncate text-xs text-[#C5C6C7]/70">{r.reason}</p>
+                    <p className="mt-1 truncate text-[13px] text-vx-text-2/70">{r.reason}</p>
                   </div>
                   <Badge tone={st.tone}>{st.label}</Badge>
                   {r.status === 'pending' && (
