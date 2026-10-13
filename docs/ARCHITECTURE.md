@@ -87,6 +87,12 @@ Cada store es la frontera con los datos: las páginas solo llaman acciones que d
 4. Chat, avisos y notificaciones necesitan tiempo real (WebSockets o similar).
 5. La ubicación y las alertas deben guardarse en el servidor para que el agente no pueda borrarlas.
 
+**Estado actual (Supabase):**
+- `src/lib/supabase.ts`: cliente solo si hay `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`. `isRemote(dominio)` se enciende por `.env` con `VITE_REMOTE_DOMAINS` (ej. `identity`). Sin eso, todo sigue local.
+- `src/api/<dominio>.ts`: llamadas al backend con el mismo contrato `{ ok } | { ok: false, reason }`.
+- Fase A (`identity`): el Login entra con Supabase Auth y sincroniza los perfiles al directorio. En modo remoto se ocultan los accesos demo y "Entrar como".
+- SQL en `supabase/migrations/` (en orden) y datos demo en `supabase/seed.sql`. La seguridad real está en las políticas RLS; las guardias del frontend son solo navegación.
+
 ## 7. Deuda técnica conocida
 
 - **Aprobar lote** aplica la regla de puntualidad dentro de la página Time Clock, no en el store.
@@ -94,4 +100,4 @@ Cada store es la frontera con los datos: las páginas solo llaman acciones que d
 - Las claves de localStorage tienen `version: 1` y no hay migraciones: si cambias un tipo persistido, sube la versión o pide un reinicio.
 - Los permisos por rol se revisan en los stores del navegador, que cualquiera puede manipular. Con backend deben vivir en el servidor.
 - Dos pestañas abiertas no se sincronizan entre sí.
-- Las páginas antiguas sin ruta (`LandingPage`, `LoginPage`, `ClientDashboardPage`, `AdminCommandCenterPage`, `AgentPortalPage` y `pages/admin/*`) no se usan; el portal nuevo reemplaza a `AgentPortalPage`.
+- Sin ruta y guardadas como referencia de diseño: `ClientDashboardPage`, `AdminCommandCenterPage`, `AgentPortalPage`, `layouts/AdminLayout.tsx` y `pages/admin/*`. `LandingPage` y `LoginPage` sí están en uso.

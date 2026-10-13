@@ -6,6 +6,7 @@ import { useWorkforceStore } from '@/store/useWorkforceStore';
 import { useDirectoryStore } from '@/store/useDirectoryStore';
 import { useSessionStore, useCurrentUser } from '@/store/useSessionStore';
 import { getProfile } from '@/lib/groups';
+import { isRemote } from '@/lib/supabase';
 import type { UserRole } from '@/types/directory';
 
 const ROLE_LABELS: Record<UserRole, string> = { agent: 'Agente', supervisor: 'Supervisor', admin: 'Administrador', client: 'Cliente' };
@@ -99,6 +100,9 @@ export const UserSwitcher: React.FC = () => {
               </button>
             </div>
           )}
+          {/* Cambiar de usuario sin contraseña: solo en modo local */}
+          {!isRemote('identity') && (
+          <>
           <div className="px-3 pb-1 pt-3 font-mono text-[10px] font-bold uppercase tracking-wider text-[#C5C6C7]/40">
             Entrar como (demo)
           </div>
@@ -126,6 +130,8 @@ export const UserSwitcher: React.FC = () => {
               );
             })}
           </div>
+          </>
+          )}
           <div className="border-t border-[#242E3B] p-1.5">
             <button
               type="button"

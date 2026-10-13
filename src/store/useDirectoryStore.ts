@@ -43,6 +43,9 @@ interface DirectoryState {
   /** Solo para grupos manuales: agrega o quita a un agente */
   toggleGroupMember: (groupId: string, agentId: string) => DirectoryResult
 
+  /** Trae los perfiles del backend: actualiza los que existen y agrega los nuevos */
+  syncProfiles: (remote: UserProfile[]) => void
+
   resetDirectoryDemo: () => void
 }
 
@@ -199,6 +202,14 @@ export const useDirectoryStore = create<DirectoryState>()(
         set((s) => ({ groups: s.groups.map((g) => (g.id === groupId ? { ...g, memberIds } : g)) }))
         return { ok: true }
       },
+
+      syncProfiles: (remote) =>
+        set((s) => ({
+          profiles: [
+            ...s.profiles.map((p) => remote.find((r) => r.agentId === p.agentId) ?? p),
+            ...remote.filter((r) => !s.profiles.some((p) => p.agentId === r.agentId)),
+          ],
+        })),
 
       resetDirectoryDemo: () => set(seed()),
     }),

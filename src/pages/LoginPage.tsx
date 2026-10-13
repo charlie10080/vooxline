@@ -3,7 +3,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { VooxlineLogo } from '@/components/common/VooxlineLogo';
 import { useDirectoryStore } from '@/store/useDirectoryStore';
 import { homePathFor, useSessionStore } from '@/store/useSessionStore';
+import { isRemote } from '@/lib/supabase';
+import { signIn } from '@/api/identity';
+import type { IdentityError } from '@/api/identity';
 import type { UserRole } from '@/types/directory';
+
+const REMOTE_AUTH = isRemote('identity');
+
+const SIGN_IN_ERRORS: Record<IdentityError, string> = {
+  offline: 'El inicio de sesión no está disponible ahora.',
+  invalid_credentials: 'Correo o contraseña incorrectos.',
+  no_profile: 'Tu cuenta no tiene perfil en Vooxline. Pide acceso a tu administrador.',
+  inactive: 'Este usuario está desactivado. Pide acceso a tu administrador.',
+  network: 'No pudimos conectar. Revisa tu internet e inténtalo de nuevo.',
+};
 
 /** Accesos demo: un usuario semilla por rol */
 const DEMO_USERS: { id: string; role: UserRole; label: string; icon: string }[] = [
@@ -21,19 +34,32 @@ export const LoginPage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const profiles = useDirectoryStore((s) => s.profiles);
   const login = useSessionStore((s) => s.login);
+  const syncProfiles = useDirectoryStore((s) => s.syncProfiles);
 
   const enterAs = (id: string, role: UserRole) => {
     login(id);
     navigate(homePathFor(role));
   };
 
-  // shortcut: la contraseña no se valida (no hay backend); con API se reemplaza por autenticación real
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
 
-    const input = e.currentTarget.elements.namedItem('agent-identity') as HTMLInputElement;
-    const typed = input.value.trim().toLowerCase();
+    const form = e.currentTarget;
+    const typed = (form.elements.namedItem('agent-identity') as HTMLInputElement).value.trim().toLowerCase();
+
+    if (REMOTE_AUTH) {
+      const password = (form.elements.namedItem('agent-secret') as HTMLInputElement).value;
+      setIsSubmitting(true);
+      const res = await signIn(typed, password);
+      setIsSubmitting(false);
+      if (!res.ok) return setError(SIGN_IN_ERRORS[res.reason]);
+      setError('');
+      syncProfiles(res.profiles);
+      return enterAs(res.profile.agentId, res.profile.role);
+    }
+
+    // shortcut: en modo local la contraseña no se valida; con VITE_REMOTE_DOMAINS=identity entra por Supabase Auth
     const profile = profiles.find((p) => p.email.toLowerCase() === typed || p.agentId === typed);
     if (!profile) return setError('No encontramos ese correo o ID.');
     if (!profile.active) return setError('Este usuario está desactivado. Pide acceso a tu administrador.');
@@ -237,7 +263,8 @@ export const LoginPage: React.FC = () => {
               )}
             </button>
 
-            {/* Multi-Tenant Ecosystem Direct Navigation Links */}
+            {/* Accesos demo: solo en modo local (con Supabase saltarían la autenticación) */}
+            {!REMOTE_AUTH && (
             <div className="mt-space-sm pt-space-md bg-surface-container-high/40 -mx-space-lg md:-mx-space-xl px-space-lg -mb-space-lg md:-mb-space-xl pb-space-lg flex flex-col items-center justify-center gap-2.5">
               <div className="flex items-center gap-space-sm text-on-surface-variant">
                 <span className="material-symbols-outlined text-[16px] text-primary">hub</span>
@@ -259,6 +286,7 @@ export const LoginPage: React.FC = () => {
                 ))}
               </div>
             </div>
+            )}
           </form>
         </div>
 

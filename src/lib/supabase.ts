@@ -10,10 +10,12 @@ const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
  */
 export const supabase: SupabaseClient | null = url && anonKey ? createClient(url, anonKey) : null
 
-/** Dónde vive cada dominio. Se migra uno a uno (Fases A–E); los que no estén aquí siguen locales */
+/** Dónde vive cada dominio. Se migra uno a uno (Fases A–E); los que no estén encendidos siguen locales */
 export type RemoteDomain = 'identity' | 'workforce' | 'client'
 
-// shortcut: hoy ningún dominio está activo en remoto; se enciende uno por fase cuando su API esté lista
-const REMOTE_DOMAINS: readonly RemoteDomain[] = []
+// Se encienden por .env, sin tocar código: VITE_REMOTE_DOMAINS=identity,workforce
+const REMOTE_DOMAINS = ((import.meta.env.VITE_REMOTE_DOMAINS as string | undefined) ?? '')
+  .split(',')
+  .map((d) => d.trim())
 
 export const isRemote = (domain: RemoteDomain): boolean => supabase !== null && REMOTE_DOMAINS.includes(domain)

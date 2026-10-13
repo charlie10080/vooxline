@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware'
 import type { Agent } from '@/types'
 import type { UserProfile, UserRole } from '@/types/directory'
 import { getProfile } from '@/lib/groups'
+import { isRemote } from '@/lib/supabase'
+import { signOut } from '@/api/identity'
 import { useDirectoryStore } from '@/store/useDirectoryStore'
 import { useWorkforceStore } from '@/store/useWorkforceStore'
 
@@ -35,7 +37,10 @@ export const useSessionStore = create<SessionState>()(
       isAuthenticated: false,
       setCurrentUser: (agentId) => set({ currentUserId: agentId }),
       login: (agentId) => set({ currentUserId: agentId, isAuthenticated: true }),
-      logout: () => set({ isAuthenticated: false }),
+      logout: () => {
+        if (isRemote('identity')) void signOut()
+        set({ isAuthenticated: false })
+      },
     }),
     { name: 'vooxline-session', version: 1 },
   ),
