@@ -58,8 +58,8 @@ export const PortalLayout: React.FC = () => {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all ${
                 isActive
-                  ? 'border-[#66FCF1]/30 bg-[#66FCF1]/10 text-[#66FCF1] shadow-[0_0_12px_rgba(102,252,241,0.12)]'
-                  : 'border-transparent text-[#C5C6C7]/75 hover:bg-white/[0.04] hover:text-white'
+                  ? 'border-vx-accent/30 bg-vx-accent/10 text-vx-accent'
+                  : 'border-transparent text-vx-text-2/75 hover:bg-white/[0.04] hover:text-vx-text'
               }`
             }
           >
@@ -73,13 +73,13 @@ export const PortalLayout: React.FC = () => {
   );
 
   return (
-    <div className="flex min-h-screen bg-[#0B0C10] font-sans text-[#C5C6C7] antialiased selection:bg-[#66FCF1]/20">
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-[#242E3B] lg:flex">
-        <div className="flex h-16 items-center gap-3 border-b border-[#242E3B] px-5">
+    <div className="flex min-h-screen bg-vx-bg font-sans text-vx-text-2 antialiased selection:bg-vx-accent/20">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-vx-border lg:flex">
+        <div className="flex h-16 items-center gap-3 border-b border-vx-border px-5">
           <VooxlineLogo size="sm" showSubtitle={false} />
           <div className="flex flex-col">
-            <span className="font-mono text-sm font-bold tracking-wider text-white">VOOXLINE</span>
-            <span className="font-mono text-[10px] leading-none text-[#66FCF1]">PORTAL DEL AGENTE</span>
+            <span className="tabular-nums text-sm font-bold text-vx-text">VOOXLINE</span>
+            <span className="tabular-nums text-xs leading-none text-vx-accent">PORTAL DEL AGENTE</span>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-3.5 py-4">{nav}</div>
@@ -88,11 +88,11 @@ export const PortalLayout: React.FC = () => {
       {menuOpen && (
         <div className="fixed inset-0 z-40 bg-black/70 lg:hidden" onClick={() => setMenuOpen(false)}>
           <div
-            className="h-full w-72 border-r border-[#242E3B] bg-[#0B0C10] p-4"
+            className="h-full w-72 border-r border-vx-border bg-vx-bg p-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <span className="font-mono text-sm font-bold text-white">VOOXLINE</span>
+              <span className="tabular-nums text-sm font-bold text-vx-text">VOOXLINE</span>
               <button
                 type="button"
                 aria-label="Cerrar menú"
@@ -108,7 +108,7 @@ export const PortalLayout: React.FC = () => {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-[#242E3B] bg-[#0B0C10]/85 px-4 backdrop-blur-md lg:px-8">
+        <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-vx-border bg-vx-bg/85 px-4 backdrop-blur-md lg:px-8">
           <button
             type="button"
             aria-label="Abrir menú"
@@ -117,7 +117,7 @@ export const PortalLayout: React.FC = () => {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="hidden font-mono text-xs text-[#C5C6C7]/60 lg:block">VOOXLINE / PORTAL</span>
+          <span className="hidden tabular-nums text-[13px] text-vx-text-2/60 lg:block">VOOXLINE / PORTAL</span>
           <div className="flex items-center gap-3">
             <NotificationBell />
             <UserSwitcher />

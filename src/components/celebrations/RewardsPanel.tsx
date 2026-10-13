@@ -59,12 +59,12 @@ const RewardEditor: React.FC<{
             <Input type="number" min={0} step={1} value={draft.stock} onChange={(e) => setDraft({ ...draft, stock: Number(e.target.value) })} />
           </Field>
         </div>
-        <label className="flex items-center gap-2 text-xs text-[#C5C6C7]">
+        <label className="flex items-center gap-2 text-[13px] text-vx-text-2">
           <input
             type="checkbox"
             checked={draft.active}
             onChange={(e) => setDraft({ ...draft, active: e.target.checked })}
-            className="h-4 w-4 accent-[#66FCF1]"
+            className="h-4 w-4 accent-vx-accent"
           />
           Visible para canjear
         </label>
@@ -107,15 +107,15 @@ export const RewardsPanel: React.FC<{
     <div className="space-y-6">
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="space-y-6 xl:col-span-2">
-          <div className="relative overflow-hidden rounded-2xl border border-[#66FCF1]/25 bg-gradient-to-br from-[#66FCF1]/[0.08] to-[#13151c] p-6">
-            <p className="font-mono text-xs text-[#C5C6C7]/60">Tu saldo disponible</p>
-            <p className="mt-1 flex items-baseline gap-2 font-mono text-4xl font-bold text-white">
-              {earned - spent} <span className="text-sm font-semibold text-[#66FCF1]">pts</span>
+          <div className="relative overflow-hidden rounded-2xl border border-vx-accent/25 bg-gradient-to-br from-vx-accent/[0.08] to-vx-surface p-6">
+            <p className="tabular-nums text-[13px] text-vx-text-2/60">Tu saldo disponible</p>
+            <p className="mt-1 flex items-baseline gap-2 tabular-nums text-4xl font-bold text-vx-text">
+              {earned - spent} <span className="text-sm font-semibold text-vx-accent">pts</span>
             </p>
-            <p className="mt-2 text-xs text-[#C5C6C7]/60">
+            <p className="mt-2 text-[13px] text-vx-text-2/60">
               Ganados {earned} · Canjeados {spent}
             </p>
-            <Coins className="pointer-events-none absolute -right-4 -bottom-4 h-28 w-28 text-[#66FCF1]/10" />
+            <Coins className="pointer-events-none absolute -right-4 -bottom-4 h-28 w-28 text-vx-accent/10" />
           </div>
 
           <Card
@@ -134,19 +134,19 @@ export const RewardsPanel: React.FC<{
             ) : (
               <ul className="grid gap-3 sm:grid-cols-2">
                 {visibleRewards.map((r) => (
-                  <li key={r.id} className={`flex flex-col rounded-xl border border-[#242E3B] bg-[#0B0C10] p-4 ${r.active ? '' : 'opacity-60'}`}>
+                  <li key={r.id} className={`flex flex-col rounded-xl border border-vx-border bg-vx-bg p-4 ${r.active ? '' : 'opacity-60'}`}>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <span className="rounded-lg border border-[#66FCF1]/25 bg-[#66FCF1]/10 p-2 text-[#66FCF1]">
+                        <span className="rounded-lg border border-vx-accent/25 bg-vx-accent/10 p-2 text-vx-accent">
                           <Gift className="h-4 w-4" />
                         </span>
-                        <p className="text-sm font-bold text-white">{r.name}</p>
+                        <p className="text-sm font-bold text-vx-text">{r.name}</p>
                       </div>
                       {isManager && (
                         <Button size="sm" variant="ghost" icon={Pencil} aria-label={`Editar ${r.name}`} onClick={() => setEditing({ ...r })} />
                       )}
                     </div>
-                    <p className="mt-2 flex-1 text-xs text-[#C5C6C7]/70">{r.description}</p>
+                    <p className="mt-2 flex-1 text-[13px] text-vx-text-2/70">{r.description}</p>
                     <div className="mt-3 flex items-center justify-between gap-2">
                       <div className="flex flex-wrap gap-1.5">
                         <Badge tone="accent">{r.cost} pts</Badge>
@@ -167,7 +167,7 @@ export const RewardsPanel: React.FC<{
         <Card
           title={
             <span className="flex items-center gap-2">
-              <Medal className="h-4 w-4 text-[#F59E0B]" /> Tabla de líderes
+              <Medal className="h-4 w-4 text-vx-warning" /> Tabla de líderes
             </span>
           }
           subtitle="Puntos recibidos en el mes"
@@ -189,18 +189,18 @@ export const RewardsPanel: React.FC<{
                 <li
                   key={row.agentId}
                   className={`flex items-center gap-3 rounded-xl border p-3 ${
-                    row.agentId === currentUserId ? 'border-[#66FCF1]/40 bg-[#66FCF1]/[0.06]' : 'border-[#242E3B] bg-[#0B0C10]'
+                    row.agentId === currentUserId ? 'border-vx-accent/40 bg-vx-accent/[0.06]' : 'border-vx-border bg-vx-bg'
                   }`}
                 >
-                  <span className={`w-6 text-center font-mono text-sm font-bold ${i === 0 ? 'text-[#F59E0B]' : 'text-[#C5C6C7]/50'}`}>{i + 1}</span>
+                  <span className={`w-6 text-center tabular-nums text-sm font-bold ${i === 0 ? 'text-vx-warning' : 'text-vx-text-2/50'}`}>{i + 1}</span>
                   <Avatar name={nameOf(row.agentId)} size="sm" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-white">{nameOf(row.agentId)}</p>
-                    <p className="text-[11px] text-[#C5C6C7]/50">
+                    <p className="truncate text-sm font-semibold text-vx-text">{nameOf(row.agentId)}</p>
+                    <p className="text-xs text-vx-text-2/50">
                       {row.count} {row.count === 1 ? 'reconocimiento' : 'reconocimientos'}
                     </p>
                   </div>
-                  <span className="font-mono text-sm font-bold text-[#66FCF1]">{row.points}</span>
+                  <span className="tabular-nums text-sm font-bold text-vx-accent">{row.points}</span>
                 </li>
               ))}
             </ol>
@@ -212,16 +212,16 @@ export const RewardsPanel: React.FC<{
         {visibleRedemptions.length === 0 ? (
           <EmptyState icon={PackageCheck} title="Sin canjes todavía" />
         ) : (
-          <ul className="divide-y divide-[#242E3B]">
+          <ul className="divide-y divide-vx-border">
             {visibleRedemptions.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center gap-3 px-5 py-3.5">
                 <Avatar name={nameOf(r.agentId)} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm text-white">
+                  <p className="text-sm text-vx-text">
                     {isManager && <span className="font-semibold">{nameOf(r.agentId)} · </span>}
                     {r.rewardName}
                   </p>
-                  <p className="font-mono text-[11px] text-[#C5C6C7]/50">
+                  <p className="tabular-nums text-xs text-vx-text-2/50">
                     {r.cost} pts · {timeAgo(r.requestedAt)}
                   </p>
                 </div>

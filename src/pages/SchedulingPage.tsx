@@ -253,23 +253,23 @@ export const SchedulingPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Encabezado */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-[#13151c] border border-[#242E3B] rounded-2xl p-6 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-[#66FCF1]/5 to-transparent pointer-events-none" />
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-vx-surface border border-vx-border rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-vx-accent/5 to-transparent pointer-events-none" />
 
         <div className="space-y-1 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[13px] tabular-nums font-semibold bg-vx-accent/10 text-vx-accent border border-vx-accent/30">
               OPERATIONS
             </span>
-            <span className="text-xs text-[#C5C6C7]/50 font-mono">
+            <span className="text-[13px] text-vx-text-2/50 tabular-nums">
               Planificación Semanal & Matriz Horaria
             </span>
           </div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Calendar className="w-7 h-7 text-[#66FCF1]" />
+          <h1 className="text-2xl lg:text-3xl font-bold text-vx-text tracking-tight flex items-center gap-2.5">
+            <Calendar className="w-7 h-7 text-vx-accent" />
             <span>Job Scheduling</span>
           </h1>
-          <p className="text-sm text-[#C5C6C7]/80">
+          <p className="text-sm text-vx-text-2/80">
             Control de turnos, matriz semanal de agentes activos y sincronización con permisos de ausencia.
           </p>
         </div>
@@ -279,9 +279,9 @@ export const SchedulingPage: React.FC = () => {
           <button
             type="button"
             onClick={handleCopyWeek}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1F2833] hover:bg-[#253240] text-white text-xs font-semibold border border-[#242E3B] transition-all hover:border-[#66FCF1]/40"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-vx-raised hover:bg-vx-raised text-vx-text text-[13px] font-semibold border border-vx-border transition-all hover:border-vx-accent/40"
           >
-            <Copy className="w-4 h-4 text-[#66FCF1]" />
+            <Copy className="w-4 h-4 text-vx-accent" />
             <span>Copiar semana anterior</span>
           </button>
 
@@ -289,7 +289,7 @@ export const SchedulingPage: React.FC = () => {
             type="button"
             onClick={handleResetDemo}
             title="Reiniciar turnos de demostración"
-            className="p-2.5 rounded-xl bg-[#1F2833]/60 hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
+            className="p-2.5 rounded-xl bg-vx-raised/60 hover:bg-vx-raised text-vx-text-2 hover:text-vx-text border border-vx-border transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -301,12 +301,12 @@ export const SchedulingPage: React.FC = () => {
         <div
           className={`flex items-center justify-between p-4 rounded-xl border text-sm animate-fadeIn ${
             alertNotice.type === 'success'
-              ? 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
+              ? 'bg-vx-success/10 border-vx-success/30 text-vx-success'
               : alertNotice.type === 'warning'
-                ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30 text-[#F59E0B]'
+                ? 'bg-vx-warning/10 border-vx-warning/30 text-vx-warning'
                 : alertNotice.type === 'error'
-                  ? 'bg-[#EF4444]/10 border-[#EF4444]/30 text-[#EF4444]'
-                  : 'bg-[#66FCF1]/10 border-[#66FCF1]/30 text-[#66FCF1]'
+                  ? 'bg-vx-danger/10 border-vx-danger/30 text-vx-danger'
+                  : 'bg-vx-accent/10 border-vx-accent/30 text-vx-accent'
           }`}
         >
           <div className="flex items-center gap-2.5">
@@ -318,7 +318,7 @@ export const SchedulingPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setAlertNotice(null)}
-            className="text-xs opacity-70 hover:opacity-100 uppercase tracking-wider font-mono ml-4"
+            className="text-[13px] opacity-70 hover:opacity-100 tabular-nums ml-4"
           >
             ✕
           </button>
@@ -341,12 +341,12 @@ export const SchedulingPage: React.FC = () => {
       {view === 'calendar' && (
       <>
       {/* 2. Barra de Navegación de Semana */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handlePrevWeek}
-            className="p-2 rounded-xl bg-[#0B0C10] hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
+            className="p-2 rounded-xl bg-vx-bg hover:bg-vx-raised text-vx-text-2 hover:text-vx-text border border-vx-border transition-colors"
             title="Semana anterior"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -355,7 +355,7 @@ export const SchedulingPage: React.FC = () => {
           <button
             type="button"
             onClick={handleToday}
-            className="px-3.5 py-1.5 rounded-xl bg-[#0B0C10] hover:bg-[#1F2833] text-xs font-mono font-semibold text-white border border-[#242E3B] transition-colors"
+            className="px-3.5 py-1.5 rounded-xl bg-vx-bg hover:bg-vx-raised text-[13px] tabular-nums font-semibold text-vx-text border border-vx-border transition-colors"
           >
             Hoy
           </button>
@@ -363,39 +363,39 @@ export const SchedulingPage: React.FC = () => {
           <button
             type="button"
             onClick={handleNextWeek}
-            className="p-2 rounded-xl bg-[#0B0C10] hover:bg-[#1F2833] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
+            className="p-2 rounded-xl bg-vx-bg hover:bg-vx-raised text-vx-text-2 hover:text-vx-text border border-vx-border transition-colors"
             title="Semana siguiente"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
 
           <div className="ml-2 flex items-center gap-2">
-            <span className="text-sm font-bold text-white">
+            <span className="text-sm font-bold text-vx-text">
               Semana del {currentMonday} al {sundayDate}
             </span>
           </div>
         </div>
 
-        <div className="text-xs text-[#C5C6C7]/60 font-mono">
+        <div className="text-[13px] text-vx-text-2/60 tabular-nums">
           Mostrando {activeAgents.length} agentes activos
         </div>
       </div>
 
       {/* 1. Calendario Semanal */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[960px]">
             <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/80 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
-                <th className="py-3 px-4 w-48 sticky left-0 bg-[#0B0C10] z-10 border-r border-[#242E3B]">
+              <tr className="border-b border-vx-border bg-vx-bg/80 text-xs tabular-nums text-vx-text-2/60">
+                <th className="py-3 px-4 w-48 sticky left-0 bg-vx-bg z-10 border-r border-vx-border">
                   Agente
                 </th>
                 {currentWeekDates.map((date) => (
-                  <th key={date} className="py-3 px-3 border-r border-[#242E3B] text-center w-36">
-                    <span className="block text-white font-semibold capitalize">
+                  <th key={date} className="py-3 px-3 border-r border-vx-border text-center w-36">
+                    <span className="block text-vx-text font-semibold capitalize">
                       {formatDayLabel(date)}
                     </span>
-                    <span className="text-[10px] text-[#C5C6C7]/50">{date.slice(5)}</span>
+                    <span className="text-xs text-vx-text-2/50">{date.slice(5)}</span>
                   </th>
                 ))}
                 {/* 3. Columna final con horas programadas */}
@@ -403,19 +403,19 @@ export const SchedulingPage: React.FC = () => {
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+            <tbody className="divide-y divide-vx-border/60 text-[13px]">
               {activeAgents.map((agent) => {
                 const campaign = campaignMap.get(agent.campaignId);
                 const weekMinutes = getWeekMinutes(shifts, agent.id, currentWeekDates);
 
                 return (
-                  <tr key={agent.id} className="hover:bg-[#1A202C]/30 transition-colors">
+                  <tr key={agent.id} className="hover:bg-vx-raised/30 transition-colors">
                     {/* Columna Agente */}
-                    <td className="py-3 px-4 sticky left-0 bg-[#13151c] z-10 border-r border-[#242E3B]">
-                      <div className="font-semibold text-white truncate max-w-[170px]">
+                    <td className="py-3 px-4 sticky left-0 bg-vx-surface z-10 border-r border-vx-border">
+                      <div className="font-semibold text-vx-text truncate max-w-[170px]">
                         {agent.name}
                       </div>
-                      <div className="text-[10px] text-[#C5C6C7]/50 font-mono truncate">
+                      <div className="text-xs text-vx-text-2/50 tabular-nums truncate">
                         {agent.employeeCode} • {campaign?.name}
                       </div>
                     </td>
@@ -431,15 +431,15 @@ export const SchedulingPage: React.FC = () => {
                         <td
                           key={date}
                           onClick={() => handleCellClick(agent.id, date)}
-                          className={`py-2 px-2 border-r border-[#242E3B] align-top transition-colors cursor-pointer group relative ${
+                          className={`py-2 px-2 border-r border-vx-border align-top transition-colors cursor-pointer group relative ${
                             hasTimeOff
-                              ? 'bg-[#F59E0B]/5 hover:bg-[#F59E0B]/10'
-                              : 'hover:bg-[#1F2833]/40'
+                              ? 'bg-vx-warning/5 hover:bg-vx-warning/10'
+                              : 'hover:bg-vx-raised/40'
                           }`}
                         >
                           {/* 4. Insignia Permiso Aprobado */}
                           {hasTimeOff && (
-                            <div className="p-1.5 mb-1.5 rounded-lg bg-[#F59E0B]/15 border border-[#F59E0B]/30 text-center flex items-center justify-center gap-1.5 text-[11px] font-mono font-bold text-[#F59E0B]">
+                            <div className="p-1.5 mb-1.5 rounded-lg bg-vx-warning/15 border border-vx-warning/30 text-center flex items-center justify-center gap-1.5 text-xs tabular-nums font-bold text-vx-warning">
                               <Palmtree className="w-3.5 h-3.5 shrink-0" />
                               <span>Permiso</span>
                             </div>
@@ -457,25 +457,25 @@ export const SchedulingPage: React.FC = () => {
                                     onClick={(e) => handleShiftClick(shift, e)}
                                     className={`p-2 rounded-lg border text-left transition-all hover:scale-[1.02] shadow-sm ${
                                       isCancelled
-                                        ? 'bg-[#1F2833]/30 border-[#242E3B] line-through text-[#C5C6C7]/40'
-                                        : 'bg-[#66FCF1]/10 border-[#66FCF1]/30 hover:border-[#66FCF1] text-white'
+                                        ? 'bg-vx-raised/30 border-vx-border line-through text-vx-text-2/40'
+                                        : 'bg-vx-accent/10 border-vx-accent/30 hover:border-vx-accent text-vx-text'
                                     }`}
                                   >
-                                    <div className="flex items-center justify-between font-mono font-bold text-[11px]">
-                                      <span className={isCancelled ? 'line-through' : 'text-[#66FCF1]'}>
+                                    <div className="flex items-center justify-between tabular-nums font-bold text-xs">
+                                      <span className={isCancelled ? 'line-through' : 'text-vx-accent'}>
                                         {shift.startTime} - {shift.endTime}
                                       </span>
                                       {isCancelled && (
-                                        <span className="text-[9px] text-[#EF4444] font-mono not-italic uppercase">
+                                        <span className="text-xs text-vx-danger tabular-nums not-italic">
                                           Canc
                                         </span>
                                       )}
                                     </div>
-                                    <div className="text-[10px] text-[#C5C6C7]/60 font-mono truncate mt-0.5">
+                                    <div className="text-xs text-vx-text-2/60 tabular-nums truncate mt-0.5">
                                       {cName}
                                     </div>
                                     {shift.breakMinutes > 0 && (
-                                      <div className="text-[9px] text-[#C5C6C7]/40 font-mono">
+                                      <div className="text-xs text-vx-text-2/40 tabular-nums">
                                         Desc: {shift.breakMinutes}m
                                       </div>
                                     )}
@@ -484,7 +484,7 @@ export const SchedulingPage: React.FC = () => {
                               })}
                             </div>
                           ) : (
-                            <div className="h-10 flex items-center justify-center text-[#C5C6C7]/20 group-hover:text-[#66FCF1]/60 transition-colors">
+                            <div className="h-10 flex items-center justify-center text-vx-text-2/20 group-hover:text-vx-accent/60 transition-colors">
                               <Plus className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                           )}
@@ -493,8 +493,8 @@ export const SchedulingPage: React.FC = () => {
                     })}
 
                     {/* 3. Columna final con horas programadas */}
-                    <td className="py-3 px-4 text-center font-mono font-bold text-white text-xs">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#1F2833] border border-[#242E3B] text-[#66FCF1]">
+                    <td className="py-3 px-4 text-center tabular-nums font-bold text-vx-text text-[13px]">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-vx-raised border border-vx-border text-vx-accent">
                         <Clock className="w-3 h-3" />
                         {formatDuration(weekMinutes)}
                       </span>
@@ -512,40 +512,40 @@ export const SchedulingPage: React.FC = () => {
       {/* 5. Modal "Nuevo Turno" */}
       {isNewShiftModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#242E3B] pb-3">
+          <div className="bg-vx-surface border border-vx-border rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-vx-border pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
+                <div className="w-8 h-8 rounded-lg bg-vx-accent/15 text-vx-accent flex items-center justify-center border border-vx-accent/30">
                   <Plus className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">Nuevo Turno</h3>
-                  <p className="text-[11px] text-[#C5C6C7]/60 font-mono">{selectedDate}</p>
+                  <h3 className="text-base font-bold text-vx-text">Nuevo Turno</h3>
+                  <p className="text-xs text-vx-text-2/60 tabular-nums">{selectedDate}</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsNewShiftModalOpen(false)}
-                className="p-1 rounded-lg text-[#C5C6C7] hover:text-white"
+                className="p-1 rounded-lg text-vx-text-2 hover:text-vx-text"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {newShiftError && (
-              <div className="p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#EF4444] text-xs flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-vx-danger/15 border border-vx-danger/30 text-vx-danger text-[13px] flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{newShiftError}</span>
               </div>
             )}
 
-            <form onSubmit={handleCreateShiftSubmit} className="space-y-3.5 text-xs">
+            <form onSubmit={handleCreateShiftSubmit} className="space-y-3.5 text-[13px]">
               <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1">Agente</label>
+                <label className="block text-vx-text-2 font-medium mb-1">Agente</label>
                 <select
                   value={selectedAgentId}
                   onChange={(e) => setSelectedAgentId(e.target.value)}
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1]"
+                  className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2.5 focus:outline-none focus:border-vx-accent"
                 >
                   {activeAgents.map((a) => (
                     <option key={a.id} value={a.id}>
@@ -556,11 +556,11 @@ export const SchedulingPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1">Campaña</label>
+                <label className="block text-vx-text-2 font-medium mb-1">Campaña</label>
                 <select
                   value={shiftCampaignId}
                   onChange={(e) => setShiftCampaignId(e.target.value)}
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1]"
+                  className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2.5 focus:outline-none focus:border-vx-accent"
                 >
                   {campaigns.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -572,61 +572,61 @@ export const SchedulingPage: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1">Hora Inicio (HH:mm)</label>
+                  <label className="block text-vx-text-2 font-medium mb-1">Hora Inicio (HH:mm)</label>
                   <input
                     type="time"
                     required
                     value={shiftStartTime}
                     onChange={(e) => setShiftStartTime(e.target.value)}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-[#66FCF1]"
+                    className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 tabular-nums focus:outline-none focus:border-vx-accent"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1">Hora Fin (HH:mm)</label>
+                  <label className="block text-vx-text-2 font-medium mb-1">Hora Fin (HH:mm)</label>
                   <input
                     type="time"
                     required
                     value={shiftEndTime}
                     onChange={(e) => setShiftEndTime(e.target.value)}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-[#66FCF1]"
+                    className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 tabular-nums focus:outline-none focus:border-vx-accent"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1">Descanso (minutos)</label>
+                <label className="block text-vx-text-2 font-medium mb-1">Descanso (minutos)</label>
                 <input
                   type="number"
                   min="0"
                   value={shiftBreakMinutes}
                   onChange={(e) => setShiftBreakMinutes(Number(e.target.value))}
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-[#66FCF1]"
+                  className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 tabular-nums focus:outline-none focus:border-vx-accent"
                 />
               </div>
 
               <div>
-                <label className="block text-[#C5C6C7] font-medium mb-1">Nota (opcional)</label>
+                <label className="block text-vx-text-2 font-medium mb-1">Nota (opcional)</label>
                 <input
                   type="text"
                   value={shiftNote}
                   onChange={(e) => setShiftNote(e.target.value)}
                   placeholder="Ej: Turno rotativo o soporte especial"
-                  className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#66FCF1]"
+                  className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 focus:outline-none focus:border-vx-accent"
                 />
               </div>
 
-              <div className="pt-3 border-t border-[#242E3B] flex justify-end gap-3">
+              <div className="pt-3 border-t border-vx-border flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsNewShiftModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#C5C6C7] hover:text-white bg-[#1F2833] hover:bg-[#253240]"
+                  className="px-4 py-2 rounded-xl text-[13px] font-semibold text-vx-text-2 hover:text-vx-text bg-vx-raised hover:bg-vx-raised"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-[#0B0C10] bg-[#66FCF1] hover:bg-[#52e0d6] shadow-[0_0_12px_rgba(102,252,241,0.25)]"
+                  className="px-5 py-2 rounded-xl text-[13px] font-bold text-vx-bg bg-vx-accent hover:bg-vx-accent"
                 >
                   Programar Turno
                 </button>
@@ -639,15 +639,15 @@ export const SchedulingPage: React.FC = () => {
       {/* 6. Modal "Editar / Gestionar Turno" */}
       {editingShift && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-[#242E3B] pb-3">
+          <div className="bg-vx-surface border border-vx-border rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-vx-border pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#66FCF1]/15 text-[#66FCF1] flex items-center justify-center border border-[#66FCF1]/30">
+                <div className="w-8 h-8 rounded-lg bg-vx-accent/15 text-vx-accent flex items-center justify-center border border-vx-accent/30">
                   <Edit3 className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">Gestionar Turno</h3>
-                  <p className="text-[11px] text-[#C5C6C7]/60 font-mono">
+                  <h3 className="text-base font-bold text-vx-text">Gestionar Turno</h3>
+                  <p className="text-xs text-vx-text-2/60 tabular-nums">
                     {agents.find((a) => a.id === editingShift.agentId)?.name} • {editingShift.date}
                   </p>
                 </div>
@@ -655,49 +655,49 @@ export const SchedulingPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setEditingShift(null)}
-                className="p-1 rounded-lg text-[#C5C6C7] hover:text-white"
+                className="p-1 rounded-lg text-vx-text-2 hover:text-vx-text"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {editError && (
-              <div className="p-3 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#EF4444] text-xs flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-vx-danger/15 border border-vx-danger/30 text-vx-danger text-[13px] flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{editError}</span>
               </div>
             )}
 
             {isDeletingConfirm ? (
-              <div className="p-4 rounded-xl bg-[#EF4444]/10 border border-[#EF4444]/30 space-y-3">
-                <p className="text-xs text-[#EF4444] font-semibold">
+              <div className="p-4 rounded-xl bg-vx-danger/10 border border-vx-danger/30 space-y-3">
+                <p className="text-[13px] text-vx-danger font-semibold">
                   ¿Estás seguro de eliminar permanentemente este turno?
                 </p>
                 <div className="flex justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setIsDeletingConfirm(false)}
-                    className="px-3 py-1.5 rounded-lg bg-[#1F2833] text-xs text-white"
+                    className="px-3 py-1.5 rounded-lg bg-vx-raised text-[13px] text-vx-text"
                   >
                     No, volver
                   </button>
                   <button
                     type="button"
                     onClick={handleDeleteShift}
-                    className="px-3 py-1.5 rounded-lg bg-[#EF4444] hover:bg-[#dc2626] text-xs font-bold text-white"
+                    className="px-3 py-1.5 rounded-lg bg-vx-danger hover:bg-vx-danger text-[13px] font-bold text-vx-text"
                   >
                     Sí, eliminar
                   </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSaveShiftEdit} className="space-y-3.5 text-xs">
+              <form onSubmit={handleSaveShiftEdit} className="space-y-3.5 text-[13px]">
                 <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1">Campaña</label>
+                  <label className="block text-vx-text-2 font-medium mb-1">Campaña</label>
                   <select
                     value={editCampaignId}
                     onChange={(e) => setEditCampaignId(e.target.value)}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#66FCF1]"
+                    className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2.5 focus:outline-none focus:border-vx-accent"
                   >
                     {campaigns.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -709,56 +709,56 @@ export const SchedulingPage: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[#C5C6C7] font-medium mb-1">Hora Inicio</label>
+                    <label className="block text-vx-text-2 font-medium mb-1">Hora Inicio</label>
                     <input
                       type="time"
                       required
                       value={editStartTime}
                       onChange={(e) => setEditStartTime(e.target.value)}
-                      className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-[#66FCF1]"
+                      className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 tabular-nums focus:outline-none focus:border-vx-accent"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[#C5C6C7] font-medium mb-1">Hora Fin</label>
+                    <label className="block text-vx-text-2 font-medium mb-1">Hora Fin</label>
                     <input
                       type="time"
                       required
                       value={editEndTime}
                       onChange={(e) => setEditEndTime(e.target.value)}
-                      className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-[#66FCF1]"
+                      className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 tabular-nums focus:outline-none focus:border-vx-accent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1">Descanso (minutos)</label>
+                  <label className="block text-vx-text-2 font-medium mb-1">Descanso (minutos)</label>
                   <input
                     type="number"
                     min="0"
                     value={editBreakMinutes}
                     onChange={(e) => setEditBreakMinutes(Number(e.target.value))}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 font-mono focus:outline-none focus:border-[#66FCF1]"
+                    className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 tabular-nums focus:outline-none focus:border-vx-accent"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[#C5C6C7] font-medium mb-1">Nota</label>
+                  <label className="block text-vx-text-2 font-medium mb-1">Nota</label>
                   <input
                     type="text"
                     value={editNote}
                     onChange={(e) => setEditNote(e.target.value)}
-                    className="w-full bg-[#0B0C10] border border-[#242E3B] text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#66FCF1]"
+                    className="w-full bg-vx-bg border border-vx-border text-vx-text rounded-xl px-3 py-2 focus:outline-none focus:border-vx-accent"
                   />
                 </div>
 
-                <div className="pt-3 border-t border-[#242E3B] flex flex-wrap items-center justify-between gap-2">
+                <div className="pt-3 border-t border-vx-border flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     {editingShift.status === 'scheduled' && (
                       <button
                         type="button"
                         onClick={handleCancelShift}
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#F59E0B]/10 hover:bg-[#F59E0B] text-[#F59E0B] hover:text-[#0B0C10] border border-[#F59E0B]/30 text-xs font-semibold transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-vx-warning/10 hover:bg-vx-warning text-vx-warning hover:text-vx-bg border border-vx-warning/30 text-[13px] font-semibold transition-colors"
                       >
                         <Ban className="w-3.5 h-3.5" />
                         <span>Cancelar</span>
@@ -768,7 +768,7 @@ export const SchedulingPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setIsDeletingConfirm(true)}
-                      className="p-1.5 rounded-lg bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 transition-colors"
+                      className="p-1.5 rounded-lg bg-vx-danger/10 hover:bg-vx-danger text-vx-danger hover:text-vx-text border border-vx-danger/30 transition-colors"
                       title="Eliminar turno"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -779,13 +779,13 @@ export const SchedulingPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setEditingShift(null)}
-                      className="px-3 py-1.5 rounded-xl text-xs font-semibold text-[#C5C6C7] hover:text-white bg-[#1F2833]"
+                      className="px-3 py-1.5 rounded-xl text-[13px] font-semibold text-vx-text-2 hover:text-vx-text bg-vx-raised"
                     >
                       Cerrar
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-1.5 rounded-xl text-xs font-bold text-[#0B0C10] bg-[#66FCF1] hover:bg-[#52e0d6]"
+                      className="px-4 py-1.5 rounded-xl text-[13px] font-bold text-vx-bg bg-vx-accent hover:bg-vx-accent"
                     >
                       Guardar
                     </button>
@@ -821,15 +821,15 @@ const ShiftSummary: React.FC<{ date: string; startTime: string; endTime: string;
   breakMinutes,
 }) => (
   <div className="flex items-center gap-3">
-    <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-[#66FCF1]/25 bg-[#66FCF1]/10 font-mono text-[#66FCF1]">
-      <span className="text-[10px] uppercase">{formatDayLabel(date).split(' ')[0]}</span>
+    <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl border border-vx-accent/25 bg-vx-accent/10 tabular-nums text-vx-accent">
+      <span className="text-xs">{formatDayLabel(date).split(' ')[0]}</span>
       <span className="text-base font-bold leading-none">{date.slice(8)}</span>
     </div>
     <div>
-      <div className="font-mono text-sm font-bold text-white">
+      <div className="tabular-nums text-sm font-bold text-vx-text">
         {startTime} – {endTime}
       </div>
-      <div className="text-[11px] text-[#C5C6C7]/60">
+      <div className="text-xs text-vx-text-2/60">
         {campaign}
         {breakMinutes > 0 && ` · Descanso ${breakMinutes} min`}
       </div>
@@ -887,7 +887,7 @@ const OpenShiftsPanel: React.FC<{ report: Report }> = ({ report }) => {
       {sorted.length === 0 ? (
         <EmptyState icon={Calendar} title="No hay turnos abiertos" description="Publica uno para cubrir picos de llamadas o ausencias." />
       ) : (
-        <ul className="divide-y divide-[#242E3B]">
+        <ul className="divide-y divide-vx-border">
           {sorted.map((os) => {
             const osClaims = claims.filter((c) => c.openShiftId === os.id);
             const filledBy = shifts.find((s) => s.id === os.filledShiftId)?.agentId ?? null;
@@ -909,20 +909,20 @@ const OpenShiftsPanel: React.FC<{ report: Report }> = ({ report }) => {
                       aria-label="Eliminar turno abierto"
                       title="Eliminar turno abierto"
                       onClick={() => report(deleteOpenShift(profile.agentId, os.id), 'Turno abierto eliminado.')}
-                      className="rounded-lg border border-[#EF4444]/30 bg-[#EF4444]/10 p-1.5 text-[#EF4444] transition-colors hover:bg-[#EF4444] hover:text-white"
+                      className="rounded-lg border border-vx-danger/30 bg-vx-danger/10 p-1.5 text-vx-danger transition-colors hover:bg-vx-danger hover:text-vx-text"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
-                {os.note && <p className="text-xs text-[#C5C6C7]/70">{os.note}</p>}
+                {os.note && <p className="text-[13px] text-vx-text-2/70">{os.note}</p>}
                 {osClaims.length > 0 && (
-                  <ul className="space-y-2 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
+                  <ul className="space-y-2 rounded-xl border border-vx-border bg-vx-bg p-3">
                     {osClaims.map((c) => (
-                      <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                        <span className="text-white">
+                      <li key={c.id} className="flex flex-wrap items-center justify-between gap-2 text-[13px]">
+                        <span className="text-vx-text">
                           <span className="font-semibold">{agentName(c.agentId)}</span>
-                          <span className="text-[#C5C6C7]/60"> quiere tomar este turno</span>
+                          <span className="text-vx-text-2/60"> quiere tomar este turno</span>
                         </span>
                         {c.status === 'pending' ? (
                           <span className="flex gap-2">
@@ -975,7 +975,7 @@ const OpenShiftsPanel: React.FC<{ report: Report }> = ({ report }) => {
         {form && (
           <form id="open-shift-form" onSubmit={submit} className="space-y-3.5">
             {formError && (
-              <div role="alert" className="flex items-center gap-2 rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/15 p-3 text-xs text-[#EF4444]">
+              <div role="alert" className="flex items-center gap-2 rounded-xl border border-vx-danger/30 bg-vx-danger/15 p-3 text-[13px] text-vx-danger">
                 <AlertTriangle className="h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -1011,16 +1011,16 @@ const OpenShiftsPanel: React.FC<{ report: Report }> = ({ report }) => {
             <Field label="Nota (opcional)">
               <TextArea value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} placeholder="Ej: refuerzo por campaña de cobranza" />
             </Field>
-            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-vx-border bg-vx-bg p-3">
               <input
                 type="checkbox"
                 checked={form.requiresApproval}
                 onChange={(e) => setForm({ ...form, requiresApproval: e.target.checked })}
-                className="mt-0.5 h-4 w-4 accent-[#66FCF1]"
+                className="mt-0.5 h-4 w-4 accent-vx-accent"
               />
               <span>
-                <span className="block text-xs font-semibold text-white">Requiere mi aprobación</span>
-                <span className="block text-[11px] text-[#C5C6C7]/60">
+                <span className="block text-[13px] font-semibold text-vx-text">Requiere mi aprobación</span>
+                <span className="block text-xs text-vx-text-2/60">
                   Si lo desmarcas, el turno se asigna al primer agente que lo tome.
                 </span>
               </span>
@@ -1044,7 +1044,7 @@ const SwapsPanel: React.FC<{ report: Report }> = ({ report }) => {
       {sorted.length === 0 ? (
         <EmptyState icon={Calendar} title="Sin solicitudes de intercambio" />
       ) : (
-        <ul className="divide-y divide-[#242E3B]">
+        <ul className="divide-y divide-vx-border">
           {sorted.map((w) => {
             const shift = shifts.find((s) => s.id === w.shiftId);
             const target = w.acceptedBy ?? w.toAgentId;
@@ -1054,14 +1054,14 @@ const SwapsPanel: React.FC<{ report: Report }> = ({ report }) => {
                   {shift ? (
                     <ShiftSummary {...shift} campaign={campaignName(shift.campaignId)} />
                   ) : (
-                    <span className="text-xs text-[#C5C6C7]/60">Turno eliminado</span>
+                    <span className="text-[13px] text-vx-text-2/60">Turno eliminado</span>
                   )}
-                  <div className="text-xs text-white">
+                  <div className="text-[13px] text-vx-text">
                     <span className="font-semibold">{agentName(w.fromAgentId)}</span>
-                    <span className="text-[#C5C6C7]/60"> → </span>
+                    <span className="text-vx-text-2/60"> → </span>
                     <span className="font-semibold">{target ? agentName(target) : 'Cualquiera de la campaña'}</span>
                   </div>
-                  {w.note && <p className="text-[11px] text-[#C5C6C7]/60">“{w.note}”</p>}
+                  {w.note && <p className="text-xs text-vx-text-2/60">“{w.note}”</p>}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge tone={SWAP_STATUS_META[w.status].tone}>{SWAP_STATUS_META[w.status].label}</Badge>

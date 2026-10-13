@@ -24,18 +24,18 @@ const BADGE_TONE: Record<BadgeType, 'accent' | 'success' | 'warning' | 'info'> =
 };
 
 const MilestoneCard: React.FC<{ m: Milestone; nameOf: (id: string) => string }> = ({ m, nameOf }) => (
-  <div className="flex items-center gap-4 rounded-2xl border border-[#F59E0B]/25 bg-gradient-to-r from-[#F59E0B]/[0.07] to-[#13151c] p-4">
-    <div className="rounded-xl border border-[#F59E0B]/30 bg-[#F59E0B]/10 p-2.5 text-[#F59E0B]">
+  <div className="flex items-center gap-4 rounded-2xl border border-vx-warning/25 bg-gradient-to-r from-vx-warning/[0.07] to-vx-surface p-4">
+    <div className="rounded-xl border border-vx-warning/30 bg-vx-warning/10 p-2.5 text-vx-warning">
       {m.kind === 'anniversary' ? <CalendarHeart className="h-5 w-5" /> : <Trophy className="h-5 w-5" />}
     </div>
     <div className="min-w-0 flex-1">
-      <p className="text-sm text-white">
+      <p className="text-sm text-vx-text">
         <span className="font-bold">{nameOf(m.agentId)}</span>{' '}
         {m.kind === 'anniversary'
           ? `cumple ${m.years} ${m.years === 1 ? 'año' : 'años'} en Vooxline`
           : `es QA destacado con ${m.qaScore} puntos de calidad`}
       </p>
-      <p className="mt-0.5 font-mono text-[11px] text-[#C5C6C7]/50">Hito automático · {formatDay(m.date)}</p>
+      <p className="mt-0.5 tabular-nums text-xs text-vx-text-2/50">Hito automático · {formatDay(m.date)}</p>
     </div>
     <Badge tone="warning">
       <Sparkles className="h-3 w-3" /> Hito
@@ -60,27 +60,27 @@ const RecognitionCard: React.FC<{
   };
 
   return (
-    <article className="rounded-2xl border border-[#242E3B] bg-[#13151c] p-5 shadow-xl transition-colors hover:border-[#66FCF1]/20">
+    <article className="rounded-2xl border border-vx-border bg-vx-surface p-5 transition-colors hover:border-vx-accent/20">
       <header className="flex flex-wrap items-start gap-3">
         <Avatar name={nameOf(r.toId)} size="lg" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm text-[#C5C6C7]">
-            <span className="font-bold text-white">{nameOf(r.fromId)}</span> reconoció a{' '}
-            <span className="font-bold text-white">{nameOf(r.toId)}</span>
+          <p className="text-sm text-vx-text-2">
+            <span className="font-bold text-vx-text">{nameOf(r.fromId)}</span> reconoció a{' '}
+            <span className="font-bold text-vx-text">{nameOf(r.toId)}</span>
           </p>
           <div className="mt-1.5 flex flex-wrap items-center gap-2">
             <Badge tone={BADGE_TONE[r.badge]}>
               <Award className="h-3 w-3" /> {BADGES[r.badge]}
             </Badge>
-            <span className="font-mono text-[11px] text-[#C5C6C7]/50">{timeAgo(r.createdAt)}</span>
+            <span className="tabular-nums text-xs text-vx-text-2/50">{timeAgo(r.createdAt)}</span>
           </div>
         </div>
-        <span className="rounded-lg border border-[#66FCF1]/30 bg-[#66FCF1]/10 px-2.5 py-1 font-mono text-xs font-bold text-[#66FCF1]">
+        <span className="rounded-lg border border-vx-accent/30 bg-vx-accent/10 px-2.5 py-1 tabular-nums text-[13px] font-bold text-vx-accent">
           +{r.points} pts
         </span>
       </header>
 
-      <p className="mt-4 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3.5 text-sm leading-relaxed text-[#C5C6C7]">“{r.message}”</p>
+      <p className="mt-4 rounded-xl border border-vx-border bg-vx-bg p-3.5 text-sm leading-relaxed text-vx-text-2">“{r.message}”</p>
 
       <footer className="mt-3 flex flex-wrap items-center gap-1.5">
         {REACTIONS.map(({ kind, label, icon: Icon }) => {
@@ -94,10 +94,10 @@ const RecognitionCard: React.FC<{
               aria-label={`${label} (${ids.length})`}
               title={ids.map(nameOf).join(', ') || label}
               onClick={() => report(toggleReaction(r.id, currentUserId, kind), '')}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 font-mono text-xs transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 tabular-nums text-[13px] transition-colors ${
                 mine
-                  ? 'border-[#66FCF1]/40 bg-[#66FCF1]/10 text-[#66FCF1]'
-                  : 'border-[#242E3B] text-[#C5C6C7]/70 hover:border-[#66FCF1]/30 hover:text-white'
+                  ? 'border-vx-accent/40 bg-vx-accent/10 text-vx-accent'
+                  : 'border-vx-border text-vx-text-2/70 hover:border-vx-accent/30 hover:text-vx-text'
               }`}
             >
               <Icon className="h-3.5 w-3.5" /> {ids.length}
@@ -108,23 +108,23 @@ const RecognitionCard: React.FC<{
           type="button"
           aria-expanded={showComments}
           onClick={() => setShowComments((v) => !v)}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs text-[#C5C6C7]/70 hover:bg-white/5 hover:text-white"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[13px] text-vx-text-2/70 hover:bg-white/5 hover:text-vx-text"
         >
           <MessageCircle className="h-3.5 w-3.5" /> {r.comments.length} {r.comments.length === 1 ? 'comentario' : 'comentarios'}
         </button>
       </footer>
 
       {showComments && (
-        <div className="mt-3 space-y-2.5 border-t border-[#242E3B] pt-3">
+        <div className="mt-3 space-y-2.5 border-t border-vx-border pt-3">
           {r.comments.map((c) => (
             <div key={c.id} className="flex gap-2.5">
               <Avatar name={nameOf(c.authorId)} size="sm" />
-              <div className="min-w-0 flex-1 rounded-xl bg-[#0B0C10] px-3 py-2">
-                <p className="text-xs">
-                  <span className="font-semibold text-white">{nameOf(c.authorId)}</span>{' '}
-                  <span className="font-mono text-[10px] text-[#C5C6C7]/40">{timeAgo(c.createdAt)}</span>
+              <div className="min-w-0 flex-1 rounded-xl bg-vx-bg px-3 py-2">
+                <p className="text-[13px]">
+                  <span className="font-semibold text-vx-text">{nameOf(c.authorId)}</span>{' '}
+                  <span className="tabular-nums text-xs text-vx-text-2/40">{timeAgo(c.createdAt)}</span>
                 </p>
-                <p className="mt-0.5 text-xs text-[#C5C6C7]">{c.text}</p>
+                <p className="mt-0.5 text-[13px] text-vx-text-2">{c.text}</p>
               </div>
             </div>
           ))}
@@ -140,7 +140,7 @@ const RecognitionCard: React.FC<{
               type="submit"
               aria-label="Publicar comentario"
               disabled={!draft.trim()}
-              className="rounded-xl bg-[#66FCF1] p-2.5 text-[#0B0C10] hover:bg-[#52e0d6] disabled:opacity-40"
+              className="rounded-xl bg-vx-accent p-2.5 text-vx-bg hover:bg-vx-accent disabled:opacity-40"
             >
               <Send className="h-3.5 w-3.5" />
             </button>

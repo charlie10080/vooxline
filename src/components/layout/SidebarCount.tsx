@@ -6,7 +6,7 @@ export type BadgeKey = 'chat' | 'updates';
 
 const Count: React.FC<{ value: number }> = ({ value }) =>
   value > 0 ? (
-    <span className="ml-auto min-w-5 rounded-full bg-[#66FCF1] px-1.5 text-center font-mono text-[10px] font-bold leading-5 text-[#0B0C10]">
+    <span className="ml-auto min-w-5 rounded-full bg-vx-accent px-1.5 text-center tabular-nums text-xs font-bold leading-5 text-vx-bg">
       {value > 99 ? '99+' : value}
     </span>
   ) : null;

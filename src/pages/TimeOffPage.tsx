@@ -319,7 +319,7 @@ export const TimeOffPage: React.FC = () => {
       >
         <table className="w-full min-w-[560px] border-collapse text-left">
           <thead>
-            <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 font-mono text-[11px] uppercase tracking-wider text-[#C5C6C7]/60">
+            <tr className="border-b border-vx-border bg-vx-bg/60 tabular-nums text-xs text-vx-text-2/60">
               <th scope="col" className="px-4 py-2.5">Agente</th>
               <th scope="col" className="px-4 py-2.5">Código</th>
               <th scope="col" className="px-4 py-2.5">Campaña</th>
@@ -327,20 +327,20 @@ export const TimeOffPage: React.FC = () => {
               <th scope="col" className="px-4 py-2.5 text-right">Saldo PTO disponible</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+          <tbody className="divide-y divide-vx-border/60 text-[13px]">
             {agents.map((agent) => {
               const campaign = campaignMap.get(agent.campaignId);
               return (
-                <tr key={agent.id} className="transition-colors hover:bg-[#1F2833]/40">
+                <tr key={agent.id} className="transition-colors hover:bg-vx-raised/40">
                   <td className="px-4 py-2.5">
                     <div className="flex items-center gap-2.5">
                       <Avatar name={agent.name} size="sm" />
-                      <span className="font-semibold text-white">{agent.name}</span>
+                      <span className="font-semibold text-vx-text">{agent.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-2.5 font-mono text-[#C5C6C7]">{agent.employeeCode}</td>
-                  <td className="px-4 py-2.5 text-[#C5C6C7]">{campaign?.name ?? 'Sin asignar'}</td>
-                  <td className="px-4 py-2.5 text-[#C5C6C7]/70">{agent.level}</td>
+                  <td className="px-4 py-2.5 tabular-nums text-vx-text-2">{agent.employeeCode}</td>
+                  <td className="px-4 py-2.5 text-vx-text-2">{campaign?.name ?? 'Sin asignar'}</td>
+                  <td className="px-4 py-2.5 text-vx-text-2/70">{agent.level}</td>
                   <td className="px-4 py-2.5 text-right">
                     <Badge tone="accent">
                       <Clock className="h-3 w-3" />
@@ -360,7 +360,7 @@ export const TimeOffPage: React.FC = () => {
         subtitle={`${filteredRequests.length} mostradas · ${TAB_LABELS[activeTab]}`}
         bodyClassName=""
       >
-        <div className="flex flex-col justify-between gap-3 border-b border-[#242E3B] p-4 md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-3 border-b border-vx-border p-4 md:flex-row md:items-center">
           <Tabs
             value={activeTab}
             onChange={setActiveTab}
@@ -386,7 +386,7 @@ export const TimeOffPage: React.FC = () => {
               ))}
             </Select>
             <div className="relative flex-1 sm:w-60">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#C5C6C7]/40" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-vx-text-2/40" />
               <Input
                 type="search"
                 aria-label="Buscar solicitudes"
@@ -409,7 +409,7 @@ export const TimeOffPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[960px] border-collapse text-left">
               <thead>
-                <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 font-mono text-[11px] uppercase tracking-wider text-[#C5C6C7]/60">
+                <tr className="border-b border-vx-border bg-vx-bg/60 tabular-nums text-xs text-vx-text-2/60">
                   <th scope="col" className="px-4 py-3">Agente</th>
                   <th scope="col" className="px-4 py-3">Campaña</th>
                   <th scope="col" className="px-4 py-3">Tipo</th>
@@ -421,29 +421,29 @@ export const TimeOffPage: React.FC = () => {
                   <th scope="col" className="px-4 py-3 text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+              <tbody className="divide-y divide-vx-border/60 text-[13px]">
                 {filteredRequests.map((req) => {
                   const agent = agentMap.get(req.agentId);
                   const campaign = agent ? campaignMap.get(agent.campaignId) : null;
 
                   return (
-                    <tr key={req.id} className="transition-colors hover:bg-[#1F2833]/40">
+                    <tr key={req.id} className="transition-colors hover:bg-vx-raised/40">
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-3">
                           <Avatar name={agent?.name ?? '?'} size="sm" />
                           <div>
-                            <div className="font-semibold text-white">{agent?.name ?? 'Desconocido'}</div>
-                            <div className="mt-0.5 font-mono text-[11px] text-[#C5C6C7]/60">{agent?.employeeCode}</div>
+                            <div className="font-semibold text-vx-text">{agent?.name ?? 'Desconocido'}</div>
+                            <div className="mt-0.5 tabular-nums text-xs text-vx-text-2/60">{agent?.employeeCode}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3.5 text-white/90">{campaign?.name ?? 'Sin asignar'}</td>
+                      <td className="px-4 py-3.5 text-vx-text/90">{campaign?.name ?? 'Sin asignar'}</td>
                       <td className="px-4 py-3.5">{renderTypeBadge(req.type)}</td>
-                      <td className="px-4 py-3.5 font-mono">
-                        <div className="flex items-center gap-1.5 whitespace-nowrap text-white">
-                          <Calendar className="h-3.5 w-3.5 text-[#66FCF1]/70" />
+                      <td className="px-4 py-3.5 tabular-nums">
+                        <div className="flex items-center gap-1.5 whitespace-nowrap text-vx-text">
+                          <Calendar className="h-3.5 w-3.5 text-vx-accent/70" />
                           <span>{req.startDate}</span>
-                          <span className="text-[#C5C6C7]/50">→</span>
+                          <span className="text-vx-text-2/50">→</span>
                           <span>{req.endDate}</span>
                         </div>
                       </td>
@@ -451,7 +451,7 @@ export const TimeOffPage: React.FC = () => {
                         <Badge>{req.hours} h</Badge>
                       </td>
                       <td className="max-w-xs px-4 py-3.5">
-                        <p className="line-clamp-2 text-xs text-[#C5C6C7]" title={req.reason}>
+                        <p className="line-clamp-2 text-[13px] text-vx-text-2" title={req.reason}>
                           {req.reason}
                         </p>
                       </td>
@@ -462,13 +462,13 @@ export const TimeOffPage: React.FC = () => {
                             <span className="truncate" title={req.attachmentName}>{req.attachmentName}</span>
                           </Badge>
                         ) : (
-                          <span className="font-mono text-[11px] text-[#C5C6C7]/40">—</span>
+                          <span className="tabular-nums text-xs text-vx-text-2/40">—</span>
                         )}
                       </td>
                       <td className="px-4 py-3.5">
                         {req.status === 'pending' && (
                           <Badge tone="warning">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#F59E0B]" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-vx-warning" />
                             Pendiente
                           </Badge>
                         )}
@@ -506,7 +506,7 @@ export const TimeOffPage: React.FC = () => {
                             </Button>
                           </div>
                         ) : (
-                          <span className="font-mono text-[11px] text-[#C5C6C7]/50">Procesada</span>
+                          <span className="tabular-nums text-xs text-vx-text-2/50">Procesada</span>
                         )}
                       </td>
                     </tr>
@@ -529,7 +529,7 @@ export const TimeOffPage: React.FC = () => {
           {formError && (
             <div
               role="alert"
-              className="flex items-center gap-2 rounded-xl border border-[#EF4444]/30 bg-[#EF4444]/10 p-3 text-xs text-[#EF4444]"
+              className="flex items-center gap-2 rounded-xl border border-vx-danger/30 bg-vx-danger/10 p-3 text-[13px] text-vx-danger"
             >
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span>{formError}</span>
@@ -547,7 +547,7 @@ export const TimeOffPage: React.FC = () => {
           </Field>
 
           <fieldset className="space-y-1.5">
-            <legend className="mb-1.5 text-xs font-medium text-[#C5C6C7]">Tipo de solicitud</legend>
+            <legend className="mb-1.5 text-[13px] font-medium text-vx-text-2">Tipo de solicitud</legend>
             <div className="grid grid-cols-3 gap-2">
               {TYPE_OPTIONS.map((opt) => (
                 <button
@@ -555,10 +555,10 @@ export const TimeOffPage: React.FC = () => {
                   type="button"
                   aria-pressed={formType === opt.value}
                   onClick={() => setFormType(opt.value)}
-                  className={`rounded-xl border px-3 py-2 text-center text-xs transition-all ${
+                  className={`rounded-xl border px-3 py-2 text-center text-[13px] transition-all ${
                     formType === opt.value
-                      ? 'border-[#66FCF1]/40 bg-[#66FCF1]/15 font-semibold text-[#66FCF1]'
-                      : 'border-[#242E3B] bg-[#0B0C10] text-[#C5C6C7]/70 hover:text-white'
+                      ? 'border-vx-accent/40 bg-vx-accent/15 font-semibold text-vx-accent'
+                      : 'border-vx-border bg-vx-bg text-vx-text-2/70 hover:text-vx-text'
                   }`}
                 >
                   {opt.label}
@@ -573,7 +573,7 @@ export const TimeOffPage: React.FC = () => {
                 type="date"
                 value={formStartDate}
                 onChange={(e) => setFormStartDate(e.target.value)}
-                className="font-mono"
+                className="tabular-nums"
               />
             </Field>
             <Field label="Fecha de fin">
@@ -581,7 +581,7 @@ export const TimeOffPage: React.FC = () => {
                 type="date"
                 value={formEndDate}
                 onChange={(e) => setFormEndDate(e.target.value)}
-                className="font-mono"
+                className="tabular-nums"
               />
             </Field>
           </div>
@@ -601,7 +601,7 @@ export const TimeOffPage: React.FC = () => {
               value={formHours}
               onChange={(e) => setFormHours(e.target.value)}
               placeholder="Ej: 8, 16, 24"
-              className="font-mono"
+              className="tabular-nums"
             />
           </Field>
 
@@ -614,7 +614,7 @@ export const TimeOffPage: React.FC = () => {
             />
           </Field>
 
-          <div className="flex items-center justify-end gap-2.5 border-t border-[#242E3B] pt-4">
+          <div className="flex items-center justify-end gap-2.5 border-t border-vx-border pt-4">
             <Button variant="ghost" onClick={closeModal}>
               Cancelar
             </Button>

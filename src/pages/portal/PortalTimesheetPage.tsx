@@ -45,7 +45,7 @@ export const PortalTimesheetPage: React.FC = () => {
         actions={
           <div className="flex items-center gap-2">
             <Button size="sm" icon={ChevronLeft} aria-label="Semana anterior" onClick={() => setMonday(addDays(monday, -7))} />
-            <span className="min-w-36 text-center font-mono text-xs text-white">
+            <span className="min-w-36 text-center tabular-nums text-[13px] text-vx-text">
               {formatDayLabel(days[0])} – {formatDayLabel(days[6])}
             </span>
             <Button
@@ -71,9 +71,9 @@ export const PortalTimesheetPage: React.FC = () => {
           <EmptyState icon={Timer} title="Sin marcas esta semana" description="Cuando marques entrada y salida, aparecerán aquí." />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-[13px]">
               <thead>
-                <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 font-mono text-[11px] uppercase tracking-wider text-[#C5C6C7]/60">
+                <tr className="border-b border-vx-border bg-vx-bg/60 tabular-nums text-xs text-vx-text-2/60">
                   <th className="px-4 py-3">Día</th>
                   <th className="px-4 py-3">Entrada</th>
                   <th className="px-4 py-3">Salida</th>
@@ -83,7 +83,7 @@ export const PortalTimesheetPage: React.FC = () => {
                   <th className="px-4 py-3">Estado</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#242E3B]/60">
+              <tbody className="divide-y divide-vx-border/60">
                 {entries.map((e) => {
                   const st = STATUS[e.status];
                   const Icon = st.icon;
@@ -91,21 +91,21 @@ export const PortalTimesheetPage: React.FC = () => {
                   const flags = p.flags;
                   return (
                     <tr key={e.id} className="hover:bg-white/[0.02]">
-                      <td className="px-4 py-3 capitalize text-white">{formatDayLabel(toDateStr(new Date(e.clockIn)))}</td>
-                      <td className="px-4 py-3 font-mono text-white">
+                      <td className="px-4 py-3 capitalize text-vx-text">{formatDayLabel(toDateStr(new Date(e.clockIn)))}</td>
+                      <td className="px-4 py-3 tabular-nums text-vx-text">
                         {formatClock(e.clockIn)}
                         {e.clockInGeo && (
-                          <span className="mt-0.5 flex items-center gap-1 text-[10px] text-[#C5C6C7]/50">
+                          <span className="mt-0.5 flex items-center gap-1 text-xs text-vx-text-2/50">
                             <MapPin className="h-3 w-3" /> {describeGeoCheck(e.clockInGeo)}
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 font-mono text-white">{e.clockOut ? formatClock(e.clockOut) : <Badge tone="success">En turno</Badge>}</td>
-                      <td className="px-4 py-3 font-mono">{e.breakMinutes} min</td>
-                      <td className="px-4 py-3 font-mono font-semibold text-white">{formatDuration(getWorkedMinutes(e))}</td>
+                      <td className="px-4 py-3 tabular-nums text-vx-text">{e.clockOut ? formatClock(e.clockOut) : <Badge tone="success">En turno</Badge>}</td>
+                      <td className="px-4 py-3 tabular-nums">{e.breakMinutes} min</td>
+                      <td className="px-4 py-3 tabular-nums font-semibold text-vx-text">{formatDuration(getWorkedMinutes(e))}</td>
                       <td className="px-4 py-3">
                         {flags.length === 0 ? (
-                          <span className="text-[#C5C6C7]/40">—</span>
+                          <span className="text-vx-text-2/40">—</span>
                         ) : (
                           <div className="flex flex-col gap-1">
                             {flags.map((f) => (

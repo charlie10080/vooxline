@@ -150,14 +150,14 @@ export const FormsPage: React.FC = () => {
                 actions={<Badge tone={t.active ? 'success' : 'neutral'}>{t.active ? 'Activo' : 'Inactivo'}</Badge>}
                 className={t.active ? '' : 'opacity-70'}
               >
-                <p className="text-xs text-[#C5C6C7]/70">{t.description || 'Sin descripción.'}</p>
+                <p className="text-[13px] text-vx-text-2/70">{t.description || 'Sin descripción.'}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   <Badge tone="accent">{CATEGORY_LABELS[t.category]}</Badge>
                   <Badge>{t.questions.length} preguntas</Badge>
                   <Badge>{FREQUENCY_LABELS[t.frequency]}</Badge>
                   <Badge tone="info">{count} respuestas</Badge>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2 border-t border-[#242E3B] pt-4">
+                <div className="mt-4 flex flex-wrap gap-2 border-t border-vx-border pt-4">
                   <Button size="sm" icon={Eye} onClick={() => { setResponsesFor(t.id); setTab('responses'); }}>
                     Ver respuestas
                   </Button>
@@ -220,7 +220,7 @@ export const FormsPage: React.FC = () => {
             const done = doneToday.includes(t);
             return (
               <Card key={t.id} title={t.title} subtitle={CATEGORY_LABELS[t.category]}>
-                <p className="min-h-[2.5rem] text-xs text-[#C5C6C7]/70">{t.description}</p>
+                <p className="min-h-[2.5rem] text-[13px] text-vx-text-2/70">{t.description}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   <Badge>{t.questions.length} preguntas</Badge>
                   <Badge tone={t.frequency === 'daily' ? 'warning' : 'neutral'}>{FREQUENCY_LABELS[t.frequency]}</Badge>
@@ -240,14 +240,14 @@ export const FormsPage: React.FC = () => {
           {mySubs.length === 0 ? (
             <EmptyState icon={Inbox} title="Aún no envías formularios" />
           ) : (
-            <ul className="divide-y divide-[#242E3B]">
+            <ul className="divide-y divide-vx-border">
               {mySubs.map((s) => {
                 const t = templates.find((x) => x.id === s.templateId);
                 return (
                   <li key={s.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
                     <div>
-                      <p className="text-sm font-semibold text-white">{t?.title ?? 'Formulario eliminado'}</p>
-                      <p className="font-mono text-[11px] text-[#C5C6C7]/60">{formatDateTime(s.submittedAt)}</p>
+                      <p className="text-sm font-semibold text-vx-text">{t?.title ?? 'Formulario eliminado'}</p>
+                      <p className="tabular-nums text-xs text-vx-text-2/60">{formatDateTime(s.submittedAt)}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge tone={s.status === 'reviewed' ? 'success' : 'warning'}>{s.status === 'reviewed' ? 'Revisado' : 'Pendiente'}</Badge>

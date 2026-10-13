@@ -81,49 +81,49 @@ export const TicketDetail: React.FC<{
       <Card>
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-xs font-semibold text-[#66FCF1]">{ticket.code}</span>
+            <span className="tabular-nums text-[13px] font-semibold text-vx-accent">{ticket.code}</span>
             <StatusBadge status={ticket.status} />
             <PriorityBadge priority={ticket.priority} />
             <SlaBadge ticket={ticket} now={now} />
             <Badge>{CATEGORY_LABELS[ticket.category]}</Badge>
           </div>
-          <h2 className="text-lg font-bold text-white">{ticket.title}</h2>
-          <div className="grid gap-3 text-xs sm:grid-cols-3">
+          <h2 className="text-lg font-bold text-vx-text">{ticket.title}</h2>
+          <div className="grid gap-3 text-[13px] sm:grid-cols-3">
             <div>
-              <div className="text-[#C5C6C7]/50">Solicitante</div>
-              <div className="mt-1 flex items-center gap-2 text-white">
+              <div className="text-vx-text-2/50">Solicitante</div>
+              <div className="mt-1 flex items-center gap-2 text-vx-text">
                 <Avatar name={nameOf(ticket.requesterId)} size="sm" />
                 {nameOf(ticket.requesterId)}
               </div>
             </div>
             <div>
-              <div className="text-[#C5C6C7]/50">Responsable</div>
-              <div className="mt-1 flex h-7 items-center text-white">
-                {ticket.assigneeId ? nameOf(ticket.assigneeId) : <span className="text-[#F59E0B]">Sin asignar</span>}
+              <div className="text-vx-text-2/50">Responsable</div>
+              <div className="mt-1 flex h-7 items-center text-vx-text">
+                {ticket.assigneeId ? nameOf(ticket.assigneeId) : <span className="text-vx-warning">Sin asignar</span>}
               </div>
             </div>
             <div>
-              <div className="text-[#C5C6C7]/50">Creado</div>
-              <div className="mt-1 flex h-7 items-center gap-1.5 text-white">
-                <Clock className="h-3.5 w-3.5 text-[#C5C6C7]/50" />
+              <div className="text-vx-text-2/50">Creado</div>
+              <div className="mt-1 flex h-7 items-center gap-1.5 text-vx-text">
+                <Clock className="h-3.5 w-3.5 text-vx-text-2/50" />
                 {fmt(ticket.createdAt)}
               </div>
             </div>
           </div>
-          <p className="whitespace-pre-wrap rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3.5 text-sm text-[#C5C6C7]">
+          <p className="whitespace-pre-wrap rounded-xl border border-vx-border bg-vx-bg p-3.5 text-sm text-vx-text-2">
             {ticket.description}
           </p>
           {ticket.attachmentName && (
-            <div className="inline-flex items-center gap-2 rounded-lg border border-[#242E3B] px-3 py-1.5 text-xs text-[#C5C6C7]">
-              <Paperclip className="h-3.5 w-3.5 text-[#66FCF1]" aria-hidden="true" />
+            <div className="inline-flex items-center gap-2 rounded-lg border border-vx-border px-3 py-1.5 text-[13px] text-vx-text-2">
+              <Paperclip className="h-3.5 w-3.5 text-vx-accent" aria-hidden="true" />
               {ticket.attachmentName}
             </div>
           )}
 
           {isManager && ticket.status !== 'closed' && (
-            <div className="flex flex-wrap items-end gap-2.5 border-t border-[#242E3B] pt-4">
+            <div className="flex flex-wrap items-end gap-2.5 border-t border-vx-border pt-4">
               <label className="min-w-[180px] flex-1 space-y-1.5">
-                <span className="text-xs font-medium text-[#C5C6C7]">Asignar a</span>
+                <span className="text-[13px] font-medium text-vx-text-2">Asignar a</span>
                 <Select
                   value={ticket.assigneeId ?? ''}
                   onChange={(e) => onResult(assign(ticket.id, e.target.value || null), 'Responsable actualizado.')}
@@ -158,8 +158,8 @@ export const TicketDetail: React.FC<{
           )}
 
           {isRequester && ticket.status === 'resolved' && (
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#10B981]/30 bg-[#10B981]/5 p-3.5">
-              <p className="text-xs text-[#C5C6C7]">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-vx-success/30 bg-vx-success/5 p-3.5">
+              <p className="text-[13px] text-vx-text-2">
                 ¿No quedó resuelto? Puedes reabrirlo durante {REOPEN_WINDOW_HOURS} h después de la resolución.
               </p>
               <Button
@@ -174,8 +174,8 @@ export const TicketDetail: React.FC<{
           )}
 
           {isRequester && (ticket.status === 'resolved' || ticket.status === 'closed') && (
-            <div className="flex flex-wrap items-center gap-3 border-t border-[#242E3B] pt-4">
-              <span className="text-xs font-medium text-[#C5C6C7]">
+            <div className="flex flex-wrap items-center gap-3 border-t border-vx-border pt-4">
+              <span className="text-[13px] font-medium text-vx-text-2">
                 {ticket.rating === null ? 'Califica la atención:' : 'Tu calificación:'}
               </span>
               <div className="flex gap-1" role="group" aria-label="Calificación de 1 a 5" onMouseLeave={() => setHoverRating(0)}>
@@ -190,9 +190,9 @@ export const TicketDetail: React.FC<{
                       onMouseEnter={() => ticket.rating === null && setHoverRating(n)}
                       onFocus={() => ticket.rating === null && setHoverRating(n)}
                       onClick={() => onResult(rate(ticket.id, n), '¡Gracias por tu calificación!')}
-                      className="rounded p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#66FCF1] disabled:cursor-default"
+                      className="rounded p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-vx-accent disabled:cursor-default"
                     >
-                      <Star className={`h-5 w-5 ${filled ? 'fill-[#F59E0B] text-[#F59E0B]' : 'text-[#242E3B]'}`} />
+                      <Star className={`h-5 w-5 ${filled ? 'fill-vx-warning text-vx-warning' : 'text-vx-border'}`} />
                     </button>
                   );
                 })}
@@ -205,7 +205,7 @@ export const TicketDetail: React.FC<{
       <Card title="Conversación" subtitle={isManager ? 'Las notas internas solo las ven supervisores' : undefined}>
         <div className="space-y-3">
           {messages.length === 0 && (
-            <p className="flex items-center gap-2 text-xs text-[#C5C6C7]/50">
+            <p className="flex items-center gap-2 text-[13px] text-vx-text-2/50">
               <MessageSquare className="h-4 w-4" aria-hidden="true" /> Sin mensajes todavía.
             </p>
           )}
@@ -214,28 +214,28 @@ export const TicketDetail: React.FC<{
               key={m.id}
               className={`rounded-xl border p-3.5 ${
                 m.internal
-                  ? 'border-[#F59E0B]/30 bg-[#F59E0B]/5'
+                  ? 'border-vx-warning/30 bg-vx-warning/5'
                   : m.authorId === ticket.requesterId
-                    ? 'border-[#242E3B] bg-[#0B0C10]'
-                    : 'border-[#66FCF1]/20 bg-[#66FCF1]/[0.04]'
+                    ? 'border-vx-border bg-vx-bg'
+                    : 'border-vx-accent/20 bg-vx-accent/[0.04]'
               }`}
             >
-              <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs">
-                <span className="font-semibold text-white">{nameOf(m.authorId)}</span>
+              <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[13px]">
+                <span className="font-semibold text-vx-text">{nameOf(m.authorId)}</span>
                 {m.internal && (
                   <Badge tone="warning">
                     <Lock className="h-3 w-3" aria-hidden="true" /> Nota interna
                   </Badge>
                 )}
-                <span className="text-[#C5C6C7]/50">{fmt(m.createdAt)}</span>
+                <span className="text-vx-text-2/50">{fmt(m.createdAt)}</span>
               </div>
-              <p className="whitespace-pre-wrap text-sm text-[#C5C6C7]">{m.body}</p>
+              <p className="whitespace-pre-wrap text-sm text-vx-text-2">{m.body}</p>
             </div>
           ))}
 
           {canWrite && (
             <form
-              className="space-y-2.5 border-t border-[#242E3B] pt-3"
+              className="space-y-2.5 border-t border-vx-border pt-3"
               onSubmit={(e) => {
                 e.preventDefault();
                 send();
@@ -253,12 +253,12 @@ export const TicketDetail: React.FC<{
               />
               <div className="flex flex-wrap items-center justify-between gap-2">
                 {isManager ? (
-                  <label className="flex items-center gap-2 text-xs text-[#C5C6C7]">
+                  <label className="flex items-center gap-2 text-[13px] text-vx-text-2">
                     <input
                       type="checkbox"
                       checked={internal}
                       onChange={(e) => setInternal(e.target.checked)}
-                      className="accent-[#F59E0B]"
+                      className="accent-vx-warning"
                     />
                     Nota interna
                   </label>
@@ -277,10 +277,10 @@ export const TicketDetail: React.FC<{
       <Card title="Historial">
         <ol className="space-y-2.5">
           {[...ticket.history].reverse().map((e) => (
-            <li key={e.id} className="flex items-start gap-2.5 text-xs">
-              <History className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#66FCF1]/60" aria-hidden="true" />
-              <span className="flex-1 text-[#C5C6C7]">{describeEvent(e)}</span>
-              <span className="whitespace-nowrap font-mono text-[11px] text-[#C5C6C7]/40">{fmt(e.at)}</span>
+            <li key={e.id} className="flex items-start gap-2.5 text-[13px]">
+              <History className="mt-0.5 h-3.5 w-3.5 shrink-0 text-vx-accent/60" aria-hidden="true" />
+              <span className="flex-1 text-vx-text-2">{describeEvent(e)}</span>
+              <span className="whitespace-nowrap tabular-nums text-xs text-vx-text-2/40">{fmt(e.at)}</span>
             </li>
           ))}
         </ol>

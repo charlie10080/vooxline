@@ -127,28 +127,28 @@ export const PortalSchedulePage: React.FC = () => {
             return (
               <div
                 key={date}
-                className={`min-h-[120px] rounded-xl border p-3 ${isToday ? 'border-[#66FCF1]/50 bg-[#66FCF1]/[0.04]' : 'border-[#242E3B] bg-[#0B0C10]'}`}
+                className={`min-h-[120px] rounded-xl border p-3 ${isToday ? 'border-vx-accent/50 bg-vx-accent/[0.04]' : 'border-vx-border bg-vx-bg'}`}
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <span className={`text-xs font-bold capitalize ${isToday ? 'text-[#66FCF1]' : 'text-white'}`}>{formatDayLabel(date)}</span>
+                  <span className={`text-[13px] font-bold capitalize ${isToday ? 'text-vx-accent' : 'text-vx-text'}`}>{formatDayLabel(date)}</span>
                   {isToday && <Badge tone="accent">Hoy</Badge>}
                 </div>
                 {isOnApprovedTimeOff(timeOffRequests, me, date) && (
-                  <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-[#F59E0B]">
+                  <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-vx-warning">
                     <Palmtree className="h-3.5 w-3.5" /> Permiso
                   </div>
                 )}
-                {day.length === 0 && <p className="text-[11px] text-[#C5C6C7]/40">Descanso</p>}
+                {day.length === 0 && <p className="text-xs text-vx-text-2/40">Descanso</p>}
                 <div className="space-y-2">
                   {day.map((s) => {
                     const pendingSwap = swapOf(s.id);
                     const cancelled = s.status === 'cancelled';
                     return (
-                      <div key={s.id} className={`rounded-lg border p-2 ${cancelled ? 'border-[#242E3B] opacity-50' : 'border-[#66FCF1]/30 bg-[#66FCF1]/10'}`}>
-                        <div className={`font-mono text-[11px] font-bold ${cancelled ? 'line-through text-[#C5C6C7]' : 'text-[#66FCF1]'}`}>
+                      <div key={s.id} className={`rounded-lg border p-2 ${cancelled ? 'border-vx-border opacity-50' : 'border-vx-accent/30 bg-vx-accent/10'}`}>
+                        <div className={`tabular-nums text-xs font-bold ${cancelled ? 'line-through text-vx-text-2' : 'text-vx-accent'}`}>
                           {s.startTime} – {s.endTime}
                         </div>
-                        <div className="truncate text-[10px] text-[#C5C6C7]/60">{campaignName(s.campaignId)}</div>
+                        <div className="truncate text-xs text-vx-text-2/60">{campaignName(s.campaignId)}</div>
                         {cancelled ? (
                           <Badge tone="danger" className="mt-1.5">Cancelado</Badge>
                         ) : pendingSwap ? (
@@ -158,7 +158,7 @@ export const PortalSchedulePage: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => openOffer(s)}
-                              className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-[#C5C6C7] hover:text-[#66FCF1]"
+                              className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-vx-text-2 hover:text-vx-accent"
                             >
                               <ArrowLeftRight className="h-3 w-3" /> Ofrecer
                             </button>
@@ -179,7 +179,7 @@ export const PortalSchedulePage: React.FC = () => {
           {available.length === 0 ? (
             <EmptyState icon={CalendarPlus} title="No hay turnos abiertos por ahora" />
           ) : (
-            <ul className="divide-y divide-[#242E3B]">
+            <ul className="divide-y divide-vx-border">
               {available.map((os) => {
                 const claim = myClaim(os);
                 const mine = os.campaignId === myAgent.campaignId;
@@ -187,17 +187,17 @@ export const PortalSchedulePage: React.FC = () => {
                   <li key={os.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-bold capitalize text-white">{formatDayLabel(os.date)}</span>
-                        <span className="font-mono text-sm text-[#66FCF1]">
+                        <span className="text-sm font-bold capitalize text-vx-text">{formatDayLabel(os.date)}</span>
+                        <span className="tabular-nums text-sm text-vx-accent">
                           {os.startTime} – {os.endTime}
                         </span>
                       </div>
-                      <div className="text-[11px] text-[#C5C6C7]/60">
+                      <div className="text-xs text-vx-text-2/60">
                         {campaignName(os.campaignId)}
                         {mine && ' · tu campaña'}
                         {os.breakMinutes > 0 && ` · Descanso ${os.breakMinutes} min`}
                       </div>
-                      {os.note && <p className="text-[11px] text-[#C5C6C7]/70">{os.note}</p>}
+                      {os.note && <p className="text-xs text-vx-text-2/70">{os.note}</p>}
                     </div>
                     {claim?.status === 'pending' ? (
                       <Badge tone={CLAIM_STATUS_META.pending.tone}>Solicitud enviada</Badge>
@@ -244,7 +244,7 @@ export const PortalSchedulePage: React.FC = () => {
           {shownSwaps.length === 0 ? (
             <EmptyState icon={ArrowLeftRight} title={swapTab === 'incoming' ? 'No tienes ofertas de intercambio' : 'No has ofrecido turnos'} />
           ) : (
-            <ul className="divide-y divide-[#242E3B]">
+            <ul className="divide-y divide-vx-border">
               {shownSwaps.map((w) => (
                 <SwapRow
                   key={w.id}
@@ -314,7 +314,7 @@ const SwapRow: React.FC<{
   return (
     <li className="space-y-2 px-5 py-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-xs text-white">
+        <span className="text-[13px] text-vx-text">
           {outgoing ? (
             <>
               Para <span className="font-semibold">{target ? agentName(target) : 'cualquiera de tu campaña'}</span>
@@ -327,17 +327,17 @@ const SwapRow: React.FC<{
         </span>
         <Badge tone={SWAP_STATUS_META[swap.status].tone}>{SWAP_STATUS_META[swap.status].label}</Badge>
       </div>
-      <div className="font-mono text-xs text-[#66FCF1]">
+      <div className="tabular-nums text-[13px] text-vx-accent">
         {shift ? (
           <>
             <span className="capitalize">{formatDayLabel(shift.date)}</span> · {shift.startTime} – {shift.endTime}
-            <span className="text-[#C5C6C7]/60"> · {campaignName(shift.campaignId)}</span>
+            <span className="text-vx-text-2/60"> · {campaignName(shift.campaignId)}</span>
           </>
         ) : (
-          <span className="text-[#C5C6C7]/60">Turno eliminado</span>
+          <span className="text-vx-text-2/60">Turno eliminado</span>
         )}
       </div>
-      {swap.note && <p className="text-[11px] text-[#C5C6C7]/60">“{swap.note}”</p>}
+      {swap.note && <p className="text-xs text-vx-text-2/60">“{swap.note}”</p>}
       <div className="flex flex-wrap gap-2">
         {!outgoing && swap.status === 'pending_peer' && (
           <>

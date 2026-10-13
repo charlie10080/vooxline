@@ -76,13 +76,13 @@ const NOTICE_TONE = {
 const GeoBadge: React.FC<{ check: GeoCheck }> = ({ check }) => {
   const color =
     check.status === 'inside'
-      ? 'text-[#10B981]'
+      ? 'text-vx-success'
       : check.status === 'no_reference'
-        ? 'text-[#C5C6C7]/50'
-        : 'text-[#F59E0B]';
+        ? 'text-vx-text-2/50'
+        : 'text-vx-warning';
   return (
     <div
-      className={`flex items-center gap-1 text-[10px] mt-0.5 ${color}`}
+      className={`flex items-center gap-1 text-xs mt-0.5 ${color}`}
       title={check.accuracyM !== null ? `Precisión ±${check.accuracyM} m` : undefined}
     >
       <MapPin className="w-3 h-3 shrink-0" />
@@ -391,7 +391,7 @@ export const TimeClockPage: React.FC = () => {
       <Card
         title={
           <span className="flex items-center gap-2">
-            <ShieldAlert className="h-4 w-4 text-[#F59E0B]" />
+            <ShieldAlert className="h-4 w-4 text-vx-warning" />
             <span>Alertas de asistencia</span>
             <Badge tone="warning">{attendanceAlerts.length}</Badge>
           </span>
@@ -403,7 +403,7 @@ export const TimeClockPage: React.FC = () => {
               const count = alertCounts[kind];
               return (
                 <Badge key={kind} tone={count > 0 ? 'warning' : 'neutral'}>
-                  {ALERT_KIND_LABELS[kind]}: <span className={count > 0 ? 'text-white' : ''}>{count}</span>
+                  {ALERT_KIND_LABELS[kind]}: <span className={count > 0 ? 'text-vx-text' : ''}>{count}</span>
                 </Badge>
               );
             })}
@@ -411,7 +411,7 @@ export const TimeClockPage: React.FC = () => {
         }
       >
         {attendanceAlerts.length === 0 ? (
-          <div className="flex items-center gap-2 py-2 text-xs text-[#10B981] font-mono">
+          <div className="flex items-center gap-2 py-2 text-[13px] text-vx-success tabular-nums">
             <CheckCircle2 className="w-4 h-4" />
             <span>Sin alertas</span>
           </div>
@@ -422,13 +422,13 @@ export const TimeClockPage: React.FC = () => {
               return (
                 <div
                   key={alert.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-[#0B0C10] border border-[#242E3B] hover:border-[#F59E0B]/40 transition-colors text-xs"
+                  className="flex items-center justify-between p-3 rounded-xl bg-vx-bg border border-vx-border hover:border-vx-warning/40 transition-colors text-[13px]"
                 >
                   <div className="min-w-0 mr-2">
-                    <div className="font-semibold text-white truncate">
+                    <div className="font-semibold text-vx-text truncate">
                       {agent?.name ?? 'Desconocido'}
                     </div>
-                    <div className="text-[10px] text-[#C5C6C7]/50 font-mono">
+                    <div className="text-xs text-vx-text-2/50 tabular-nums">
                       {alert.date} • {agent?.employeeCode}
                     </div>
                   </div>
@@ -453,26 +453,26 @@ export const TimeClockPage: React.FC = () => {
 
       {/* Batch Notice Banner */}
       {batchNotice && (
-        <div role="status" className="bg-[#13151c] border border-[#66FCF1]/40 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
+        <div role="status" className="bg-vx-surface border border-vx-accent/40 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start sm:items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-[#66FCF1]/15 text-[#66FCF1] border border-[#66FCF1]/30">
+              <div className="p-2.5 rounded-xl bg-vx-accent/15 text-vx-accent border border-vx-accent/30">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-white">Resultado del Proceso en Lote</h2>
-                <p className="text-xs text-[#C5C6C7] mt-0.5">
-                  Se aprobaron automáticamente <strong className="text-[#66FCF1] font-semibold">{batchNotice.approved}</strong> entradas sin incidencias.
+                <h2 className="text-base font-bold text-vx-text">Resultado del Proceso en Lote</h2>
+                <p className="text-[13px] text-vx-text-2 mt-0.5">
+                  Se aprobaron automáticamente <strong className="text-vx-accent font-semibold">{batchNotice.approved}</strong> entradas sin incidencias.
                 </p>
                 {batchNotice.blockedCount > 0 ? (
-                  <div className="flex items-center gap-2 mt-2 text-xs text-[#F59E0B] bg-[#F59E0B]/10 px-3 py-1.5 rounded-lg border border-[#F59E0B]/20">
+                  <div className="flex items-center gap-2 mt-2 text-[13px] text-vx-warning bg-vx-warning/10 px-3 py-1.5 rounded-lg border border-vx-warning/20">
                     <AlertTriangle className="w-4 h-4 shrink-0" />
                     <span>
                       <strong>{batchNotice.blockedCount} entradas quedaron bloqueadas</strong> por presentar desviación mayor a 15 minutos o por ser turnos abiertos. Requieren confirmación manual del supervisor.
                     </span>
                   </div>
                 ) : (
-                  <p className="text-xs text-[#10B981] mt-1">
+                  <p className="text-[13px] text-vx-success mt-1">
                     ✓ No quedaron entradas bloqueadas en este lote.
                   </p>
                 )}
@@ -501,7 +501,7 @@ export const TimeClockPage: React.FC = () => {
         bodyClassName=""
       >
         {/* Controls Bar: Tabs + Search + Campaign Filter */}
-        <div className="flex flex-col justify-between gap-3 border-b border-[#242E3B] p-4 md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-3 border-b border-vx-border p-4 md:flex-row md:items-center">
           <Tabs
             value={activeTab}
             onChange={setActiveTab}
@@ -527,7 +527,7 @@ export const TimeClockPage: React.FC = () => {
               ))}
             </Select>
             <div className="relative flex-1 sm:w-60">
-              <Search className="pointer-events-none w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="pointer-events-none w-3.5 h-3.5 text-vx-text-2/40 absolute left-3 top-1/2 -translate-y-1/2" />
               <Input
                 type="search"
                 aria-label="Buscar registros"
@@ -550,7 +550,7 @@ export const TimeClockPage: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1080px] text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase tracking-wider">
+              <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                 <th scope="col" className="py-3 px-4">Agente</th>
                 <th scope="col" className="py-3 px-4">Campaña</th>
                 <th scope="col" className="py-3 px-4">Entrada</th>
@@ -562,7 +562,7 @@ export const TimeClockPage: React.FC = () => {
                 <th scope="col" className="py-3 px-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#242E3B]/60 text-xs">
+            <tbody className="divide-y divide-vx-border/60 text-[13px]">
               {(
                 filteredEntries.map((entry) => {
                   const agent = agentMap.get(entry.agentId);
@@ -575,7 +575,7 @@ export const TimeClockPage: React.FC = () => {
                   return (
                     <tr
                       key={entry.id}
-                      className="hover:bg-[#1F2833]/40 transition-colors"
+                      className="hover:bg-vx-raised/40 transition-colors"
                     >
                       {/* Agente */}
                       <td className="py-3.5 px-4">
@@ -583,12 +583,12 @@ export const TimeClockPage: React.FC = () => {
                           <Avatar name={agent?.name ?? '?'} size="sm" />
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold text-white">
+                              <span className="font-semibold text-vx-text">
                                 {agent?.name ?? 'Desconocido'}
                               </span>
                               {agent?.isVip && <Badge tone="warning">VIP</Badge>}
                             </div>
-                            <div className="text-[11px] text-[#C5C6C7]/60 font-mono flex items-center gap-1.5 mt-0.5">
+                            <div className="text-xs text-vx-text-2/60 tabular-nums flex items-center gap-1.5 mt-0.5">
                               <span>{agent?.employeeCode}</span>
                               <span>•</span>
                               <span>{agent?.level}</span>
@@ -598,16 +598,16 @@ export const TimeClockPage: React.FC = () => {
                       </td>
 
                       {/* Campaña */}
-                      <td className="py-3.5 px-4 font-medium text-white/90">
+                      <td className="py-3.5 px-4 font-medium text-vx-text/90">
                         {campaign?.name ?? 'Sin Asignar'}
                       </td>
 
                       {/* Entrada */}
-                      <td className="py-3.5 px-4 font-mono text-[#C5C6C7]">
-                        <div className="text-white font-medium">
+                      <td className="py-3.5 px-4 tabular-nums text-vx-text-2">
+                        <div className="text-vx-text font-medium">
                           {formatClock(entry.clockIn)}
                         </div>
-                        <div className="text-[10px] text-[#C5C6C7]/50">
+                        <div className="text-xs text-vx-text-2/50">
                           {new Date(entry.clockIn).toLocaleDateString('es-MX', {
                             month: 'short',
                             day: 'numeric',
@@ -617,18 +617,18 @@ export const TimeClockPage: React.FC = () => {
                       </td>
 
                       {/* Salida */}
-                      <td className="py-3.5 px-4 font-mono">
+                      <td className="py-3.5 px-4 tabular-nums">
                         {isOpen ? (
-                          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30 text-[11px]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-vx-success/15 text-vx-success border border-vx-success/30 text-xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-vx-success animate-pulse" />
                             <span>En turno</span>
                           </div>
                         ) : (
                           <div>
-                            <div className="text-white font-medium">
+                            <div className="text-vx-text font-medium">
                               {formatClock(entry.clockOut!)}
                             </div>
-                            <div className="text-[10px] text-[#C5C6C7]/50">
+                            <div className="text-xs text-vx-text-2/50">
                               {new Date(entry.clockOut!).toLocaleDateString('es-MX', {
                                 month: 'short',
                                 day: 'numeric',
@@ -640,30 +640,30 @@ export const TimeClockPage: React.FC = () => {
                       </td>
 
                       {/* Horas Trabajadas */}
-                      <td className="py-3.5 px-4 font-mono">
-                        <span className="text-white font-semibold">
+                      <td className="py-3.5 px-4 tabular-nums">
+                        <span className="text-vx-text font-semibold">
                           {formatDuration(workedMinutes)}
                         </span>
                         {entry.breakMinutes > 0 && (
-                          <span className="text-[10px] text-[#C5C6C7]/50 block">
+                          <span className="text-xs text-vx-text-2/50 block">
                             (descanso {entry.breakMinutes}m)
                           </span>
                         )}
                       </td>
 
                       {/* Dif. Turno (Desviación) */}
-                      <td className="py-3.5 px-4 font-mono">
+                      <td className="py-3.5 px-4 tabular-nums">
                         {isOpen ? (
-                          <span className="text-[#C5C6C7]/50 text-xs">--</span>
+                          <span className="text-vx-text-2/50 text-[13px]">--</span>
                         ) : (
                           <div className="flex items-center gap-1.5">
                             <span
-                              className={`px-2 py-0.5 rounded font-mono text-xs font-semibold ${
+                              className={`px-2 py-0.5 rounded tabular-nums text-[13px] font-semibold ${
                                 needsReview
-                                  ? 'bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40'
+                                  ? 'bg-vx-warning/20 text-vx-warning border border-vx-warning/40'
                                   : deviationMinutes === 0
-                                    ? 'bg-[#1F2833] text-[#C5C6C7]'
-                                    : 'bg-[#1F2833] text-[#66FCF1]'
+                                    ? 'bg-vx-raised text-vx-text-2'
+                                    : 'bg-vx-raised text-vx-accent'
                               }`}
                             >
                               {formatDeviation(deviationMinutes)}
@@ -672,7 +672,7 @@ export const TimeClockPage: React.FC = () => {
                             {needsReview && (
                               <span
                                 title={`Desviación de ${Math.abs(deviationMinutes)} min excede el umbral de 15 min`}
-                                className="text-[#F59E0B]"
+                                className="text-vx-warning"
                               >
                                 <AlertTriangle className="w-3.5 h-3.5" />
                               </span>
@@ -687,14 +687,14 @@ export const TimeClockPage: React.FC = () => {
                           const punctuality = getEntryPunctuality(entry, shifts);
                           if (!punctuality.shift) {
                             return (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono text-[#C5C6C7]/50 bg-[#1F2833]/60 border border-[#242E3B]">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs tabular-nums text-vx-text-2/50 bg-vx-raised/60 border border-vx-border">
                                 Sin turno
                               </span>
                             );
                           }
                           if (punctuality.flags.length === 0) {
                             return (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-medium text-[#10B981] bg-[#10B981]/15 border border-[#10B981]/30">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs tabular-nums font-medium text-vx-success bg-vx-success/15 border border-vx-success/30">
                                 <CheckCircle2 className="w-3 h-3" />
                                 <span>A tiempo</span>
                               </span>
@@ -712,7 +712,7 @@ export const TimeClockPage: React.FC = () => {
                                 return (
                                   <span
                                     key={flag}
-                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30 whitespace-nowrap"
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs tabular-nums font-semibold bg-vx-warning/15 text-vx-warning border border-vx-warning/30 whitespace-nowrap"
                                   >
                                     <AlertTriangle className="w-3 h-3 shrink-0" />
                                     <span>{describeAlert(flag, mins)}</span>
@@ -728,7 +728,7 @@ export const TimeClockPage: React.FC = () => {
                       <td className="py-3.5 px-4">
                         {entry.status === 'pending' && (
                           <Badge tone="warning">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-vx-warning" />
                             Pendiente
                           </Badge>
                         )}
@@ -746,7 +746,7 @@ export const TimeClockPage: React.FC = () => {
                         )}
 
                         {entry.note && (
-                          <p className="text-[10px] text-[#C5C6C7]/60 mt-1 max-w-[140px] truncate" title={entry.note}>
+                          <p className="text-xs text-vx-text-2/60 mt-1 max-w-[140px] truncate" title={entry.note}>
                             {entry.note}
                           </p>
                         )}
@@ -765,10 +765,10 @@ export const TimeClockPage: React.FC = () => {
                                   ? 'Turno abierto. Debe marcar salida primero'
                                   : 'Aprobar entrada horaria'
                               }
-                              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all ${
                                 isOpen
-                                  ? 'bg-[#1F2833] text-[#C5C6C7]/40 border border-[#242E3B] cursor-not-allowed'
-                                  : 'bg-[#66FCF1]/10 text-[#66FCF1] border border-[#66FCF1]/30 hover:bg-[#66FCF1] hover:text-[#0B0C10] shadow-[0_0_10px_rgba(102,252,241,0.15)]'
+                                  ? 'bg-vx-raised text-vx-text-2/40 border border-vx-border cursor-not-allowed'
+                                  : 'bg-vx-accent/10 text-vx-accent border border-vx-accent/30 hover:bg-vx-accent hover:text-vx-bg'
                               }`}
                             >
                               <CheckCircle2 className="w-3.5 h-3.5" />
@@ -780,14 +780,14 @@ export const TimeClockPage: React.FC = () => {
                               type="button"
                               onClick={() => handleReject(entry.id)}
                               title="Rechazar entrada horaria"
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#EF4444] bg-[#EF4444]/10 hover:bg-[#EF4444] hover:text-white border border-[#EF4444]/20 transition-all"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[13px] font-medium text-vx-danger bg-vx-danger/10 hover:bg-vx-danger hover:text-vx-text border border-vx-danger/20 transition-all"
                             >
                               <XCircle className="w-3.5 h-3.5" />
                               <span>Rechazar</span>
                             </button>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-[#C5C6C7]/50 font-mono">
+                          <span className="text-xs text-vx-text-2/50 tabular-nums">
                             Procesada
                           </span>
                         )}
@@ -817,7 +817,7 @@ export const TimeClockPage: React.FC = () => {
               <Button
                 icon={ShieldAlert}
                 onClick={() => handleApprove(pendingConfirmationEntry.id, true)}
-                className="bg-[#F59E0B] font-bold text-[#0B0C10] border-[#F59E0B] hover:bg-[#F59E0B]/90 hover:border-[#F59E0B]"
+                className="bg-vx-warning font-bold text-vx-bg border-vx-warning hover:bg-vx-warning/90 hover:border-vx-warning"
               >
                 Confirmar y aprobar
               </Button>
@@ -828,42 +828,42 @@ export const TimeClockPage: React.FC = () => {
       {pendingConfirmationEntry && (
           <div className="space-y-5">
             {/* Entry Audit Card */}
-            <div className="bg-[#0B0C10] rounded-xl border border-[#242E3B] p-4 space-y-3 text-xs">
-              <div className="flex items-center justify-between border-b border-[#242E3B] pb-2">
-                <span className="text-[#C5C6C7]/60">Agente:</span>
-                <span className="font-semibold text-white">
+            <div className="bg-vx-bg rounded-xl border border-vx-border p-4 space-y-3 text-[13px]">
+              <div className="flex items-center justify-between border-b border-vx-border pb-2">
+                <span className="text-vx-text-2/60">Agente:</span>
+                <span className="font-semibold text-vx-text">
                   {agentMap.get(pendingConfirmationEntry.agentId)?.name ?? 'Agente'} (
                   {agentMap.get(pendingConfirmationEntry.agentId)?.employeeCode})
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-b border-[#242E3B] pb-2">
-                <span className="text-[#C5C6C7]/60">Campaña:</span>
-                <span className="text-white">
+              <div className="flex items-center justify-between border-b border-vx-border pb-2">
+                <span className="text-vx-text-2/60">Campaña:</span>
+                <span className="text-vx-text">
                   {campaignMap.get(pendingConfirmationEntry.campaignId)?.name}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-b border-[#242E3B] pb-2">
-                <span className="text-[#C5C6C7]/60">Turno Programado:</span>
-                <span className="font-mono text-white">
+              <div className="flex items-center justify-between border-b border-vx-border pb-2">
+                <span className="text-vx-text-2/60">Turno Programado:</span>
+                <span className="tabular-nums text-vx-text">
                   {formatDuration(pendingConfirmationEntry.scheduledMinutes)}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-b border-[#242E3B] pb-2">
-                <span className="text-[#C5C6C7]/60">Horas Trabajadas:</span>
-                <span className="font-mono text-white font-semibold">
+              <div className="flex items-center justify-between border-b border-vx-border pb-2">
+                <span className="text-vx-text-2/60">Horas Trabajadas:</span>
+                <span className="tabular-nums text-vx-text font-semibold">
                   {formatDuration(getWorkedMinutes(pendingConfirmationEntry))}
                 </span>
               </div>
 
               <div className="flex items-center justify-between pt-1">
-                <span className="text-[#F59E0B] font-semibold flex items-center gap-1.5">
+                <span className="text-vx-warning font-semibold flex items-center gap-1.5">
                   <AlertTriangle className="w-4 h-4" />
                   Desviación Detectada:
                 </span>
-                <span className="font-mono text-sm font-bold text-[#F59E0B] bg-[#F59E0B]/10 px-2 py-0.5 rounded border border-[#F59E0B]/30">
+                <span className="tabular-nums text-sm font-bold text-vx-warning bg-vx-warning/10 px-2 py-0.5 rounded border border-vx-warning/30">
                   {formatDeviation(getDeviationMinutes(pendingConfirmationEntry))}
                 </span>
               </div>
@@ -872,8 +872,8 @@ export const TimeClockPage: React.FC = () => {
                 const p = getEntryPunctuality(pendingConfirmationEntry, shifts);
                 if (p.flags.length === 0) return null;
                 return (
-                  <div className="pt-2 border-t border-[#242E3B]/60 space-y-1.5">
-                    <span className="text-[#C5C6C7]/70 font-medium block">
+                  <div className="pt-2 border-t border-vx-border/60 space-y-1.5">
+                    <span className="text-vx-text-2/70 font-medium block">
                       Incidencias de Puntualidad:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
@@ -887,7 +887,7 @@ export const TimeClockPage: React.FC = () => {
                         return (
                           <span
                             key={flag}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs tabular-nums font-semibold bg-vx-warning/15 text-vx-warning border border-vx-warning/30"
                           >
                             <AlertTriangle className="w-3 h-3 shrink-0" />
                             <span>{describeAlert(flag, mins)}</span>
@@ -900,35 +900,35 @@ export const TimeClockPage: React.FC = () => {
               })()}
 
               {getEntryLocationFlags(pendingConfirmationEntry).length > 0 && (
-                <div className="pt-2 border-t border-[#242E3B]/60 space-y-1.5">
-                  <span className="text-[#C5C6C7]/70 font-medium block">
+                <div className="pt-2 border-t border-vx-border/60 space-y-1.5">
+                  <span className="text-vx-text-2/70 font-medium block">
                     Incidencias de Ubicación:
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {getEntryLocationFlags(pendingConfirmationEntry).map((flag) => (
                       <span
                         key={flag}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs tabular-nums font-semibold bg-vx-warning/15 text-vx-warning border border-vx-warning/30"
                       >
                         <MapPin className="w-3 h-3 shrink-0" />
                         <span>{describeAlert(flag, null)}</span>
                       </span>
                     ))}
                   </div>
-                  <p className="text-[10px] text-[#C5C6C7]/50">
+                  <p className="text-xs text-vx-text-2/50">
                     En computadora la ubicación se estima por wifi o IP y puede fallar por decenas de metros. Revisa antes de decidir.
                   </p>
                 </div>
               )}
 
               {pendingConfirmationEntry.note && (
-                <div className="pt-2 text-[11px] text-[#C5C6C7]/70 italic bg-[#1F2833]/40 p-2 rounded">
+                <div className="pt-2 text-xs text-vx-text-2/70 italic bg-vx-raised/40 p-2 rounded">
                   Nota del sistema: "{pendingConfirmationEntry.note}"
                 </div>
               )}
             </div>
 
-            <p className="text-xs text-[#C5C6C7]/80">
+            <p className="text-[13px] text-vx-text-2/80">
               ¿Deseas autorizar formalmente esta desviación y validar el cómputo de horas para nómina y rentabilidad del cliente?
             </p>
           </div>
@@ -962,16 +962,16 @@ export const TimeClockPage: React.FC = () => {
                 return (
                   <div
                     key={agent.id}
-                    className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-[#0B0C10] border border-[#242E3B] hover:border-[#66FCF1]/30 transition-all"
+                    className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-vx-bg border border-vx-border hover:border-vx-accent/30 transition-all"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <Avatar name={agent.name} />
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-semibold text-white text-xs">
+                          <span className="font-semibold text-vx-text text-[13px]">
                             {agent.name}
                           </span>
-                          <span className="text-[10px] font-mono text-[#C5C6C7]/50">
+                          <span className="text-xs tabular-nums text-vx-text-2/50">
                             {agent.employeeCode}
                           </span>
                           {todayShift ? (
@@ -982,7 +982,7 @@ export const TimeClockPage: React.FC = () => {
                             <Badge tone="warning">Sin turno programado hoy</Badge>
                           )}
                         </div>
-                        <div className="text-[11px] text-[#C5C6C7]/70 mt-0.5">
+                        <div className="text-xs text-vx-text-2/70 mt-0.5">
                           {campaign?.name} • Ext: {agent.sipExtension}
                         </div>
                       </div>
@@ -1001,8 +1001,8 @@ export const TimeClockPage: React.FC = () => {
                         }
                         className={`p-1.5 rounded-lg border transition-colors disabled:opacity-40 ${
                           agent.authorizedLocation
-                            ? 'text-[#10B981] border-[#10B981]/30 hover:bg-[#10B981]/10'
-                            : 'text-[#C5C6C7]/50 border-[#242E3B] hover:text-white hover:bg-white/5'
+                            ? 'text-vx-success border-vx-success/30 hover:bg-vx-success/10'
+                            : 'text-vx-text-2/50 border-vx-border hover:text-vx-text hover:bg-white/5'
                         }`}
                       >
                         <MapPin className="w-3.5 h-3.5" />
@@ -1010,14 +1010,14 @@ export const TimeClockPage: React.FC = () => {
                       {isClockedIn ? (
                         <div className="flex items-center gap-2">
                           <Badge tone="success">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-vx-success animate-pulse" />
                             Turno activo
                           </Badge>
                           <button
                             type="button"
                             onClick={() => handleAgentClockOut(agent.id)}
                             disabled={locatingAgentId !== null}
-                            className="disabled:opacity-40 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EF4444]/15 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/30 text-xs font-semibold transition-all"
+                            className="disabled:opacity-40 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-vx-danger/15 hover:bg-vx-danger text-vx-danger hover:text-vx-text border border-vx-danger/30 text-[13px] font-semibold transition-all"
                           >
                             <Square className="w-3.5 h-3.5" />
                             <span>{locatingAgentId === agent.id ? 'Ubicando…' : 'Marcar Salida'}</span>
@@ -1025,14 +1025,14 @@ export const TimeClockPage: React.FC = () => {
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-mono text-[#C5C6C7]/50">
+                          <span className="text-xs tabular-nums text-vx-text-2/50">
                             Fuera de turno
                           </span>
                           <button
                             type="button"
                             onClick={() => handleAgentClockIn(agent.id)}
                             disabled={locatingAgentId !== null}
-                            className="disabled:opacity-40 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#66FCF1]/10 hover:bg-[#66FCF1] text-[#66FCF1] hover:text-[#0B0C10] border border-[#66FCF1]/30 text-xs font-semibold transition-all shadow-[0_0_10px_rgba(102,252,241,0.15)]"
+                            className="disabled:opacity-40 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-vx-accent/10 hover:bg-vx-accent text-vx-accent hover:text-vx-bg border border-vx-accent/30 text-[13px] font-semibold transition-all"
                           >
                             <Play className="w-3.5 h-3.5" />
                             <span>{locatingAgentId === agent.id ? 'Ubicando…' : 'Marcar Entrada'}</span>

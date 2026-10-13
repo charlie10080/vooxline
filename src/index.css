@@ -3,13 +3,44 @@
 /* index.html usa <html class="dark">: Tailwind 4 necesita esto para que dark: siga esa clase */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Paleta de la app (consola y portales). Los valores viven en :root para que un tema claro
+ * futuro solo tenga que redefinirlos (ej. :root[data-theme='light'] { ... }).
+ */
+:root {
+  --vx-bg: #0F1218;
+  --vx-surface: #161A22;
+  --vx-raised: #1D222C;
+  --vx-border: rgb(255 255 255 / 0.07);
+  --vx-accent: #66FCF1;
+  --vx-text: #E7E9EC;
+  --vx-text-2: #A8AEB8;
+  --vx-text-3: #6E7681;
+  --vx-success: #34D399;
+  --vx-warning: #FBBF24;
+  --vx-danger: #F87171;
+  --vx-info: #A5B4FC;
+}
+
+@theme inline {
+  --color-vx-bg: var(--vx-bg);
+  --color-vx-surface: var(--vx-surface);
+  --color-vx-raised: var(--vx-raised);
+  --color-vx-border: var(--vx-border);
+  --color-vx-accent: var(--vx-accent);
+  --color-vx-text: var(--vx-text);
+  --color-vx-text-2: var(--vx-text-2);
+  --color-vx-text-3: var(--vx-text-3);
+  --color-vx-success: var(--vx-success);
+  --color-vx-warning: var(--vx-warning);
+  --color-vx-danger: var(--vx-danger);
+  --color-vx-info: var(--vx-info);
+}
+
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Sora', 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --color-vx-bg: #0B0C10;
-  --color-vx-text: #C5C6C7;
-  --color-vx-accent: #66FCF1;
 
   /* Tokens de la web pública, login y portales de cliente/admin (restaurados del diseño original) */
   --font-display-hero: 'Sora', sans-serif;

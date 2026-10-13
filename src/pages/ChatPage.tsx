@@ -170,12 +170,12 @@ export const ChatPage: React.FC = () => {
 
       {notice && <Notice tone="danger" onClose={() => setNotice(null)}>{notice}</Notice>}
 
-      <div className="grid h-[calc(100vh-17rem)] min-h-[560px] grid-cols-1 overflow-hidden rounded-2xl border border-[#242E3B] bg-[#13151c] shadow-xl md:grid-cols-[300px_1fr]">
+      <div className="grid h-[calc(100vh-17rem)] min-h-[560px] grid-cols-1 overflow-hidden rounded-2xl border border-vx-border bg-vx-surface md:grid-cols-[300px_1fr]">
         {/* Lista de conversaciones */}
-        <aside className="flex min-h-0 flex-col border-b border-[#242E3B] md:border-r md:border-b-0">
-          <div className="border-b border-[#242E3B] p-3">
+        <aside className="flex min-h-0 flex-col border-b border-vx-border md:border-r md:border-b-0">
+          <div className="border-b border-vx-border p-3">
             <div className="relative">
-              <Search className="pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-[#C5C6C7]/40" />
+              <Search className="pointer-events-none absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-vx-text-2/40" />
               <Input
                 aria-label="Buscar conversación"
                 placeholder="Buscar conversación…"
@@ -188,8 +188,8 @@ export const ChatPage: React.FC = () => {
           <nav className="min-h-0 flex-1 space-y-4 overflow-y-auto p-2" aria-label="Conversaciones">
             {sections.map((s) => (
               <div key={s.label}>
-                <p className="px-2 pb-1 font-mono text-[10px] font-semibold tracking-wider text-[#C5C6C7]/40 uppercase">{s.label}</p>
-                {s.items.length === 0 && <p className="px-2 py-1 text-[11px] text-[#C5C6C7]/30">Sin resultados</p>}
+                <p className="px-2 pb-1 tabular-nums text-xs font-semibold text-vx-text-2/40">{s.label}</p>
+                {s.items.length === 0 && <p className="px-2 py-1 text-xs text-vx-text-2/30">Sin resultados</p>}
                 {s.items.map((c) => {
                   const unread = countUnread(c.id, userId, messages, lastReadAt);
                   const selected = active?.id === c.id;
@@ -201,26 +201,26 @@ export const ChatPage: React.FC = () => {
                       onClick={() => selectConversation(c.id)}
                       aria-current={selected ? 'true' : undefined}
                       className={`flex w-full items-center gap-2.5 rounded-xl px-2 py-2 text-left transition-colors ${
-                        selected ? 'bg-[#66FCF1]/10' : 'hover:bg-white/[0.03]'
+                        selected ? 'bg-vx-accent/10' : 'hover:bg-white/[0.03]'
                       }`}
                     >
                       {c.kind === 'direct' ? (
                         <Avatar name={titleOf(c)} size="sm" />
                       ) : (
-                        <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-[#242E3B] bg-[#0B0C10] ${selected ? 'text-[#66FCF1]' : 'text-[#C5C6C7]/60'}`}>
+                        <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl border border-vx-border bg-vx-bg ${selected ? 'text-vx-accent' : 'text-vx-text-2/60'}`}>
                           <ConvIcon conv={c} className="h-3.5 w-3.5" />
                         </span>
                       )}
                       <span className="min-w-0 flex-1">
-                        <span className={`block truncate text-xs ${unread > 0 || selected ? 'font-bold text-white' : 'font-medium text-[#C5C6C7]'}`}>
+                        <span className={`block truncate text-[13px] ${unread > 0 || selected ? 'font-bold text-vx-text' : 'font-medium text-vx-text-2'}`}>
                           {titleOf(c)}
                         </span>
-                        <span className="block truncate text-[11px] text-[#C5C6C7]/45">
+                        <span className="block truncate text-xs text-vx-text-2/45">
                           {last ? (last.deletedAt ? 'Mensaje eliminado' : `${last.authorId === userId ? 'Tú' : nameOf(last.authorId).split(' ')[0]}: ${last.text}`) : 'Sin mensajes'}
                         </span>
                       </span>
                       {unread > 0 && (
-                        <span className="min-w-5 rounded-full bg-[#66FCF1] px-1.5 text-center font-mono text-[10px] font-bold text-[#0B0C10]" aria-label={`${unread} sin leer`}>
+                        <span className="min-w-5 rounded-full bg-vx-accent px-1.5 text-center tabular-nums text-xs font-bold text-vx-bg" aria-label={`${unread} sin leer`}>
                           {unread}
                         </span>
                       )}
@@ -237,14 +237,14 @@ export const ChatPage: React.FC = () => {
           <EmptyState icon={MessageSquare} title="No tienes conversaciones" description="Inicia un mensaje directo con alguien del equipo." />
         ) : (
           <section className="flex min-h-0 flex-col" aria-label={`Conversación ${titleOf(active)}`}>
-            <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#242E3B] px-5 py-3">
+            <header className="flex flex-wrap items-center justify-between gap-3 border-b border-vx-border px-5 py-3">
               <div className="min-w-0">
-                <h2 className="flex items-center gap-2 text-sm font-bold text-white">
-                  <ConvIcon conv={active} className="h-4 w-4 text-[#66FCF1]" />
+                <h2 className="flex items-center gap-2 text-sm font-bold text-vx-text">
+                  <ConvIcon conv={active} className="h-4 w-4 text-vx-accent" />
                   <span className="truncate">{titleOf(active)}</span>
                   {active.announcementOnly && <Badge tone="warning">Solo anuncios</Badge>}
                 </h2>
-                <p className="truncate text-[11px] text-[#C5C6C7]/50">
+                <p className="truncate text-xs text-vx-text-2/50">
                   {active.description ? `${active.description} · ` : ''}
                   {memberIds.length} miembros
                 </p>
@@ -280,26 +280,26 @@ export const ChatPage: React.FC = () => {
             </header>
 
             {showSearch && (
-              <div className="flex items-center gap-2 border-b border-[#242E3B] px-5 py-2.5">
+              <div className="flex items-center gap-2 border-b border-vx-border px-5 py-2.5">
                 <Input autoFocus aria-label="Buscar en la conversación" placeholder="Buscar en esta conversación…" value={msgQuery} onChange={(e) => setMsgQuery(e.target.value)} />
-                {msgQuery.trim() && <span className="shrink-0 font-mono text-[11px] text-[#C5C6C7]/60">{shown.length} resultados</span>}
+                {msgQuery.trim() && <span className="shrink-0 tabular-nums text-xs text-vx-text-2/60">{shown.length} resultados</span>}
               </div>
             )}
 
             {showPinned && (
-              <div className="max-h-48 space-y-2 overflow-y-auto border-b border-[#242E3B] bg-[#0B0C10]/50 px-5 py-3">
+              <div className="max-h-48 space-y-2 overflow-y-auto border-b border-vx-border bg-vx-bg/50 px-5 py-3">
                 {pinned.length === 0 ? (
-                  <p className="text-xs text-[#C5C6C7]/50">No hay mensajes fijados{isManager ? '. Fija uno desde las acciones del mensaje.' : '.'}</p>
+                  <p className="text-[13px] text-vx-text-2/50">No hay mensajes fijados{isManager ? '. Fija uno desde las acciones del mensaje.' : '.'}</p>
                 ) : (
                   pinned.map((m) => (
-                    <div key={m.id} className="flex items-start justify-between gap-3 rounded-xl border border-[#242E3B] bg-[#13151c] p-2.5">
-                      <div className="min-w-0 text-xs">
-                        <span className="font-semibold text-white">{nameOf(m.authorId)}</span>{' '}
-                        <span className="text-[#C5C6C7]/50">· {dayLabel(m.createdAt)}</span>
-                        <p className="mt-0.5 line-clamp-2 text-[#C5C6C7]">{m.text}</p>
+                    <div key={m.id} className="flex items-start justify-between gap-3 rounded-xl border border-vx-border bg-vx-surface p-2.5">
+                      <div className="min-w-0 text-[13px]">
+                        <span className="font-semibold text-vx-text">{nameOf(m.authorId)}</span>{' '}
+                        <span className="text-vx-text-2/50">· {dayLabel(m.createdAt)}</span>
+                        <p className="mt-0.5 line-clamp-2 text-vx-text-2">{m.text}</p>
                       </div>
                       {isManager && (
-                        <button type="button" aria-label="Desfijar mensaje" onClick={() => fail(togglePin(userId, m.id))} className="rounded-md p-1 text-[#C5C6C7]/60 hover:bg-white/5 hover:text-white">
+                        <button type="button" aria-label="Desfijar mensaje" onClick={() => fail(togglePin(userId, m.id))} className="rounded-md p-1 text-vx-text-2/60 hover:bg-white/5 hover:text-vx-text">
                           <X className="h-3.5 w-3.5" />
                         </button>
                       )}
@@ -328,9 +328,9 @@ export const ChatPage: React.FC = () => {
                     <React.Fragment key={m.id}>
                       {newDay && (
                         <div className="my-3 flex items-center gap-3 px-3" role="separator">
-                          <span className="h-px flex-1 bg-[#242E3B]" />
-                          <span className="font-mono text-[10px] font-semibold tracking-wider text-[#C5C6C7]/50 uppercase">{dayLabel(m.createdAt)}</span>
-                          <span className="h-px flex-1 bg-[#242E3B]" />
+                          <span className="h-px flex-1 bg-vx-border" />
+                          <span className="tabular-nums text-xs font-semibold text-vx-text-2/50">{dayLabel(m.createdAt)}</span>
+                          <span className="h-px flex-1 bg-vx-border" />
                         </div>
                       )}
                       <MessageRow
@@ -394,7 +394,7 @@ export const ChatPage: React.FC = () => {
           </>
         }
       >
-        <p className="text-sm text-[#C5C6C7]">Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-vx-text-2">Esta acción no se puede deshacer.</p>
       </Modal>
 
       <DirectModal
@@ -443,29 +443,29 @@ const Composer: React.FC<{
 }> = ({ canWrite, text, setText, onSubmit, placeholder, replyTarget, onCancelReply, mentionCandidates, onMention, names, myName }) => {
   if (!canWrite) {
     return (
-      <div className="flex items-center gap-2 border-t border-[#242E3B] px-5 py-4 text-xs text-[#C5C6C7]/60">
-        <Megaphone className="h-4 w-4 text-[#F59E0B]" /> Canal de solo anuncios: únicamente supervisión puede publicar aquí.
+      <div className="flex items-center gap-2 border-t border-vx-border px-5 py-4 text-[13px] text-vx-text-2/60">
+        <Megaphone className="h-4 w-4 text-vx-warning" /> Canal de solo anuncios: únicamente supervisión puede publicar aquí.
       </div>
     );
   }
   return (
-    <div className="relative border-t border-[#242E3B] p-3">
+    <div className="relative border-t border-vx-border p-3">
       {mentionCandidates.length > 0 && (
-        <div className="absolute bottom-full left-3 mb-1 w-64 rounded-xl border border-[#242E3B] bg-[#13151c] p-1 shadow-2xl" role="listbox" aria-label="Mencionar a">
+        <div className="absolute bottom-full left-3 mb-1 w-64 rounded-xl border border-vx-border bg-vx-surface p-1 shadow-2xl" role="listbox" aria-label="Mencionar a">
           {mentionCandidates.map((c) => (
-            <button key={c.id} type="button" role="option" aria-selected="false" onClick={() => onMention(c.id)} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs text-[#C5C6C7] hover:bg-white/5 hover:text-white">
+            <button key={c.id} type="button" role="option" aria-selected="false" onClick={() => onMention(c.id)} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[13px] text-vx-text-2 hover:bg-white/5 hover:text-vx-text">
               <Avatar name={c.name} size="sm" /> {c.name}
             </button>
           ))}
         </div>
       )}
       {replyTarget && (
-        <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border-l-2 border-[#66FCF1] bg-[#0B0C10] px-3 py-1.5 text-xs">
-          <span className="min-w-0 truncate text-[#C5C6C7]/70">
-            Respondiendo a <span className="font-semibold text-white">{replyTarget.author}</span>:{' '}
+        <div className="mb-2 flex items-center justify-between gap-2 rounded-lg border-l-2 border-vx-accent bg-vx-bg px-3 py-1.5 text-[13px]">
+          <span className="min-w-0 truncate text-vx-text-2/70">
+            Respondiendo a <span className="font-semibold text-vx-text">{replyTarget.author}</span>:{' '}
             <MessageText text={replyTarget.text} names={names} myName={myName} />
           </span>
-          <button type="button" aria-label="Cancelar respuesta" onClick={onCancelReply} className="rounded p-0.5 text-[#C5C6C7]/60 hover:text-white">
+          <button type="button" aria-label="Cancelar respuesta" onClick={onCancelReply} className="rounded p-0.5 text-vx-text-2/60 hover:text-vx-text">
             <X className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -488,7 +488,7 @@ const Composer: React.FC<{
         />
         <Button variant="primary" icon={Send} aria-label="Enviar mensaje" onClick={onSubmit} disabled={!text.trim()} className="h-[42px]" />
       </div>
-      <p className="mt-1.5 px-1 text-[10px] text-[#C5C6C7]/35">Enter para enviar · Shift + Enter para nueva línea · @ para mencionar</p>
+      <p className="mt-1.5 px-1 text-xs text-vx-text-2/35">Enter para enviar · Shift + Enter para nueva línea · @ para mencionar</p>
     </div>
   );
 };
@@ -501,11 +501,11 @@ const DirectModal: React.FC<{ open: boolean; onClose: () => void; users: ChatUse
       <div className="space-y-3">
         <Input autoFocus aria-label="Buscar persona" placeholder="Buscar por nombre…" value={q} onChange={(e) => setQ(e.target.value)} />
         <div className="space-y-1">
-          {list.length === 0 && <p className="py-4 text-center text-xs text-[#C5C6C7]/50">Nadie coincide con la búsqueda.</p>}
+          {list.length === 0 && <p className="py-4 text-center text-[13px] text-vx-text-2/50">Nadie coincide con la búsqueda.</p>}
           {list.map((u) => (
             <button key={u.id} type="button" onClick={() => onPick(u.id)} className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left hover:bg-white/5">
               <Avatar name={u.name} size="sm" />
-              <span className="flex-1 text-sm text-white">{u.name}</span>
+              <span className="flex-1 text-sm text-vx-text">{u.name}</span>
               {u.isManager && <Badge tone="accent">Supervisión</Badge>}
             </button>
           ))}
@@ -555,17 +555,17 @@ const GroupModal: React.FC<{
           <Input value={name} maxLength={60} onChange={(e) => setName(e.target.value)} placeholder="Ej. Calibración QA semanal" />
         </Field>
         <fieldset className="space-y-1">
-          <legend className="mb-1.5 text-xs font-medium text-[#C5C6C7]">Integrantes ({ids.length})</legend>
+          <legend className="mb-1.5 text-[13px] font-medium text-vx-text-2">Integrantes ({ids.length})</legend>
           {users.map((u) => (
             <label key={u.id} className="flex cursor-pointer items-center gap-3 rounded-xl px-2 py-1.5 hover:bg-white/5">
               <input
                 type="checkbox"
                 checked={ids.includes(u.id)}
                 onChange={(e) => setIds((cur) => (e.target.checked ? [...cur, u.id] : cur.filter((x) => x !== u.id)))}
-                className="h-4 w-4 accent-[#66FCF1]"
+                className="h-4 w-4 accent-vx-accent"
               />
               <Avatar name={u.name} size="sm" />
-              <span className="flex-1 text-sm text-white">{u.name}</span>
+              <span className="flex-1 text-sm text-vx-text">{u.name}</span>
               {u.isManager && <Badge tone="accent">Supervisión</Badge>}
             </label>
           ))}

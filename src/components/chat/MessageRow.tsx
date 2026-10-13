@@ -16,7 +16,7 @@ export const MessageText: React.FC<{ text: string; names: string[]; myName: stri
         <span
           key={i}
           className={`rounded px-1 font-semibold ${
-            part.mention === myName ? 'bg-[#F59E0B]/15 text-[#F59E0B]' : 'bg-[#66FCF1]/10 text-[#66FCF1]'
+            part.mention === myName ? 'bg-vx-warning/15 text-vx-warning' : 'bg-vx-accent/10 text-vx-accent'
           }`}
         >
           {part.text}
@@ -39,7 +39,7 @@ const IconAction: React.FC<{ label: string; onClick: () => void; icon: React.Com
     aria-label={label}
     title={label}
     onClick={onClick}
-    className={`rounded-md p-1.5 text-[#C5C6C7]/70 transition-colors hover:bg-white/5 ${danger ? 'hover:text-[#EF4444]' : 'hover:text-[#66FCF1]'}`}
+    className={`rounded-md p-1.5 text-vx-text-2/70 transition-colors hover:bg-white/5 ${danger ? 'hover:text-vx-danger' : 'hover:text-vx-accent'}`}
   >
     <Icon className="h-3.5 w-3.5" />
   </button>
@@ -75,11 +75,11 @@ export const MessageRow: React.FC<{
   };
 
   return (
-    <div className={`group relative flex gap-3 rounded-xl px-3 transition-colors hover:bg-white/[0.02] ${compact ? 'py-0.5' : 'mt-2 py-1.5'} ${message.pinned ? 'bg-[#66FCF1]/[0.03]' : ''}`}>
+    <div className={`group relative flex gap-3 rounded-xl px-3 transition-colors hover:bg-white/[0.02] ${compact ? 'py-0.5' : 'mt-2 py-1.5'} ${message.pinned ? 'bg-vx-accent/[0.03]' : ''}`}>
       <div className="w-9 shrink-0">
         {!compact && <Avatar name={authorName} />}
         {compact && (
-          <span className="hidden pt-1 text-right font-mono text-[10px] text-[#C5C6C7]/40 group-hover:block">
+          <span className="hidden pt-1 text-right tabular-nums text-xs text-vx-text-2/40 group-hover:block">
             {formatTime(message.createdAt)}
           </span>
         )}
@@ -87,10 +87,10 @@ export const MessageRow: React.FC<{
       <div className="min-w-0 flex-1">
         {!compact && (
           <div className="flex items-baseline gap-2">
-            <span className="text-sm font-semibold text-white">{authorName}</span>
-            <span className="font-mono text-[10px] text-[#C5C6C7]/50">{formatTime(message.createdAt)}</span>
+            <span className="text-sm font-semibold text-vx-text">{authorName}</span>
+            <span className="tabular-nums text-xs text-vx-text-2/50">{formatTime(message.createdAt)}</span>
             {message.pinned && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#66FCF1]">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-vx-accent">
                 <Pin className="h-3 w-3" /> Fijado
               </span>
             )}
@@ -98,14 +98,14 @@ export const MessageRow: React.FC<{
         )}
 
         {replyTo && !deleted && (
-          <div className="mt-1 mb-1 border-l-2 border-[#66FCF1]/40 pl-2 text-xs text-[#C5C6C7]/60">
-            <span className="font-semibold text-[#C5C6C7]/80">{replyTo.authorName}</span>{' '}
+          <div className="mt-1 mb-1 border-l-2 border-vx-accent/40 pl-2 text-[13px] text-vx-text-2/60">
+            <span className="font-semibold text-vx-text-2/80">{replyTo.authorName}</span>{' '}
             {replyTo.deleted ? <em>Mensaje eliminado</em> : <span className="line-clamp-1">{replyTo.text}</span>}
           </div>
         )}
 
         {deleted ? (
-          <p className="text-sm italic text-[#C5C6C7]/40">Mensaje eliminado</p>
+          <p className="text-sm italic text-vx-text-2/40">Mensaje eliminado</p>
         ) : editing ? (
           <div className="mt-1 space-y-2">
             <TextArea
@@ -122,20 +122,20 @@ export const MessageRow: React.FC<{
               autoFocus
               className="min-h-[60px] text-sm"
             />
-            <div className="flex gap-2 text-[11px]">
-              <button type="button" onClick={saveEdit} className="inline-flex items-center gap-1 rounded-lg bg-[#66FCF1] px-2.5 py-1 font-bold text-[#0B0C10]">
+            <div className="flex gap-2 text-xs">
+              <button type="button" onClick={saveEdit} className="inline-flex items-center gap-1 rounded-lg bg-vx-accent px-2.5 py-1 font-bold text-vx-bg">
                 <Check className="h-3 w-3" /> Guardar
               </button>
-              <button type="button" onClick={() => setEditing(false)} className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[#C5C6C7] hover:bg-white/5">
+              <button type="button" onClick={() => setEditing(false)} className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-vx-text-2 hover:bg-white/5">
                 <X className="h-3 w-3" /> Cancelar
               </button>
-              <span className="self-center text-[#C5C6C7]/40">Enter guarda · Esc cancela</span>
+              <span className="self-center text-vx-text-2/40">Enter guarda · Esc cancela</span>
             </div>
           </div>
         ) : (
-          <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-[#C5C6C7]">
+          <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-vx-text-2">
             <MessageText text={message.text} names={names} myName={myName} />
-            {message.editedAt && <span className="ml-1 text-[10px] text-[#C5C6C7]/40">(editado)</span>}
+            {message.editedAt && <span className="ml-1 text-xs text-vx-text-2/40">(editado)</span>}
           </p>
         )}
 
@@ -153,12 +153,12 @@ export const MessageRow: React.FC<{
                   title={who.map(nameOf).join(', ')}
                   aria-label={`${e} ${who.length} reacciones${mine ? ', incluida la tuya' : ''}`}
                   aria-pressed={mine}
-                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs transition-colors ${
-                    mine ? 'border-[#66FCF1]/50 bg-[#66FCF1]/10 text-[#66FCF1]' : 'border-[#242E3B] bg-[#0B0C10] text-[#C5C6C7] hover:border-[#66FCF1]/30'
+                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[13px] transition-colors ${
+                    mine ? 'border-vx-accent/50 bg-vx-accent/10 text-vx-accent' : 'border-vx-border bg-vx-bg text-vx-text-2 hover:border-vx-accent/30'
                   }`}
                 >
                   <span>{e}</span>
-                  <span className="font-mono text-[10px]">{who.length}</span>
+                  <span className="tabular-nums text-xs">{who.length}</span>
                 </button>
               );
             })}
@@ -167,7 +167,7 @@ export const MessageRow: React.FC<{
       </div>
 
       {!deleted && !editing && (
-        <div className="absolute -top-3 right-3 flex items-center gap-0.5 rounded-lg border border-[#242E3B] bg-[#13151c] p-0.5 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+        <div className="absolute -top-3 right-3 flex items-center gap-0.5 rounded-lg border border-vx-border bg-vx-surface p-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
           {canReact && <IconAction label="Reaccionar" icon={SmilePlus} onClick={() => setPicker((v) => !v)} />}
           {canReact && <IconAction label="Responder" icon={CornerUpLeft} onClick={onReply} />}
           {canPin && <IconAction label={message.pinned ? 'Desfijar' : 'Fijar mensaje'} icon={message.pinned ? PinOff : Pin} onClick={onPin} />}
@@ -183,7 +183,7 @@ export const MessageRow: React.FC<{
           )}
           {isOwn && <IconAction label="Eliminar" icon={Trash2} danger onClick={onDelete} />}
           {picker && (
-            <div className="absolute right-0 top-8 z-10 flex gap-1 rounded-xl border border-[#242E3B] bg-[#13151c] p-1.5 shadow-2xl">
+            <div className="absolute right-0 top-8 z-10 flex gap-1 rounded-xl border border-vx-border bg-vx-surface p-1.5 shadow-2xl">
               {CHAT_REACTIONS.map((e) => (
                 <button
                   key={e}

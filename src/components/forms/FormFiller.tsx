@@ -55,26 +55,26 @@ export const FormFiller: React.FC<{
           <fieldset
             key={q.id}
             id={`fq-${q.id}`}
-            className={`space-y-2.5 rounded-xl border bg-[#0B0C10] p-4 ${
-              error?.questionId === q.id ? 'border-[#EF4444]/60' : 'border-[#242E3B]'
+            className={`space-y-2.5 rounded-xl border bg-vx-bg p-4 ${
+              error?.questionId === q.id ? 'border-vx-danger/60' : 'border-vx-border'
             }`}
           >
             <legend className="sr-only">{q.label}</legend>
-            <p aria-hidden="true" className="text-sm font-semibold text-white">
-              <span className="mr-2 font-mono text-xs text-[#66FCF1]">{String(i + 1).padStart(2, '0')}</span>
+            <p aria-hidden="true" className="text-sm font-semibold text-vx-text">
+              <span className="mr-2 tabular-nums text-[13px] text-vx-accent">{String(i + 1).padStart(2, '0')}</span>
               {q.label}
-              {q.required && <span className="ml-1 text-[#EF4444]">*</span>}
+              {q.required && <span className="ml-1 text-vx-danger">*</span>}
             </p>
             {q.type === 'number' && (q.min !== null || q.max !== null) && (
-              <p className="text-[11px] text-[#C5C6C7]/60">
+              <p className="text-xs text-vx-text-2/60">
                 Rango permitido: {q.min ?? '—'} a {q.max ?? '—'}
               </p>
             )}
             <QuestionInput q={q} value={answers[q.id] ?? null} onChange={(v) => setAnswers((a) => ({ ...a, [q.id]: v }))} />
           </fieldset>
         ))}
-        <p className="text-[11px] text-[#C5C6C7]/50">
-          <span className="text-[#EF4444]">*</span> Obligatoria
+        <p className="text-xs text-vx-text-2/50">
+          <span className="text-vx-danger">*</span> Obligatoria
         </p>
       </div>
     </Modal>
@@ -82,8 +82,8 @@ export const FormFiller: React.FC<{
 };
 
 const pill = (active: boolean) =>
-  `rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#66FCF1] ${
-    active ? 'border-[#66FCF1] bg-[#66FCF1]/15 text-[#66FCF1]' : 'border-[#242E3B] text-[#C5C6C7] hover:border-[#66FCF1]/40'
+  `rounded-lg border px-3 py-1.5 text-[13px] font-semibold transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-vx-accent ${
+    active ? 'border-vx-accent bg-vx-accent/15 text-vx-accent' : 'border-vx-border text-vx-text-2 hover:border-vx-accent/40'
   }`;
 
 const QuestionInput: React.FC<{ q: FormQuestion; value: AnswerValue; onChange: (v: AnswerValue) => void }> = ({ q, value, onChange }) => {
@@ -140,7 +140,7 @@ const QuestionInput: React.FC<{ q: FormQuestion; value: AnswerValue; onChange: (
                 aria-pressed={value === n}
                 onClick={() => onChange(n)}
                 className={`rounded-lg border p-1.5 transition-colors ${
-                  on ? 'border-[#F59E0B]/60 bg-[#F59E0B]/10 text-[#F59E0B]' : 'border-[#242E3B] text-[#C5C6C7]/40 hover:text-[#F59E0B]'
+                  on ? 'border-vx-warning/60 bg-vx-warning/10 text-vx-warning' : 'border-vx-border text-vx-text-2/40 hover:text-vx-warning'
                 }`}
               >
                 <Star className={`h-5 w-5 ${on ? 'fill-current' : ''}`} />

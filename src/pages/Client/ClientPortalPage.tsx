@@ -71,7 +71,7 @@ export const ClientPortalPage: React.FC = () => {
 
   if (!campaign || !snap) {
     return (
-      <main className="min-h-screen bg-[#0B0C10] p-6">
+      <main className="min-h-screen bg-vx-bg p-6">
         <EmptyState icon={Building2} title="No hay campañas asignadas" description="Pide a tu ejecutivo de cuenta que te asigne una campaña." />
       </main>
     );
@@ -99,7 +99,7 @@ export const ClientPortalPage: React.FC = () => {
   const now = new Date().toISOString();
 
   return (
-    <main className="min-h-screen space-y-6 bg-[#0B0C10] p-4 text-[#C5C6C7] lg:p-8">
+    <main className="min-h-screen space-y-6 bg-vx-bg p-4 text-vx-text-2 lg:p-8">
       <PageHeader
         icon={Building2}
         eyebrow="PORTAL DE CLIENTE"
@@ -159,8 +159,8 @@ export const ClientPortalPage: React.FC = () => {
           <EmptyState icon={Users} title="Sin agentes asignados" />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#242E3B] font-mono text-[11px] uppercase text-[#C5C6C7]/50">
+            <table className="w-full text-left text-[13px]">
+              <thead className="border-b border-vx-border tabular-nums text-xs text-vx-text-2/50">
                 <tr>
                   <th className="px-5 py-3">Agente</th>
                   <th className="px-5 py-3">Estado</th>
@@ -172,13 +172,13 @@ export const ClientPortalPage: React.FC = () => {
                 {snap.assigned.map((a) => {
                   const call = callByAgent.get(a.id);
                   return (
-                    <tr key={a.id} className="border-b border-[#242E3B]/60 last:border-0">
-                      <td className="px-5 py-3 font-medium text-white">{a.name}</td>
+                    <tr key={a.id} className="border-b border-vx-border/60 last:border-0">
+                      <td className="px-5 py-3 font-medium text-vx-text">{a.name}</td>
                       <td className="px-5 py-3">
                         <Badge tone={STATUS_TONES[a.status]}>{STATUS_LABELS[a.status]}</Badge>
                       </td>
                       <td className="px-5 py-3">{call ? call.customerLabel : '—'}</td>
-                      <td className="px-5 py-3 font-mono">{call ? `${Math.round(minutesBetween(call.startedAt, now))} min` : '—'}</td>
+                      <td className="px-5 py-3 tabular-nums">{call ? `${Math.round(minutesBetween(call.startedAt, now))} min` : '—'}</td>
                     </tr>
                   );
                 })}
@@ -197,7 +197,7 @@ export const ClientPortalPage: React.FC = () => {
               Nueva solicitud
             </Button>
           }
-          bodyClassName="divide-y divide-[#242E3B]"
+          bodyClassName="divide-y divide-vx-border"
         >
           {campaignRequests.length === 0 ? (
             <EmptyState icon={FileText} title="Sin solicitudes" description="Cuando pidas un cambio aparecerá aquí." />
@@ -205,8 +205,8 @@ export const ClientPortalPage: React.FC = () => {
             campaignRequests.map((r) => (
               <div key={r.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-white">{r.title}</p>
-                  <p className="mt-0.5 text-[11px] text-[#C5C6C7]/60">
+                  <p className="truncate text-sm font-medium text-vx-text">{r.title}</p>
+                  <p className="mt-0.5 text-xs text-vx-text-2/60">
                     {TYPE_LABELS[r.type]} · {new Date(r.createdAt).toLocaleDateString('es-MX')}
                     {r.priority === 'alta' && ' · Prioridad alta'}
                   </p>
@@ -239,8 +239,8 @@ export const ClientPortalPage: React.FC = () => {
           bodyClassName="p-0"
         >
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#242E3B] font-mono text-[11px] uppercase text-[#C5C6C7]/50">
+            <table className="w-full text-left text-[13px]">
+              <thead className="border-b border-vx-border tabular-nums text-xs text-vx-text-2/50">
                 <tr>
                   <th className="px-5 py-3">Periodo</th>
                   <th className="px-5 py-3">Horas</th>
@@ -250,20 +250,20 @@ export const ClientPortalPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-[#242E3B]/60 bg-[#66FCF1]/[0.04]">
-                  <td className="px-5 py-3 font-medium text-[#66FCF1]">Corte en curso</td>
-                  <td className="px-5 py-3 font-mono">{snap.workedHours.toFixed(1)}</td>
-                  <td className="px-5 py-3 font-mono">{usd(snap.estimatedUsd)}</td>
+                <tr className="border-b border-vx-border/60 bg-vx-accent/[0.04]">
+                  <td className="px-5 py-3 font-medium text-vx-accent">Corte en curso</td>
+                  <td className="px-5 py-3 tabular-nums">{snap.workedHours.toFixed(1)}</td>
+                  <td className="px-5 py-3 tabular-nums">{usd(snap.estimatedUsd)}</td>
                   <td className="px-5 py-3">
                     <Badge tone="accent">Abierto</Badge>
                   </td>
                   <td />
                 </tr>
                 {campaignInvoices.map((i) => (
-                  <tr key={i.id} className="border-b border-[#242E3B]/60 last:border-0">
-                    <td className="px-5 py-3 font-medium text-white">{i.period}</td>
-                    <td className="px-5 py-3 font-mono">{i.billableHours}</td>
-                    <td className="px-5 py-3 font-mono">{usd(i.totalUsd)}</td>
+                  <tr key={i.id} className="border-b border-vx-border/60 last:border-0">
+                    <td className="px-5 py-3 font-medium text-vx-text">{i.period}</td>
+                    <td className="px-5 py-3 tabular-nums">{i.billableHours}</td>
+                    <td className="px-5 py-3 tabular-nums">{usd(i.totalUsd)}</td>
                     <td className="px-5 py-3">
                       <Badge tone={i.status === 'pagada' ? 'success' : 'warning'}>{i.status === 'pagada' ? 'Pagada' : 'Pendiente'}</Badge>
                     </td>

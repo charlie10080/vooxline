@@ -12,7 +12,7 @@ Reglas:
 - Cada botón debe ejecutar una acción real sobre el store de zustand.
 - Nada de links muertos: cada opción del menú tiene su ruta y su página.
 - Datos mock en src/data/, modelos en src/types/, stores en src/store/.
-- Tema oscuro, colores: fondo #0B0C10, acento #66FCF1.
+- Tema Soft Dark (estilo Linear + Deel): usa los tokens `vx-*` de `src/index.css`, nunca colores hex escritos a mano.
 - Trabajar un módulo a la vez. No tocar módulos que no se pidieron.
 
 ## Forma de trabajo (regla de Carlos: ahorrar tokens)
@@ -40,7 +40,11 @@ Lee docs/ARCHITECTURE.md antes de crear o cambiar nada.
 - Antes de crear algo, revisa los tipos, stores y componentes (badges, modales, tablas, tarjetas) que ya existen y reutilízalos.
 
 ### Diseño
-- Paleta: fondo #0B0C10, tarjetas #13151c, bordes #242E3B, acento #66FCF1. No uses las clases genéricas de color de Tailwind (slate, indigo, etc.).
+- Paleta por tokens (`src/index.css`): `vx-bg`, `vx-surface`, `vx-raised`, `vx-border`, `vx-accent`, `vx-text`, `vx-text-2`, `vx-text-3`, `vx-success`, `vx-warning`, `vx-danger`, `vx-info`. Ej.: `bg-vx-surface`, `text-vx-text-2/60`. No uses hex ni las clases genéricas de Tailwind (slate, indigo, etc.).
+- Superficies se separan por tono, no por borde. Bordes solo en inputs y divisores (`border-vx-border`).
+- Acento puro solo en estado activo, botón primario y foco; en fondos usa `bg-vx-accent/10`. Cero glow (`shadow-[...]` de color).
+- Texto en `font-sans`, base 13–14 px; sin `uppercase` ni `tracking` forzados. Números con `tabular-nums`.
+- Las páginas viejas (Landing, Login y las de referencia sin ruta) usan sus propios tokens de Material; no las mezcles con `vx-*`.
 
 ### Calidad
 - Sin enum (usa uniones de strings), `import type` para tipos, sin variables sin usar.

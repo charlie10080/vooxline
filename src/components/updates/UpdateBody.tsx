@@ -6,7 +6,7 @@ const InlineText: React.FC<{ parts: Inline[] }> = ({ parts }) => (
   <>
     {parts.map((p, i) =>
       p.bold ? (
-        <strong key={i} className="font-semibold text-white">
+        <strong key={i} className="font-semibold text-vx-text">
           {p.text}
         </strong>
       ) : (
@@ -18,13 +18,13 @@ const InlineText: React.FC<{ parts: Inline[] }> = ({ parts }) => (
 
 /** Cuerpo del aviso: párrafos, listas y negritas como elementos de React (nunca HTML crudo) */
 export const UpdateBody: React.FC<{ body: string }> = ({ body }) => (
-  <div className="space-y-3 text-sm leading-relaxed text-[#C5C6C7]">
+  <div className="space-y-3 text-sm leading-relaxed text-vx-text-2">
     {parseBody(body).map((block, i) =>
       block.kind === 'list' ? (
         <ul key={i} className="space-y-1.5 pl-1">
           {block.items.map((item, j) => (
             <li key={j} className="flex gap-2.5">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#66FCF1]" aria-hidden="true" />
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-vx-accent" aria-hidden="true" />
               <span>
                 <InlineText parts={item} />
               </span>

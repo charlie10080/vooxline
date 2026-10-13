@@ -344,17 +344,17 @@ export const GroupsPage: React.FC = () => {
       )}
 
       {/* Barra de Filtros y Búsqueda */}
-      <div className="bg-[#13151c] border border-[#242E3B] rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-vx-surface border border-vx-border rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Buscador */}
         <div className="relative flex-1 md:max-w-xs">
-          <Search className="w-3.5 h-3.5 text-[#C5C6C7]/40 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-vx-text-2/40 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             aria-label="Buscar grupos"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar grupo por nombre o descripción..."
-            className="w-full bg-[#0B0C10] border border-[#242E3B] text-xs text-white rounded-xl pl-9 pr-3 py-2 placeholder:text-[#C5C6C7]/40 focus:outline-none focus:border-[#66FCF1]"
+            className="w-full bg-vx-bg border border-vx-border text-[13px] text-vx-text rounded-xl pl-9 pr-3 py-2 placeholder:text-vx-text-2/40 focus:outline-none focus:border-vx-accent"
           />
         </div>
 
@@ -394,10 +394,10 @@ export const GroupsPage: React.FC = () => {
                   setSelectedGroup(group);
                 }
               }}
-              className={`p-5 rounded-2xl bg-[#13151c] border transition-all cursor-pointer relative group flex flex-col justify-between ${
+              className={`p-5 rounded-2xl bg-vx-surface border transition-all cursor-pointer relative group flex flex-col justify-between ${
                 isSelected
-                  ? 'border-[#66FCF1] shadow-[0_0_20px_rgba(102,252,241,0.15)] ring-1 ring-[#66FCF1]'
-                  : 'border-[#242E3B] hover:border-[#66FCF1]/40 hover:bg-[#151821]'
+                  ? 'border-vx-accent ring-1 ring-vx-accent'
+                  : 'border-vx-border hover:border-vx-accent/40 hover:bg-vx-surface'
               }`}
             >
               <div className="space-y-3">
@@ -406,8 +406,8 @@ export const GroupsPage: React.FC = () => {
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 ${
                         group.kind === 'smart'
-                          ? 'bg-[#66FCF1]/10 text-[#66FCF1] border-[#66FCF1]/30'
-                          : 'bg-[#818CF8]/10 text-[#818CF8] border-[#818CF8]/30'
+                          ? 'bg-vx-accent/10 text-vx-accent border-vx-accent/30'
+                          : 'bg-vx-info/10 text-vx-info border-vx-info/30'
                       }`}
                     >
                       {group.kind === 'smart' ? (
@@ -417,10 +417,10 @@ export const GroupsPage: React.FC = () => {
                       )}
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-white group-hover:text-[#66FCF1] transition-colors">
+                      <h3 className="text-sm font-bold text-vx-text group-hover:text-vx-accent transition-colors">
                         {group.name}
                       </h3>
-                      <span className="text-[10px] font-mono text-[#C5C6C7]/60 block">
+                      <span className="text-xs tabular-nums text-vx-text-2/60 block">
                         {group.kind === 'smart'
                           ? `Por reglas (${group.match === 'all' ? 'todas' : 'alguna'})`
                           : 'Lista fija'}
@@ -433,16 +433,16 @@ export const GroupsPage: React.FC = () => {
                   </Badge>
                 </div>
 
-                <p className="text-xs text-[#C5C6C7]/75 line-clamp-2">
+                <p className="text-[13px] text-vx-text-2/75 line-clamp-2">
                   {group.description || 'Sin descripción asignada.'}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-[#242E3B] flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-mono">
-                  <UserCheck className="w-4 h-4 text-[#66FCF1]" />
-                  <span className="text-white font-bold">{members.length}</span>
-                  <span className="text-[#C5C6C7]/60">miembros</span>
+              <div className="pt-4 mt-4 border-t border-vx-border flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-[13px] tabular-nums">
+                  <UserCheck className="w-4 h-4 text-vx-accent" />
+                  <span className="text-vx-text font-bold">{members.length}</span>
+                  <span className="text-vx-text-2/60">miembros</span>
                 </div>
 
                 <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
@@ -451,7 +451,7 @@ export const GroupsPage: React.FC = () => {
                     onClick={(e) => handleOpenEditModal(group, e)}
                     title="Editar grupo"
                     aria-label={`Editar grupo ${group.name}`}
-                    className="p-1.5 rounded-lg bg-[#1F2833] hover:bg-[#253240] text-[#C5C6C7] hover:text-white border border-[#242E3B] transition-colors"
+                    className="p-1.5 rounded-lg bg-vx-raised hover:bg-vx-raised text-vx-text-2 hover:text-vx-text border border-vx-border transition-colors"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -463,7 +463,7 @@ export const GroupsPage: React.FC = () => {
                     }}
                     title="Eliminar grupo"
                     aria-label={`Eliminar grupo ${group.name}`}
-                    className="p-1.5 rounded-lg bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/20 transition-colors"
+                    className="p-1.5 rounded-lg bg-vx-danger/10 hover:bg-vx-danger text-vx-danger hover:text-vx-text border border-vx-danger/20 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -476,20 +476,20 @@ export const GroupsPage: React.FC = () => {
 
       {/* 2. Detalle del Grupo Seleccionado (Lista de Miembros & Reglas) */}
       {selectedGroup && (
-        <div className="bg-[#13151c] border border-[#66FCF1]/40 rounded-2xl shadow-2xl p-6 space-y-5 animate-fadeIn">
+        <div className="bg-vx-surface border border-vx-accent/40 rounded-2xl shadow-2xl p-6 space-y-5 animate-fadeIn">
           {(() => {
             const currentGroup = groups.find((g) => g.id === selectedGroup.id) ?? selectedGroup;
             const currentMembers = getGroupMembers(currentGroup, agents, profiles);
 
             return (
               <>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#242E3B] pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-vx-border pb-4">
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 ${
                         currentGroup.kind === 'smart'
-                          ? 'bg-[#66FCF1]/15 text-[#66FCF1] border-[#66FCF1]/30'
-                          : 'bg-[#818CF8]/15 text-[#818CF8] border-[#818CF8]/30'
+                          ? 'bg-vx-accent/15 text-vx-accent border-vx-accent/30'
+                          : 'bg-vx-info/15 text-vx-info border-vx-info/30'
                       }`}
                     >
                       {currentGroup.kind === 'smart' ? (
@@ -500,12 +500,12 @@ export const GroupsPage: React.FC = () => {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h2 className="text-lg font-bold text-white">{currentGroup.name}</h2>
+                        <h2 className="text-lg font-bold text-vx-text">{currentGroup.name}</h2>
                         <Badge tone={currentGroup.kind === 'smart' ? 'accent' : 'info'}>
                           {currentGroup.kind === 'smart' ? 'INTELIGENTE' : 'MANUAL'}
                         </Badge>
                       </div>
-                      <p className="text-xs text-[#C5C6C7]/70 mt-0.5">{currentGroup.description}</p>
+                      <p className="text-[13px] text-vx-text-2/70 mt-0.5">{currentGroup.description}</p>
                     </div>
                   </div>
 
@@ -517,7 +517,7 @@ export const GroupsPage: React.FC = () => {
                       type="button"
                       onClick={() => setSelectedGroup(null)}
                       aria-label="Cerrar detalle del grupo"
-                      className="p-1.5 rounded-lg text-[#C5C6C7] hover:text-white hover:bg-white/5"
+                      className="p-1.5 rounded-lg text-vx-text-2 hover:text-vx-text hover:bg-white/5"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -526,8 +526,8 @@ export const GroupsPage: React.FC = () => {
 
                 {/* Si es Smart: mostrar reglas en lenguaje legible */}
                 {currentGroup.kind === 'smart' && (
-                  <div className="p-4 rounded-xl bg-[#0B0C10] border border-[#242E3B] space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-mono text-[#66FCF1]">
+                  <div className="p-4 rounded-xl bg-vx-bg border border-vx-border space-y-2">
+                    <div className="flex items-center gap-2 text-[13px] tabular-nums text-vx-accent">
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>
                         Reglas de segmentación automática ({currentGroup.match === 'all' ? 'cumple todas' : 'cumple alguna'}):
@@ -537,13 +537,13 @@ export const GroupsPage: React.FC = () => {
                       {currentGroup.rules.map((rule) => (
                         <span
                           key={rule.id}
-                          className="px-2.5 py-1 rounded-lg bg-[#1F2833] border border-[#242E3B] text-xs font-mono text-white"
+                          className="px-2.5 py-1 rounded-lg bg-vx-raised border border-vx-border text-[13px] tabular-nums text-vx-text"
                         >
                           {formatRuleReadable(rule)}
                         </span>
                       ))}
                     </div>
-                    <p className="text-[11px] text-[#C5C6C7]/50 pt-1">
+                    <p className="text-xs text-vx-text-2/50 pt-1">
                       * Este grupo es dinámico y de solo lectura. Los agentes entran o salen automáticamente según cumplan las condiciones.
                     </p>
                   </div>
@@ -551,12 +551,12 @@ export const GroupsPage: React.FC = () => {
 
                 {/* Si es Manual: Selector para agregar miembros */}
                 {currentGroup.kind === 'manual' && (
-                  <div className="p-4 rounded-xl bg-[#0B0C10] border border-[#242E3B] space-y-3">
+                  <div className="p-4 rounded-xl bg-vx-bg border border-vx-border space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-xs font-mono text-[#A5B4FC] font-bold">
+                      <span className="text-[13px] tabular-nums text-vx-info font-bold">
                         Gestión de miembros:
                       </span>
-                      <span className="text-[11px] text-[#C5C6C7]/50 font-mono">
+                      <span className="text-xs text-vx-text-2/50 tabular-nums">
                         Haz clic en un agente para agregarlo o removerlo
                       </span>
                     </div>
@@ -570,16 +570,16 @@ export const GroupsPage: React.FC = () => {
                             type="button"
                             onClick={() => toggleGroupMember(currentGroup.id, agent.id)}
                             aria-pressed={isMember}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all ${
                               isMember
-                                ? 'bg-[#66FCF1]/20 text-[#66FCF1] border border-[#66FCF1]/40'
-                                : 'bg-[#1F2833]/60 text-[#C5C6C7]/60 border border-[#242E3B] hover:text-white'
+                                ? 'bg-vx-accent/20 text-vx-accent border border-vx-accent/40'
+                                : 'bg-vx-raised/60 text-vx-text-2/60 border border-vx-border hover:text-vx-text'
                             }`}
                           >
                             {isMember ? (
-                              <UserMinus className="w-3 h-3 text-[#EF4444]" />
+                              <UserMinus className="w-3 h-3 text-vx-danger" />
                             ) : (
-                              <UserPlus className="w-3 h-3 text-[#66FCF1]" />
+                              <UserPlus className="w-3 h-3 text-vx-accent" />
                             )}
                             <span>{agent.name}</span>
                           </button>
@@ -591,14 +591,14 @@ export const GroupsPage: React.FC = () => {
 
                 {/* Tabla de Miembros del Grupo */}
                 <div className="space-y-2">
-                  <h3 className="text-xs font-mono text-[#C5C6C7]/70 uppercase tracking-wider">
+                  <h3 className="text-[13px] tabular-nums text-vx-text-2/70">
                     Miembros actuales ({currentMembers.length})
                   </h3>
 
-                  <div className="overflow-x-auto rounded-xl border border-[#242E3B]">
-                    <table className="w-full text-left border-collapse text-xs">
+                  <div className="overflow-x-auto rounded-xl border border-vx-border">
+                    <table className="w-full text-left border-collapse text-[13px]">
                       <thead>
-                        <tr className="border-b border-[#242E3B] bg-[#0B0C10]/60 text-[11px] font-mono text-[#C5C6C7]/60 uppercase">
+                        <tr className="border-b border-vx-border bg-vx-bg/60 text-xs tabular-nums text-vx-text-2/60">
                           <th className="py-2.5 px-4">Agente</th>
                           <th className="py-2.5 px-4">Código</th>
                           <th className="py-2.5 px-4">Campaña</th>
@@ -609,12 +609,12 @@ export const GroupsPage: React.FC = () => {
                           )}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-[#242E3B]/40">
+                      <tbody className="divide-y divide-vx-border/40">
                         {currentMembers.length === 0 ? (
                           <tr>
                             <td
                               colSpan={currentGroup.kind === 'manual' ? 6 : 5}
-                              className="py-8 text-center text-[#C5C6C7]/50 font-mono"
+                              className="py-8 text-center text-vx-text-2/50 tabular-nums"
                             >
                               Este grupo no tiene miembros que cumplan las condiciones actualmente.
                             </td>
@@ -625,18 +625,18 @@ export const GroupsPage: React.FC = () => {
                             return (
                               <tr
                                 key={agent.id}
-                                className="hover:bg-[#1A202C]/40 transition-colors"
+                                className="hover:bg-vx-raised/40 transition-colors"
                               >
-                                <td className="py-2.5 px-4 font-semibold text-white whitespace-nowrap">
+                                <td className="py-2.5 px-4 font-semibold text-vx-text whitespace-nowrap">
                                   {agent.name}
                                 </td>
-                                <td className="py-2.5 px-4 font-mono text-[#C5C6C7]">
+                                <td className="py-2.5 px-4 tabular-nums text-vx-text-2">
                                   {agent.employeeCode}
                                 </td>
-                                <td className="py-2.5 px-4 text-[#C5C6C7]">
+                                <td className="py-2.5 px-4 text-vx-text-2">
                                   {campaign?.name ?? 'Sin Asignar'}
                                 </td>
-                                <td className="py-2.5 px-4 text-[#C5C6C7]">
+                                <td className="py-2.5 px-4 text-vx-text-2">
                                   {agent.level}
                                 </td>
                                 <td className="py-2.5 px-4">
@@ -666,7 +666,7 @@ export const GroupsPage: React.FC = () => {
                                       type="button"
                                       onClick={() => toggleGroupMember(currentGroup.id, agent.id)}
                                       aria-label={`Quitar a ${agent.name} del grupo`}
-                                      className="px-2 py-1 rounded bg-[#EF4444]/10 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/20 text-[11px] transition-colors"
+                                      className="px-2 py-1 rounded bg-vx-danger/10 hover:bg-vx-danger text-vx-danger hover:text-vx-text border border-vx-danger/20 text-xs transition-colors"
                                     >
                                       Quitar
                                     </button>
@@ -710,7 +710,7 @@ export const GroupsPage: React.FC = () => {
               </div>
             )}
 
-            <form id="group-form" onSubmit={handleSubmitForm} className="space-y-4 text-xs">
+            <form id="group-form" onSubmit={handleSubmitForm} className="space-y-4 text-[13px]">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Nombre del grupo">
                   <Input
@@ -741,20 +741,20 @@ export const GroupsPage: React.FC = () => {
 
               {/* Si es Smart: Editor de Reglas */}
               {formKind === 'smart' && (
-                <div className="p-4 rounded-xl bg-[#0B0C10] border border-[#242E3B] space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#242E3B] pb-2">
-                    <span className="font-semibold text-white flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#66FCF1]" />
+                <div className="p-4 rounded-xl bg-vx-bg border border-vx-border space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-vx-border pb-2">
+                    <span className="font-semibold text-vx-text flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-vx-accent" />
                       Condición de coincidencia:
                     </span>
                     <div className="flex items-center gap-1">
                       <button
                         type="button"
                         onClick={() => setFormMatch('all')}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold ${
+                        className={`px-3 py-1 rounded-lg text-[13px] font-semibold ${
                           formMatch === 'all'
-                            ? 'bg-[#66FCF1] text-[#0B0C10]'
-                            : 'bg-[#1F2833] text-[#C5C6C7]'
+                            ? 'bg-vx-accent text-vx-bg'
+                            : 'bg-vx-raised text-vx-text-2'
                         }`}
                       >
                         Cumple todas
@@ -762,10 +762,10 @@ export const GroupsPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setFormMatch('any')}
-                        className={`px-3 py-1 rounded-lg text-xs font-semibold ${
+                        className={`px-3 py-1 rounded-lg text-[13px] font-semibold ${
                           formMatch === 'any'
-                            ? 'bg-[#66FCF1] text-[#0B0C10]'
-                            : 'bg-[#1F2833] text-[#C5C6C7]'
+                            ? 'bg-vx-accent text-vx-bg'
+                            : 'bg-vx-raised text-vx-text-2'
                         }`}
                       >
                         Cumple alguna
@@ -777,7 +777,7 @@ export const GroupsPage: React.FC = () => {
                     {formRules.map((rule) => (
                       <div
                         key={rule.id}
-                        className="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2 rounded-lg bg-[#13151c] border border-[#242E3B]"
+                        className="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2 rounded-lg bg-vx-surface border border-vx-border"
                       >
                         {/* Campo */}
                         <select
@@ -786,7 +786,7 @@ export const GroupsPage: React.FC = () => {
                           onChange={(e) =>
                             handleUpdateRule(rule.id, e.target.value as RuleField)
                           }
-                          className="bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                          className="bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                         >
                           <option value="campaign">Campaña</option>
                           <option value="level">Nivel</option>
@@ -805,7 +805,7 @@ export const GroupsPage: React.FC = () => {
                               e.target.value as RuleOperator,
                             )
                           }
-                          className="bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                          className="bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                         >
                           <option value="is">es</option>
                           <option value="is_not">no es</option>
@@ -818,7 +818,7 @@ export const GroupsPage: React.FC = () => {
                             value={rule.value}
                             aria-label="Valor de la regla"
                             onChange={(e) => handleUpdateRuleValue(rule.id, e.target.value)}
-                            className="flex-1 bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                            className="flex-1 bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                           >
                             {campaigns.map((c) => (
                               <option key={c.id} value={c.id}>
@@ -833,7 +833,7 @@ export const GroupsPage: React.FC = () => {
                             value={rule.value}
                             aria-label="Valor de la regla"
                             onChange={(e) => handleUpdateRuleValue(rule.id, e.target.value)}
-                            className="flex-1 bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                            className="flex-1 bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                           >
                             <option value="on_call">En llamada</option>
                             <option value="available">Disponible</option>
@@ -847,7 +847,7 @@ export const GroupsPage: React.FC = () => {
                             value={rule.value}
                             aria-label="Valor de la regla"
                             onChange={(e) => handleUpdateRuleValue(rule.id, e.target.value)}
-                            className="flex-1 bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                            className="flex-1 bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                           >
                             <option value="agent">Agente</option>
                             <option value="supervisor">Supervisor</option>
@@ -860,7 +860,7 @@ export const GroupsPage: React.FC = () => {
                             value={rule.value}
                             aria-label="Valor de la regla"
                             onChange={(e) => handleUpdateRuleValue(rule.id, e.target.value)}
-                            className="flex-1 bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                            className="flex-1 bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                           >
                             <option value="true">Activo</option>
                             <option value="false">Inactivo</option>
@@ -874,7 +874,7 @@ export const GroupsPage: React.FC = () => {
                             aria-label="Valor de la regla"
                             onChange={(e) => handleUpdateRuleValue(rule.id, e.target.value)}
                             placeholder="Ej: bilingüe, Senior QA"
-                            className="flex-1 bg-[#0B0C10] border border-[#242E3B] text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#66FCF1]"
+                            className="flex-1 bg-vx-bg border border-vx-border text-vx-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-vx-accent"
                           />
                         )}
 
@@ -883,7 +883,7 @@ export const GroupsPage: React.FC = () => {
                             type="button"
                             onClick={() => handleRemoveRule(rule.id)}
                             aria-label="Quitar regla"
-                            className="p-1.5 rounded-lg text-[#EF4444] hover:bg-[#EF4444]/10"
+                            className="p-1.5 rounded-lg text-vx-danger hover:bg-vx-danger/10"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
@@ -895,32 +895,32 @@ export const GroupsPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleAddRule}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1F2833] hover:bg-[#253240] text-xs font-semibold text-white border border-[#242E3B] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-vx-raised hover:bg-vx-raised text-[13px] font-semibold text-vx-text border border-vx-border transition-colors"
                   >
-                    <Plus className="w-3.5 h-3.5 text-[#66FCF1]" />
+                    <Plus className="w-3.5 h-3.5 text-vx-accent" />
                     <span>Agregar otra regla</span>
                   </button>
                 </div>
               )}
 
               {/* Vista Previa en Vivo de Miembros */}
-              <div className="p-3.5 rounded-xl bg-[#0B0C10] border border-[#66FCF1]/30 space-y-2">
+              <div className="p-3.5 rounded-xl bg-vx-bg border border-vx-accent/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-[#66FCF1] font-semibold flex items-center gap-1.5">
+                  <span className="text-[13px] tabular-nums text-vx-accent font-semibold flex items-center gap-1.5">
                     <UserCheck className="w-3.5 h-3.5" />
                     Vista previa en vivo ({livePreviewMembers.length} coinciden):
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto">
                   {livePreviewMembers.length === 0 ? (
-                    <span className="text-[11px] text-[#C5C6C7]/50 font-mono italic">
+                    <span className="text-xs text-vx-text-2/50 tabular-nums italic">
                       Ningún agente coincide con estas reglas en este momento.
                     </span>
                   ) : (
                     livePreviewMembers.map((m) => (
                       <span
                         key={m.id}
-                        className="px-2 py-0.5 rounded bg-[#1F2833] text-[#66FCF1] border border-[#242E3B] text-[11px] font-mono"
+                        className="px-2 py-0.5 rounded bg-vx-raised text-vx-accent border border-vx-border text-xs tabular-nums"
                       >
                         {m.name}
                       </span>
@@ -949,7 +949,7 @@ export const GroupsPage: React.FC = () => {
           </>
         }
       >
-        <p className="text-xs text-[#C5C6C7]/80">
+        <p className="text-[13px] text-vx-text-2/80">
           Los agentes pertenecientes no se eliminarán del sistema, únicamente se desvinculará este agrupador.
         </p>
       </Modal>

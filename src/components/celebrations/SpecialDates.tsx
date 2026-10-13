@@ -21,12 +21,12 @@ const eventLabel = (e: CelebrationEvent): string =>
   e.kind === 'birthday' ? 'Cumpleaños' : `${e.years} ${e.years === 1 ? 'año' : 'años'} en Vooxline`;
 
 const EventRow: React.FC<{ e: CelebrationEvent; nameOf: (id: string) => string }> = ({ e, nameOf }) => (
-  <li className="flex items-center gap-3 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
+  <li className="flex items-center gap-3 rounded-xl border border-vx-border bg-vx-bg p-3">
     <Avatar name={nameOf(e.agentId)} size="sm" />
     <div className="min-w-0 flex-1">
-      <p className="truncate text-sm font-semibold text-white">{nameOf(e.agentId)}</p>
-      <p className="flex items-center gap-1.5 text-[11px] text-[#C5C6C7]/60">
-        {e.kind === 'birthday' ? <Cake className="h-3 w-3 text-[#EF4444]" /> : <Briefcase className="h-3 w-3 text-[#66FCF1]" />}
+      <p className="truncate text-sm font-semibold text-vx-text">{nameOf(e.agentId)}</p>
+      <p className="flex items-center gap-1.5 text-xs text-vx-text-2/60">
+        {e.kind === 'birthday' ? <Cake className="h-3 w-3 text-vx-danger" /> : <Briefcase className="h-3 w-3 text-vx-accent" />}
         {eventLabel(e)}
       </p>
     </div>
@@ -130,7 +130,7 @@ export const SpecialDates: React.FC<{
         {BUCKETS.map((b) => (
           <Card key={b.key} title={b.title} subtitle={`${byBucket[b.key].length} ${byBucket[b.key].length === 1 ? 'fecha' : 'fechas'}`}>
             {byBucket[b.key].length === 0 ? (
-              <p className="py-6 text-center text-xs text-[#C5C6C7]/50">{b.empty}</p>
+              <p className="py-6 text-center text-[13px] text-vx-text-2/50">{b.empty}</p>
             ) : (
               <ul className="space-y-2">
                 {byBucket[b.key].map((e) => (
@@ -148,25 +148,25 @@ export const SpecialDates: React.FC<{
         ) : (
           <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {timeline.map((m) => (
-              <li key={m.key} className="rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
-                <p className="mb-2 flex items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-wider text-[#66FCF1]">
+              <li key={m.key} className="rounded-xl border border-vx-border bg-vx-bg p-3">
+                <p className="mb-2 flex items-center justify-between tabular-nums text-xs font-semibold text-vx-accent">
                   <span>{m.label}</span>
-                  <span className="text-[#C5C6C7]/40">{m.events.length}</span>
+                  <span className="text-vx-text-2/40">{m.events.length}</span>
                 </p>
                 {m.events.length === 0 ? (
-                  <p className="text-[11px] text-[#C5C6C7]/30">—</p>
+                  <p className="text-xs text-vx-text-2/30">—</p>
                 ) : (
                   <ul className="space-y-1.5">
                     {m.events.map((e) => (
-                      <li key={`${e.kind}-${e.agentId}`} className="flex items-center gap-2 text-xs text-[#C5C6C7]">
+                      <li key={`${e.kind}-${e.agentId}`} className="flex items-center gap-2 text-[13px] text-vx-text-2">
                         {e.kind === 'birthday' ? (
-                          <Cake className="h-3 w-3 shrink-0 text-[#EF4444]" aria-label="Cumpleaños" />
+                          <Cake className="h-3 w-3 shrink-0 text-vx-danger" aria-label="Cumpleaños" />
                         ) : (
-                          <Briefcase className="h-3 w-3 shrink-0 text-[#66FCF1]" aria-label="Aniversario" />
+                          <Briefcase className="h-3 w-3 shrink-0 text-vx-accent" aria-label="Aniversario" />
                         )}
-                        <span className="w-10 shrink-0 font-mono text-[10px] text-[#C5C6C7]/50">{e.date.slice(8)}</span>
+                        <span className="w-10 shrink-0 tabular-nums text-xs text-vx-text-2/50">{e.date.slice(8)}</span>
                         <span className="truncate">{nameOf(e.agentId)}</span>
-                        {e.years !== null && <span className="ml-auto font-mono text-[10px] text-[#66FCF1]">{e.years}a</span>}
+                        {e.years !== null && <span className="ml-auto tabular-nums text-xs text-vx-accent">{e.years}a</span>}
                       </li>
                     ))}
                   </ul>
@@ -183,11 +183,11 @@ export const SpecialDates: React.FC<{
             {people.map((p) => {
               const b = birthdays[p.id];
               return (
-                <li key={p.id} className="flex items-center gap-3 rounded-xl border border-[#242E3B] bg-[#0B0C10] p-3">
+                <li key={p.id} className="flex items-center gap-3 rounded-xl border border-vx-border bg-vx-bg p-3">
                   <Avatar name={p.name} size="sm" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-white">{p.name}</p>
-                    <p className="text-[11px] text-[#C5C6C7]/60">
+                    <p className="truncate text-sm font-semibold text-vx-text">{p.name}</p>
+                    <p className="text-xs text-vx-text-2/60">
                       {b ? `${Number(b.slice(3))} de ${MONTHS[Number(b.slice(0, 2)) - 1].toLowerCase()}` : 'Sin registrar'}
                     </p>
                   </div>
@@ -200,8 +200,8 @@ export const SpecialDates: React.FC<{
       )}
 
       {!isManager && byBucket.today.length > 0 && (
-        <p className="flex items-center gap-2 text-xs text-[#C5C6C7]/60">
-          <PartyPopper className="h-3.5 w-3.5 text-[#66FCF1]" /> ¡Felicita a quien celebra hoy con un reconocimiento!
+        <p className="flex items-center gap-2 text-[13px] text-vx-text-2/60">
+          <PartyPopper className="h-3.5 w-3.5 text-vx-accent" /> ¡Felicita a quien celebra hoy con un reconocimiento!
         </p>
       )}
 
